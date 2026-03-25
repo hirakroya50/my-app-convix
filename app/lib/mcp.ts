@@ -117,7 +117,8 @@ export async function executeTool(
         console.log("[placeOrder] Pending order created:", orderId);
 
         // 2. Create a Stripe Checkout Session via our API route
-        const origin = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        const origin =
+          process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
         const checkoutRes = await fetch(`${origin}/api/checkout`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -6,7 +6,13 @@ import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
-import { CheckCircle2, Coffee, ArrowLeft, Loader2, XCircle } from "lucide-react";
+import {
+  CheckCircle2,
+  Coffee,
+  ArrowLeft,
+  Loader2,
+  XCircle,
+} from "lucide-react";
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
@@ -72,7 +78,10 @@ function PaymentSuccessContent() {
     return (
       <div className="min-h-screen bg-[#0a0908] flex items-center justify-center px-6">
         <div className="text-center">
-          <Loader2 size={32} className="text-amber-400 animate-spin mx-auto mb-4" />
+          <Loader2
+            size={32}
+            className="text-amber-400 animate-spin mx-auto mb-4"
+          />
           <p className="text-stone-400 text-sm">Confirming your payment…</p>
         </div>
       </div>
