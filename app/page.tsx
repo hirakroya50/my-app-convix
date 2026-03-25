@@ -16,6 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
+import ChatWidget from "./components/ChatWidget";
 
 const NAV_LINKS = ["Menu", "About", "Location", "Hours"];
 
@@ -484,6 +485,8 @@ export default function Home() {
           </Link>
         </div>
       </footer>
+      {/* ── FLOATING AI CHAT WIDGET ───────────────────────────── */}
+      <ChatWidget />
     </div>
   );
 }
