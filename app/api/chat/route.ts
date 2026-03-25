@@ -51,7 +51,11 @@ export async function POST(req: Request) {
           .map(async (tc) => ({
             role: "tool" as const,
             tool_call_id: tc.id,
-            content: await executeTool(convex, tc.function.name),
+            content: await executeTool(
+              convex,
+              tc.function.name,
+              tc.function.arguments,
+            ),
           })),
       );
 

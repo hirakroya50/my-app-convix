@@ -9,7 +9,9 @@
  */
 
 import type * as aiChat from "../aiChat.js";
+import type * as menu from "../menu.js";
 import type * as messages from "../messages.js";
+import type * as orders from "../orders.js";
 import type * as tools from "../tools.js";
 
 import type {
@@ -20,7 +22,9 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   aiChat: typeof aiChat;
+  menu: typeof menu;
   messages: typeof messages;
+  orders: typeof orders;
   tools: typeof tools;
 }>;
 

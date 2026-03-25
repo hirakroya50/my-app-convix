@@ -1,33 +1,21 @@
 import { query } from "./_generated/server";
 
-// Returns the coffee shop menu
+// Returns the coffee shop menu dynamically from the menu table
 export const getMenu = query({
   args: {},
-  handler: async () => {
+  handler: async (ctx) => {
+    const items = await ctx.db.query("menu").collect();
+    const available = items.filter((item) => item.available && item.quantity > 0);
     return {
       shopName: "Brew Haven",
-      items: [
-        {
-          name: "Espresso",
-          price: "$3.50",
-          description: "Rich and bold single shot",
-        },
-        {
-          name: "Cappuccino",
-          price: "$4.50",
-          description: "Espresso with steamed milk foam",
-        },
-        {
-          name: "Latte",
-          price: "$5.00",
-          description: "Smooth espresso with steamed milk",
-        },
-        {
-          name: "Cold Brew",
-          price: "$4.00",
-          description: "Slow-steeped cold coffee",
-        },
-      ],
+      items: available.map((item) => ({
+        id: item._id,
+        name: item.name,
+        price: `$${item.price.toFixed(2)}`,
+        priceNumber: item.price,
+        description: item.description,
+        available: item.quantity,
+      })),
     };
   },
 });
