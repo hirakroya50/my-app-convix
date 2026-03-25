@@ -6,11 +6,14 @@ type ChatMessage = {
   content: string;
 };
 
+const MAX_MESSAGES_SENT = 12;
+
 export default function Home() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [cooldownUntil, setCooldownUntil] = useState(0);
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -18,6 +21,11 @@ export default function Home() {
   }, [messages, isLoading]);
 
   const sendMessage = async () => {
+    if (Date.now() < cooldownUntil) {
+      setError("Please wait a second before sending again.");
+      return;
+    }
+
     const trimmedInput = input.trim();
     if (!trimmedInput || isLoading) return;
 
@@ -28,14 +36,17 @@ export default function Home() {
     setMessages(newMessages);
     setInput("");
     setIsLoading(true);
+    setCooldownUntil(Date.now() + 1000);
 
     try {
+      const requestMessages = newMessages.slice(-MAX_MESSAGES_SENT);
+
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: requestMessages }),
       });
 
       const data = await res.json();
@@ -50,8 +61,12 @@ export default function Home() {
 
       setMessages([...newMessages, { role: "assistant", content: data.reply }]);
     } catch (err) {
-      const message =
+      const rawMessage =
         err instanceof Error ? err.message : "Failed to send message.";
+      const message =
+        rawMessage.includes("quota") || rawMessage.includes("insufficient")
+          ? "Your OpenAI API key has no active quota. Add billing/credits in OpenAI, then try again."
+          : rawMessage;
       setError(message);
     } finally {
       setIsLoading(false);
