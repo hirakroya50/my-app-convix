@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
-import { Coffee, Plus } from "lucide-react";
+import { Coffee, Plus, ArrowLeft, Sparkles } from "lucide-react";
+import Link from "next/link";
 import ChatWindow from "../components/ChatWindow";
 import ChatInput from "../components/ChatInput";
 import { api } from "@/convex/_generated/api";
@@ -71,7 +72,14 @@ export default function AiChat() {
     <div className="flex h-screen bg-zinc-900 text-white">
       {/* Sidebar */}
       <aside className="hidden md:flex w-64 flex-col bg-zinc-950 border-r border-zinc-800">
-        <div className="p-4 border-b border-zinc-800">
+        <div className="p-4 border-b border-zinc-800 space-y-2">
+          <Link
+            href="/"
+            className="flex items-center gap-2 w-full px-3 py-2 rounded-lg hover:bg-zinc-800 transition-colors text-sm text-zinc-400 hover:text-zinc-100"
+          >
+            <ArrowLeft size={15} />
+            Back to Home
+          </Link>
           <button
             onClick={handleNewChat}
             className="flex items-center gap-2 w-full px-3 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 transition-colors text-sm cursor-pointer"
@@ -81,9 +89,15 @@ export default function AiChat() {
           </button>
         </div>
         <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-          <Coffee size={48} className="text-amber-500 mb-4" />
-          <h1 className="text-xl font-bold text-amber-500">Brew Haven</h1>
-          <p className="text-sm text-zinc-500 mt-2">Your AI Coffee Assistant</p>
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500 to-orange-600 shadow-xl shadow-amber-500/25 mb-4">
+            <Coffee size={24} className="text-white" />
+          </div>
+          <h1 className="text-xl font-bold text-amber-400">Brew Haven</h1>
+          <p className="text-sm text-zinc-500 mt-2">Your AI Coffee Barista</p>
+          <div className="mt-4 flex items-center gap-1.5 text-xs text-zinc-600">
+            <Sparkles size={11} className="text-amber-500/60" />
+            Powered by GPT-4o mini
+          </div>
         </div>
         <div className="p-4 border-t border-zinc-800 text-xs text-zinc-600">
           Powered by OpenAI + Convex
@@ -98,12 +112,20 @@ export default function AiChat() {
             <Coffee size={24} className="text-amber-500" />
             <h1 className="font-bold text-amber-500">Brew Haven</h1>
           </div>
-          <button
-            onClick={handleNewChat}
-            className="p-2 rounded-lg hover:bg-zinc-800 transition-colors cursor-pointer"
-          >
-            <Plus size={20} />
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/"
+              className="p-2 rounded-lg hover:bg-zinc-800 transition-colors text-zinc-400"
+            >
+              <ArrowLeft size={18} />
+            </Link>
+            <button
+              onClick={handleNewChat}
+              className="p-2 rounded-lg hover:bg-zinc-800 transition-colors cursor-pointer"
+            >
+              <Plus size={20} />
+            </button>
+          </div>
         </header>
 
         {errorMessage && (
