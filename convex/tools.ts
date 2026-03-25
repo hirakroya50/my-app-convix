@@ -5,7 +5,9 @@ export const getMenu = query({
   args: {},
   handler: async (ctx) => {
     const items = await ctx.db.query("menu").collect();
-    const available = items.filter((item) => item.available && item.quantity > 0);
+    const available = items.filter(
+      (item) => item.available && item.quantity > 0,
+    );
     return {
       shopName: "Brew Haven",
       items: available.map((item) => ({

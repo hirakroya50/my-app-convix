@@ -163,7 +163,9 @@ export default function AdminMenuPage() {
             },
             {
               label: "Available",
-              value: menuItems?.filter((i) => i.available && i.quantity > 0).length ?? 0,
+              value:
+                menuItems?.filter((i) => i.available && i.quantity > 0)
+                  .length ?? 0,
               icon: Coffee,
             },
             {
@@ -194,7 +196,10 @@ export default function AdminMenuPage() {
               <h2 className="font-semibold text-sm text-amber-400">
                 {editingId ? "Edit Item" : "Add New Item"}
               </h2>
-              <button onClick={handleCancel} className="text-stone-500 hover:text-white">
+              <button
+                onClick={handleCancel}
+                className="text-stone-500 hover:text-white"
+              >
                 <X size={16} />
               </button>
             </div>
@@ -219,7 +224,9 @@ export default function AdminMenuPage() {
                 type="text"
                 placeholder="Description"
                 value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
                 className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50"
               />
               <input
@@ -236,7 +243,9 @@ export default function AdminMenuPage() {
                 <input
                   type="checkbox"
                   checked={form.available}
-                  onChange={(e) => setForm({ ...form, available: e.target.checked })}
+                  onChange={(e) =>
+                    setForm({ ...form, available: e.target.checked })
+                  }
                   className="h-4 w-4 rounded border-stone-600 accent-amber-500"
                 />
                 Available for sale
@@ -267,7 +276,8 @@ export default function AdminMenuPage() {
               <Package size={32} className="text-stone-700 mx-auto mb-3" />
               <p className="text-stone-500 text-sm mb-1">No menu items yet</p>
               <p className="text-stone-600 text-xs">
-                Click &ldquo;Seed Default Items&rdquo; or &ldquo;Add Item&rdquo; to get started.
+                Click &ldquo;Seed Default Items&rdquo; or &ldquo;Add Item&rdquo;
+                to get started.
               </p>
             </div>
           ) : (

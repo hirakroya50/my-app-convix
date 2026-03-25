@@ -45,10 +45,22 @@ export const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
             items: {
               type: "object",
               properties: {
-                menuItemId: { type: "string", description: "The menu item ID from getMenu results" },
-                name: { type: "string", description: "The display name of the item" },
-                price: { type: "number", description: "The price per unit as a number" },
-                quantity: { type: "number", description: "How many of this item" },
+                menuItemId: {
+                  type: "string",
+                  description: "The menu item ID from getMenu results",
+                },
+                name: {
+                  type: "string",
+                  description: "The display name of the item",
+                },
+                price: {
+                  type: "number",
+                  description: "The price per unit as a number",
+                },
+                quantity: {
+                  type: "number",
+                  description: "How many of this item",
+                },
               },
               required: ["menuItemId", "name", "price", "quantity"],
             },

@@ -72,14 +72,62 @@ export const seed = mutation({
     if (existing) return "already_seeded";
 
     const defaults = [
-      { name: "Espresso", price: 3.5, description: "Rich and bold single shot", available: true, quantity: 50 },
-      { name: "Cappuccino", price: 4.5, description: "Espresso with steamed milk foam", available: true, quantity: 40 },
-      { name: "Latte", price: 5.0, description: "Smooth espresso with steamed milk", available: true, quantity: 40 },
-      { name: "Cold Brew", price: 4.0, description: "Slow-steeped cold coffee", available: true, quantity: 30 },
-      { name: "Honey Oat Latte", price: 6.0, description: "Local wildflower honey, oat milk, double ristretto", available: true, quantity: 25 },
-      { name: "Espresso Tonic", price: 5.0, description: "Chilled tonic, orange peel, a bold espresso float", available: true, quantity: 20 },
-      { name: "Matcha Ceremonial", price: 6.5, description: "Grade-A Japanese matcha, steamed oat milk, light foam", available: true, quantity: 15 },
-      { name: "Caramel Flat White", price: 5.75, description: "Velvety micro-foam, salted caramel drizzle", available: true, quantity: 30 },
+      {
+        name: "Espresso",
+        price: 3.5,
+        description: "Rich and bold single shot",
+        available: true,
+        quantity: 50,
+      },
+      {
+        name: "Cappuccino",
+        price: 4.5,
+        description: "Espresso with steamed milk foam",
+        available: true,
+        quantity: 40,
+      },
+      {
+        name: "Latte",
+        price: 5.0,
+        description: "Smooth espresso with steamed milk",
+        available: true,
+        quantity: 40,
+      },
+      {
+        name: "Cold Brew",
+        price: 4.0,
+        description: "Slow-steeped cold coffee",
+        available: true,
+        quantity: 30,
+      },
+      {
+        name: "Honey Oat Latte",
+        price: 6.0,
+        description: "Local wildflower honey, oat milk, double ristretto",
+        available: true,
+        quantity: 25,
+      },
+      {
+        name: "Espresso Tonic",
+        price: 5.0,
+        description: "Chilled tonic, orange peel, a bold espresso float",
+        available: true,
+        quantity: 20,
+      },
+      {
+        name: "Matcha Ceremonial",
+        price: 6.5,
+        description: "Grade-A Japanese matcha, steamed oat milk, light foam",
+        available: true,
+        quantity: 15,
+      },
+      {
+        name: "Caramel Flat White",
+        price: 5.75,
+        description: "Velvety micro-foam, salted caramel drizzle",
+        available: true,
+        quantity: 30,
+      },
     ];
 
     for (const item of defaults) {
