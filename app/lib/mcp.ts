@@ -17,8 +17,7 @@ export const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
     type: "function",
     function: {
       name: "getTimings",
-      description:
-        "Get the Brew Haven coffee shop opening and closing hours",
+      description: "Get the Brew Haven coffee shop opening and closing hours",
       parameters: { type: "object", properties: {}, required: [] },
     },
   },

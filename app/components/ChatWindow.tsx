@@ -69,9 +69,7 @@ export default function ChatWindow({
       ))}
 
       {/* Streaming assistant message */}
-      {streamingText && (
-        <MessageBubble role="assistant" text={streamingText} />
-      )}
+      {streamingText && <MessageBubble role="assistant" text={streamingText} />}
 
       {/* Typing indicator */}
       {isLoading && !streamingText && (

@@ -5,10 +5,7 @@ import { v } from "convex/values";
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db
-      .query("messages")
-      .withIndex("by_timestamp")
-      .collect();
+    return await ctx.db.query("messages").withIndex("by_timestamp").collect();
   },
 });
 

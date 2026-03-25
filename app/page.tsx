@@ -34,7 +34,9 @@ export default function Home() {
 
       if (!response.ok) {
         const errText = await response.text();
-        setErrorMessage(errText || "Failed to get a response. Please try again.");
+        setErrorMessage(
+          errText || "Failed to get a response. Please try again.",
+        );
         return;
       }
 
@@ -81,9 +83,7 @@ export default function Home() {
         <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
           <Coffee size={48} className="text-amber-500 mb-4" />
           <h1 className="text-xl font-bold text-amber-500">Brew Haven</h1>
-          <p className="text-sm text-zinc-500 mt-2">
-            Your AI Coffee Assistant
-          </p>
+          <p className="text-sm text-zinc-500 mt-2">Your AI Coffee Assistant</p>
         </div>
         <div className="p-4 border-t border-zinc-800 text-xs text-zinc-600">
           Powered by OpenAI + Convex

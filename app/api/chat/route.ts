@@ -32,10 +32,7 @@ export async function POST(req: Request) {
     // First OpenAI call — detect if tools are needed (non-streaming)
     const initialResponse = await openai.chat.completions.create({
       model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        ...chatMessages,
-      ],
+      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...chatMessages],
       tools,
     });
 
@@ -47,7 +44,10 @@ export async function POST(req: Request) {
       // Execute all tool calls via Convex
       const toolResults = await Promise.all(
         choice.message.tool_calls
-          .filter((tc): tc is Extract<typeof tc, { type: "function" }> => tc.type === "function")
+          .filter(
+            (tc): tc is Extract<typeof tc, { type: "function" }> =>
+              tc.type === "function",
+          )
           .map(async (tc) => ({
             role: "tool" as const,
             tool_call_id: tc.id,
@@ -113,13 +113,13 @@ export async function POST(req: Request) {
     if (apiError?.status === 429 || apiError?.code === "insufficient_quota") {
       return new Response(
         "OpenAI quota exceeded. Please check your billing at platform.openai.com/account/billing.",
-        { status: 429 }
+        { status: 429 },
       );
     }
     if (apiError?.status === 401) {
       return new Response(
         "Invalid OpenAI API key. Please check your OPENAI_API_KEY in .env.local.",
-        { status: 401 }
+        { status: 401 },
       );
     }
     return new Response("Something went wrong. Please try again.", {
