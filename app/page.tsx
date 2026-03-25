@@ -55,7 +55,12 @@ const FEATURES = [
 ];
 
 const MENU_HIGHLIGHTS = [
-  { name: "Signature Cold Brew", price: "$5.50", tag: "Best Seller", emoji: "🥤" },
+  {
+    name: "Signature Cold Brew",
+    price: "$5.50",
+    tag: "Best Seller",
+    emoji: "🥤",
+  },
   { name: "Honey Oat Latte", price: "$6.00", tag: "New", emoji: "🍯" },
   { name: "Espresso Tonic", price: "$5.00", tag: "Trending", emoji: "🫧" },
   { name: "Matcha Ceremonial", price: "$6.50", tag: "Fan Fave", emoji: "🍵" },
@@ -195,7 +200,10 @@ export default function Home() {
           >
             <MessageCircle size={18} />
             Try AI Chat
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            <ArrowRight
+              size={16}
+              className="group-hover:translate-x-1 transition-transform"
+            />
           </Link>
           <a
             href="#menu"
@@ -238,21 +246,29 @@ export default function Home() {
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {FEATURES.map(({ icon: Icon, title, desc, glow, iconColor, border }) => (
-              <div
-                key={title}
-                className={`relative overflow-hidden rounded-2xl border ${border} bg-zinc-900/80 p-6 transition-all hover:-translate-y-1 hover:shadow-xl`}
-              >
-                <div className={`absolute inset-0 bg-linear-to-br ${glow} opacity-50 pointer-events-none`} />
-                <div className="relative">
-                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-zinc-800 shadow-inner">
-                    <Icon size={20} className={iconColor} />
+            {FEATURES.map(
+              ({ icon: Icon, title, desc, glow, iconColor, border }) => (
+                <div
+                  key={title}
+                  className={`relative overflow-hidden rounded-2xl border ${border} bg-zinc-900/80 p-6 transition-all hover:-translate-y-1 hover:shadow-xl`}
+                >
+                  <div
+                    className={`absolute inset-0 bg-linear-to-br ${glow} opacity-50 pointer-events-none`}
+                  />
+                  <div className="relative">
+                    <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-zinc-800 shadow-inner">
+                      <Icon size={20} className={iconColor} />
+                    </div>
+                    <h3 className="mb-2 font-semibold text-zinc-100">
+                      {title}
+                    </h3>
+                    <p className="text-sm text-zinc-400 leading-relaxed">
+                      {desc}
+                    </p>
                   </div>
-                  <h3 className="mb-2 font-semibold text-zinc-100">{title}</h3>
-                  <p className="text-sm text-zinc-400 leading-relaxed">{desc}</p>
                 </div>
-              </div>
-            ))}
+              ),
+            )}
           </div>
         </div>
       </section>
@@ -322,8 +338,8 @@ export default function Home() {
               </h2>
               <p className="mt-4 text-zinc-400 max-w-lg mx-auto">
                 Not sure what to order? Our AI knows every drink, every
-                ingredient, and every special. Just ask — it&apos;s like having your
-                own personal coffee expert on demand.
+                ingredient, and every special. Just ask — it&apos;s like having
+                your own personal coffee expert on demand.
               </p>
               <Link
                 href="/ai-chat"
@@ -358,10 +374,16 @@ export default function Home() {
               >
                 <div className="flex gap-1">
                   {Array.from({ length: stars }).map((_, i) => (
-                    <Star key={i} size={14} className="fill-amber-400 text-amber-400" />
+                    <Star
+                      key={i}
+                      size={14}
+                      className="fill-amber-400 text-amber-400"
+                    />
                   ))}
                 </div>
-                <p className="text-sm text-zinc-300 leading-relaxed flex-1">&ldquo;{text}&rdquo;</p>
+                <p className="text-sm text-zinc-300 leading-relaxed flex-1">
+                  &ldquo;{text}&rdquo;
+                </p>
                 <div className="border-t border-zinc-800 pt-4">
                   <p className="font-medium text-zinc-100 text-sm">{name}</p>
                   <p className="text-xs text-zinc-500 mt-0.5">{role}</p>
@@ -390,7 +412,9 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="font-medium text-zinc-100">Location</p>
-                    <p className="text-sm text-zinc-400">42 Roaster Lane, Coffeeville, CA 94102</p>
+                    <p className="text-sm text-zinc-400">
+                      42 Roaster Lane, Coffeeville, CA 94102
+                    </p>
                   </div>
                 </div>
                 <div id="hours" className="flex items-start gap-3">
@@ -399,8 +423,12 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="font-medium text-zinc-100">Hours</p>
-                    <p className="text-sm text-zinc-400">Monday – Friday: 6:00 AM – 11:00 PM</p>
-                    <p className="text-sm text-zinc-400">Saturday – Sunday: 7:00 AM – 12:00 AM</p>
+                    <p className="text-sm text-zinc-400">
+                      Monday – Friday: 6:00 AM – 11:00 PM
+                    </p>
+                    <p className="text-sm text-zinc-400">
+                      Saturday – Sunday: 7:00 AM – 12:00 AM
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -409,7 +437,9 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="font-medium text-zinc-100">Free Wi-Fi</p>
-                    <p className="text-sm text-zinc-400">300 Mbps — password on your receipt</p>
+                    <p className="text-sm text-zinc-400">
+                      300 Mbps — password on your receipt
+                    </p>
                   </div>
                 </div>
               </div>
@@ -420,7 +450,9 @@ export default function Home() {
               <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-amber-500/5 to-transparent" />
               <div className="text-center">
                 <MapPin size={40} className="text-amber-500/40 mx-auto mb-3" />
-                <p className="text-zinc-500 text-sm">42 Roaster Lane, Coffeeville</p>
+                <p className="text-zinc-500 text-sm">
+                  42 Roaster Lane, Coffeeville
+                </p>
               </div>
             </div>
           </div>
