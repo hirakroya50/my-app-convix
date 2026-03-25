@@ -11,6 +11,7 @@ import {
   Loader2,
   Sparkles,
   ChevronDown,
+  RotateCcw,
 } from "lucide-react";
 
 /* ─── tiny inline message bubble ─────────────────────────────────── */
@@ -136,7 +137,7 @@ export default function ChatWidget() {
             ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
             : "opacity-0 scale-95 translate-y-4 pointer-events-none"
         }`}
-        style={{ height: "520px" }}
+        style={{ height: "620px" }}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 bg-zinc-950 rounded-t-2xl shrink-0">
@@ -160,7 +161,7 @@ export default function ChatWidget() {
               title="New chat"
               className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
             >
-              <Plus size={15} />
+              <RotateCcw size={15} />
             </button>
             <button
               onClick={() => setOpen(false)}
