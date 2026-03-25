@@ -1,7 +1,10 @@
 import OpenAI from "openai";
+import Stripe from "stripe";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // MCP-style tool definitions for OpenAI function calling
 export const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
@@ -116,28 +119,30 @@ export async function executeTool(
         });
         console.log("[placeOrder] Pending order created:", orderId);
 
-        // 2. Create a Stripe Checkout Session via our API route
+        // 2. Create a Stripe Checkout Session directly
         const origin =
           process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-        const checkoutRes = await fetch(`${origin}/api/checkout`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ orderId }),
+
+        const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
+          items.map((item) => ({
+            price_data: {
+              currency: "usd",
+              product_data: { name: item.name },
+              unit_amount: Math.round(item.price * 100),
+            },
+            quantity: item.quantity,
+          }));
+
+        const session = await stripe.checkout.sessions.create({
+          payment_method_types: ["card"],
+          line_items: lineItems,
+          mode: "payment",
+          success_url: `${origin}/payment/success?orderId=${orderId}&session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${origin}/?payment=cancelled`,
+          metadata: { orderId },
         });
 
-        if (!checkoutRes.ok) {
-          const errBody = await checkoutRes.text();
-          console.error("[placeOrder] Checkout creation failed:", errBody);
-          return JSON.stringify({
-            success: true,
-            orderId,
-            totalPrice: totalPrice.toFixed(2),
-            paymentUrl: null,
-            message: `Order created but could not generate payment link. Please try again.`,
-          });
-        }
-
-        const { url } = await checkoutRes.json();
+        const url = session.url;
         console.log("[placeOrder] Stripe checkout URL:", url);
 
         return JSON.stringify({
