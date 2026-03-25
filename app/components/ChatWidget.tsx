@@ -125,8 +125,7 @@ export default function ChatWidget() {
     el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
   };
 
-  const isEmpty =
-    !messages?.length && !streamingText && !isLoading;
+  const isEmpty = !messages?.length && !streamingText && !isLoading;
 
   return (
     <>
@@ -189,7 +188,11 @@ export default function ChatWidget() {
                 </p>
               </div>
               <div className="flex flex-col gap-1.5 w-full mt-1">
-                {["What's on the menu?", "What are your hours?", "Do you have WiFi?"].map((q) => (
+                {[
+                  "What's on the menu?",
+                  "What are your hours?",
+                  "Do you have WiFi?",
+                ].map((q) => (
                   <button
                     key={q}
                     onClick={() => {
@@ -206,9 +209,15 @@ export default function ChatWidget() {
           ) : (
             <>
               {messages?.map((msg) => (
-                <Bubble key={msg._id} role={msg.role as "user" | "assistant"} text={msg.text} />
+                <Bubble
+                  key={msg._id}
+                  role={msg.role as "user" | "assistant"}
+                  text={msg.text}
+                />
               ))}
-              {streamingText && <Bubble role="assistant" text={streamingText} />}
+              {streamingText && (
+                <Bubble role="assistant" text={streamingText} />
+              )}
               {isLoading && !streamingText && (
                 <div className="flex items-start gap-2.5">
                   <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-700">
