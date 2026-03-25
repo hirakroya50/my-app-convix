@@ -103,6 +103,8 @@ export async function executeTool(
           (sum, item) => sum + item.price * item.quantity,
           0,
         );
+
+        // 1. Create a pending order in Convex
         const orderId = await convex.mutation(api.orders.create, {
           items: items.map((item) => ({
             menuItemId: item.menuItemId as Id<"menu">,
@@ -112,12 +114,37 @@ export async function executeTool(
           })),
           totalPrice,
         });
-        console.log("[placeOrder] Order created:", orderId);
+        console.log("[placeOrder] Pending order created:", orderId);
+
+        // 2. Create a Stripe Checkout Session via our API route
+        const origin = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        const checkoutRes = await fetch(`${origin}/api/checkout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ orderId }),
+        });
+
+        if (!checkoutRes.ok) {
+          const errBody = await checkoutRes.text();
+          console.error("[placeOrder] Checkout creation failed:", errBody);
+          return JSON.stringify({
+            success: true,
+            orderId,
+            totalPrice: totalPrice.toFixed(2),
+            paymentUrl: null,
+            message: `Order created but could not generate payment link. Please try again.`,
+          });
+        }
+
+        const { url } = await checkoutRes.json();
+        console.log("[placeOrder] Stripe checkout URL:", url);
+
         return JSON.stringify({
           success: true,
           orderId,
           totalPrice: totalPrice.toFixed(2),
-          message: "Order placed and paid successfully!",
+          paymentUrl: url,
+          message: `Order created! Total: $${totalPrice.toFixed(2)}. Please complete payment using the link below.`,
         });
       } catch (err: unknown) {
         console.error("[placeOrder] Error:", err);

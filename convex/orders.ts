@@ -1,7 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
-// Create a new order (called after payment succeeds)
+// Create a new order with status "pending" (before payment)
 export const create = mutation({
   args: {
     items: v.array(
@@ -15,7 +15,7 @@ export const create = mutation({
     totalPrice: v.number(),
   },
   handler: async (ctx, args) => {
-    // Validate stock and decrement quantities
+    // Validate availability (don't decrement stock yet — that happens after payment)
     for (const item of args.items) {
       const menuItem = await ctx.db.get(item.menuItemId);
       if (!menuItem) {
@@ -31,23 +31,36 @@ export const create = mutation({
       }
     }
 
+    // Create order as "pending"
+    return await ctx.db.insert("orders", {
+      items: args.items,
+      totalPrice: args.totalPrice,
+      status: "pending",
+      timestamp: Date.now(),
+    });
+  },
+});
+
+// Mark order as paid and decrement stock (called by Stripe webhook or success page)
+export const markPaid = mutation({
+  args: { id: v.id("orders") },
+  handler: async (ctx, args) => {
+    const order = await ctx.db.get(args.id);
+    if (!order) throw new Error("Order not found");
+    if (order.status === "paid") return; // idempotent
+
     // Decrement stock
-    for (const item of args.items) {
+    for (const item of order.items) {
       const menuItem = await ctx.db.get(item.menuItemId);
       if (menuItem) {
         await ctx.db.patch(item.menuItemId, {
-          quantity: menuItem.quantity - item.quantity,
+          quantity: Math.max(0, menuItem.quantity - item.quantity),
         });
       }
     }
 
-    // Create the order
-    return await ctx.db.insert("orders", {
-      items: args.items,
-      totalPrice: args.totalPrice,
-      status: "paid",
-      timestamp: Date.now(),
-    });
+    // Update order status
+    await ctx.db.patch(args.id, { status: "paid" });
   },
 });
 
