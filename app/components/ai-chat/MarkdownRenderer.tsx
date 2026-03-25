@@ -59,7 +59,10 @@ export default function MarkdownRenderer({ content }: { content: string }) {
       remarkPlugins={[remarkGfm]}
       components={{
         code({ className, children, ...props }) {
-          const isInline = !className && typeof children === "string" && !children.includes("\n");
+          const isInline =
+            !className &&
+            typeof children === "string" &&
+            !children.includes("\n");
           if (isInline) {
             return (
               <code
