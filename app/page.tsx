@@ -157,21 +157,24 @@ const TESTIMONIALS = [
   {
     name: "Anika R.",
     role: "Remote Developer",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
     text: "Brew Haven is my second office. The AI chat helped me discover my new favourite order in 30 seconds. Incredible vibes and even better coffee.",
     stars: 5,
   },
   {
     name: "James T.",
     role: "Coffee Enthusiast",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
     text: "I've tried dozens of specialty shops. Brew Haven's single-origin pour-overs are on another level. The space is beautiful and the staff is so welcoming.",
     stars: 5,
   },
   {
     name: "Priya M.",
     role: "Freelance Designer",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80",
     text: "Fast Wi-Fi, cozy corners, and a menu that never gets boring. The AI barista recommended the Espresso Tonic and I've been hooked ever since.",
     stars: 5,
   },
@@ -193,7 +196,11 @@ function useCountUp(target: string, duration = 1800, start = false) {
       const progress = Math.min((now - startTime) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       const current = num * eased;
-      setDisplay(Number.isInteger(num) ? Math.round(current).toString() : current.toFixed(1));
+      setDisplay(
+        Number.isInteger(num)
+          ? Math.round(current).toString()
+          : current.toFixed(1),
+      );
       if (progress < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
@@ -202,7 +209,17 @@ function useCountUp(target: string, duration = 1800, start = false) {
 }
 
 /* ─── Stat Card ──────────────────────────────────────────── */
-function StatCard({ value, suffix, label, started }: { value: string; suffix: string; label: string; started: boolean }) {
+function StatCard({
+  value,
+  suffix,
+  label,
+  started,
+}: {
+  value: string;
+  suffix: string;
+  label: string;
+  started: boolean;
+}) {
   const animated = useCountUp(value, 1600, started);
   return (
     <div className="flex flex-col items-center gap-1.5">
@@ -230,8 +247,10 @@ export default function Home() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setStatsStarted(true); },
-      { threshold: 0.3 }
+      ([entry]) => {
+        if (entry.isIntersecting) setStatsStarted(true);
+      },
+      { threshold: 0.3 },
     );
     if (statsRef.current) observer.observe(statsRef.current);
     return () => observer.disconnect();
@@ -239,7 +258,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#0a0908] text-stone-100 overflow-x-hidden">
-
       {/* ── NAVBAR ───────────────────────────────────────────── */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
@@ -254,7 +272,10 @@ export default function Home() {
             <span className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-amber-400 to-orange-600 shadow-lg shadow-amber-500/30 group-hover:shadow-amber-500/50 transition-shadow duration-300">
               <Coffee size={18} className="text-white" />
             </span>
-            <span className="text-lg font-bold tracking-tight" style={{ fontFamily: "var(--font-playfair)" }}>
+            <span
+              className="text-lg font-bold tracking-tight"
+              style={{ fontFamily: "var(--font-playfair)" }}
+            >
               Brew<span className="text-amber-400"> Haven</span>
             </span>
           </Link>
@@ -360,8 +381,8 @@ export default function Home() {
 
           <p className="mt-7 max-w-xl text-base sm:text-lg text-stone-300 leading-relaxed animate-fade-in-up delay-200">
             Brew Haven blends artisan coffee craft with cutting-edge AI. Explore
-            our curated menu, get personalised recommendations, and order —
-            all through a natural conversation with our AI barista.
+            our curated menu, get personalised recommendations, and order — all
+            through a natural conversation with our AI barista.
           </p>
 
           {/* CTA buttons */}
@@ -373,7 +394,10 @@ export default function Home() {
               <span className="absolute inset-0 bg-linear-to-r from-white/0 via-white/15 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
               <MessageCircle size={18} />
               Chat with AI Barista
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-200" />
+              <ArrowRight
+                size={16}
+                className="group-hover:translate-x-1 transition-transform duration-200"
+              />
             </Link>
             <a
               href="#menu"
@@ -387,17 +411,28 @@ export default function Home() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-scroll-bounce z-10">
-          <span className="text-xs text-stone-500 tracking-widest uppercase">Scroll</span>
+          <span className="text-xs text-stone-500 tracking-widest uppercase">
+            Scroll
+          </span>
           <ChevronDown size={16} className="text-stone-500" />
         </div>
       </section>
 
       {/* ── STATS BAR ────────────────────────────────────────── */}
-      <div ref={statsRef} className="relative border-y border-white/5 bg-white/2">
+      <div
+        ref={statsRef}
+        className="relative border-y border-white/5 bg-white/2"
+      >
         <div className="mx-auto max-w-5xl px-6 py-10">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 divide-x-0 sm:divide-x divide-white/8">
             {STATS.map(({ value, suffix, label }) => (
-              <StatCard key={label} value={value} suffix={suffix} label={label} started={statsStarted} />
+              <StatCard
+                key={label}
+                value={value}
+                suffix={suffix}
+                label={label}
+                started={statsStarted}
+              />
             ))}
           </div>
         </div>
@@ -423,27 +458,46 @@ export default function Home() {
               <span className="gradient-text-amber">a coffee shop</span>
             </h2>
             <p className="mt-5 text-stone-400 text-lg leading-relaxed">
-              We&apos;ve obsessed over every detail — from sourcing the world&apos;s finest
-              beans to building the seamless digital experience you deserve.
+              We&apos;ve obsessed over every detail — from sourcing the
+              world&apos;s finest beans to building the seamless digital
+              experience you deserve.
             </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {FEATURES.map(({ icon: Icon, title, desc, glow, iconBg, iconColor, accent }) => (
-              <div
-                key={title}
-                className={`group relative overflow-hidden rounded-3xl border border-white/6 bg-white/3 p-7 transition-all duration-300 hover:-translate-y-2 hover:border-white/10 hover:shadow-2xl hover:shadow-black/50 ${accent}`}
-              >
-                <div className={`absolute inset-0 bg-linear-to-br ${glow} opacity-60 pointer-events-none transition-opacity duration-300 group-hover:opacity-100`} />
-                <div className="relative">
-                  <div className={`mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border ${iconBg}`}>
-                    <Icon size={20} className={iconColor} />
+            {FEATURES.map(
+              ({
+                icon: Icon,
+                title,
+                desc,
+                glow,
+                iconBg,
+                iconColor,
+                accent,
+              }) => (
+                <div
+                  key={title}
+                  className={`group relative overflow-hidden rounded-3xl border border-white/6 bg-white/3 p-7 transition-all duration-300 hover:-translate-y-2 hover:border-white/10 hover:shadow-2xl hover:shadow-black/50 ${accent}`}
+                >
+                  <div
+                    className={`absolute inset-0 bg-linear-to-br ${glow} opacity-60 pointer-events-none transition-opacity duration-300 group-hover:opacity-100`}
+                  />
+                  <div className="relative">
+                    <div
+                      className={`mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border ${iconBg}`}
+                    >
+                      <Icon size={20} className={iconColor} />
+                    </div>
+                    <h3 className="mb-2.5 font-semibold text-white text-base">
+                      {title}
+                    </h3>
+                    <p className="text-sm text-stone-400 leading-relaxed">
+                      {desc}
+                    </p>
                   </div>
-                  <h3 className="mb-2.5 font-semibold text-white text-base">{title}</h3>
-                  <p className="text-sm text-stone-400 leading-relaxed">{desc}</p>
                 </div>
-              </div>
-            ))}
+              ),
+            )}
           </div>
         </div>
       </section>
@@ -502,15 +556,15 @@ export default function Home() {
                 <span className="gradient-text-amber">served with love</span>
               </h2>
               <p className="text-stone-400 leading-relaxed mb-5 text-base">
-                What started as a small neighbourhood roastery in 2018 has grown into
-                Coffeeville&apos;s most beloved specialty café. We believe great coffee
-                is a conversation — so we built an AI barista to make that conversation
-                happen anywhere, anytime.
+                What started as a small neighbourhood roastery in 2018 has grown
+                into Coffeeville&apos;s most beloved specialty café. We believe
+                great coffee is a conversation — so we built an AI barista to
+                make that conversation happen anywhere, anytime.
               </p>
               <p className="text-stone-400 leading-relaxed mb-8 text-base">
-                Our beans travel from the highlands of Ethiopia, the hills of Colombia,
-                and the islands of Indonesia — each lot traceable back to the specific
-                farm, farmer, and harvest season.
+                Our beans travel from the highlands of Ethiopia, the hills of
+                Colombia, and the islands of Indonesia — each lot traceable back
+                to the specific farm, farmer, and harvest season.
               </p>
               <div className="flex flex-col sm:flex-row gap-6">
                 {[
@@ -518,8 +572,16 @@ export default function Home() {
                   { n: "8", label: "Roast profiles" },
                   { n: "5★", label: "Championship wins" },
                 ].map(({ n, label }) => (
-                  <div key={label} className="border-l-2 border-amber-500/40 pl-4">
-                    <div className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-playfair)" }}>{n}</div>
+                  <div
+                    key={label}
+                    className="border-l-2 border-amber-500/40 pl-4"
+                  >
+                    <div
+                      className="text-2xl font-bold text-white"
+                      style={{ fontFamily: "var(--font-playfair)" }}
+                    >
+                      {n}
+                    </div>
                     <div className="text-xs text-stone-500 mt-0.5">{label}</div>
                   </div>
                 ))}
@@ -552,38 +614,51 @@ export default function Home() {
               className="group flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 font-medium transition-colors"
             >
               Get AI recommendations
-              <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight
+                size={14}
+                className="group-hover:translate-x-1 transition-transform"
+              />
             </Link>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {MENU_HIGHLIGHTS.map(({ name, price, tag, desc, emoji, tagColor }) => (
-              <div
-                key={name}
-                className="group relative overflow-hidden rounded-2xl border border-white/6 bg-white/3 p-5 hover:border-white/10 hover:bg-white/5 transition-all duration-300 hover:-translate-y-1"
-              >
-                <div className="absolute inset-0 bg-linear-to-br from-amber-500/0 to-transparent group-hover:from-amber-500/3 transition-all duration-300 pointer-events-none" />
-                <div className="relative flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-4 flex-1 min-w-0">
-                    <span className="text-3xl shrink-0 leading-none pt-0.5">{emoji}</span>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap mb-1.5">
-                        <p className="font-semibold text-white text-sm">{name}</p>
-                        {tag && (
-                          <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${tagColor}`}>
-                            {tag}
-                          </span>
-                        )}
+            {MENU_HIGHLIGHTS.map(
+              ({ name, price, tag, desc, emoji, tagColor }) => (
+                <div
+                  key={name}
+                  className="group relative overflow-hidden rounded-2xl border border-white/6 bg-white/3 p-5 hover:border-white/10 hover:bg-white/5 transition-all duration-300 hover:-translate-y-1"
+                >
+                  <div className="absolute inset-0 bg-linear-to-br from-amber-500/0 to-transparent group-hover:from-amber-500/3 transition-all duration-300 pointer-events-none" />
+                  <div className="relative flex items-start justify-between gap-4">
+                    <div className="flex items-start gap-4 flex-1 min-w-0">
+                      <span className="text-3xl shrink-0 leading-none pt-0.5">
+                        {emoji}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                          <p className="font-semibold text-white text-sm">
+                            {name}
+                          </p>
+                          {tag && (
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${tagColor}`}
+                            >
+                              {tag}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-stone-500 leading-relaxed">
+                          {desc}
+                        </p>
                       </div>
-                      <p className="text-xs text-stone-500 leading-relaxed">{desc}</p>
                     </div>
+                    <span className="text-base font-bold text-amber-400 shrink-0 group-hover:text-amber-300 transition-colors">
+                      {price}
+                    </span>
                   </div>
-                  <span className="text-base font-bold text-amber-400 shrink-0 group-hover:text-amber-300 transition-colors">
-                    {price}
-                  </span>
                 </div>
-              </div>
-            ))}
+              ),
+            )}
           </div>
         </div>
       </section>
@@ -657,9 +732,9 @@ export default function Home() {
                   <span className="gradient-text-amber">AI barista</span>
                 </h2>
                 <p className="text-stone-300 text-base leading-relaxed max-w-md mb-8">
-                  Not sure what to order? Our AI knows every drink, every ingredient,
-                  and every special. Just ask — it&apos;s like having your own personal
-                  coffee expert on demand.
+                  Not sure what to order? Our AI knows every drink, every
+                  ingredient, and every special. Just ask — it&apos;s like
+                  having your own personal coffee expert on demand.
                 </p>
                 <Link
                   href="/ai-chat"
@@ -667,7 +742,10 @@ export default function Home() {
                 >
                   <Sparkles size={16} />
                   Start Chatting
-                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight
+                    size={16}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
                 </Link>
               </div>
 
@@ -679,7 +757,9 @@ export default function Home() {
                       <Bot size={16} className="text-white" />
                     </div>
                     <div>
-                      <p className="font-semibold text-sm text-white">AI Barista</p>
+                      <p className="font-semibold text-sm text-white">
+                        AI Barista
+                      </p>
                       <div className="flex items-center gap-1.5">
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                         <span className="text-xs text-stone-400">Online</span>
@@ -688,11 +768,20 @@ export default function Home() {
                   </div>
                   {[
                     { side: "left", text: "Hi! What's your best cold brew?" },
-                    { side: "right", text: "Our Signature Cold Brew is 18-hour steeped with nitrogen. Want to try it with oat milk? ☕" },
+                    {
+                      side: "right",
+                      text: "Our Signature Cold Brew is 18-hour steeped with nitrogen. Want to try it with oat milk? ☕",
+                    },
                     { side: "left", text: "That sounds perfect. Can I order?" },
-                    { side: "right", text: "Absolutely! I'll add one Signature Cold Brew w/ oat milk. Anything else? 😊" },
+                    {
+                      side: "right",
+                      text: "Absolutely! I'll add one Signature Cold Brew w/ oat milk. Anything else? 😊",
+                    },
                   ].map(({ side, text }, i) => (
-                    <div key={i} className={`flex mb-3 ${side === "right" ? "justify-end" : "justify-start"}`}>
+                    <div
+                      key={i}
+                      className={`flex mb-3 ${side === "right" ? "justify-end" : "justify-start"}`}
+                    >
                       <div
                         className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
                           side === "right"
@@ -723,8 +812,7 @@ export default function Home() {
               className="text-4xl sm:text-5xl font-bold tracking-tight text-white"
               style={{ fontFamily: "var(--font-playfair)" }}
             >
-              Loved by{" "}
-              <span className="gradient-text-amber">regulars</span>
+              Loved by <span className="gradient-text-amber">regulars</span>
             </h2>
           </div>
 
@@ -737,7 +825,11 @@ export default function Home() {
               >
                 <div className="flex gap-1">
                   {Array.from({ length: stars }).map((_, i) => (
-                    <Star key={i} size={13} className="fill-amber-400 text-amber-400" />
+                    <Star
+                      key={i}
+                      size={13}
+                      className="fill-amber-400 text-amber-400"
+                    />
                   ))}
                 </div>
                 <p className="text-sm text-stone-300 leading-relaxed flex-1">
@@ -788,7 +880,10 @@ export default function Home() {
                   {
                     icon: Clock,
                     title: "Hours",
-                    lines: ["Mon – Fri: 6:00 AM – 11:00 PM", "Sat – Sun: 7:00 AM – 12:00 AM"],
+                    lines: [
+                      "Mon – Fri: 6:00 AM – 11:00 PM",
+                      "Sat – Sun: 7:00 AM – 12:00 AM",
+                    ],
                     id: "hours",
                   },
                   {
@@ -807,9 +902,13 @@ export default function Home() {
                       <Icon size={16} className="text-amber-400" />
                     </div>
                     <div>
-                      <p className="font-semibold text-white text-sm mb-1">{title}</p>
+                      <p className="font-semibold text-white text-sm mb-1">
+                        {title}
+                      </p>
                       {lines.map((l) => (
-                        <p key={l} className="text-sm text-stone-400">{l}</p>
+                        <p key={l} className="text-sm text-stone-400">
+                          {l}
+                        </p>
                       ))}
                     </div>
                   </div>
@@ -830,7 +929,9 @@ export default function Home() {
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <div className="inline-flex items-center gap-2 rounded-full bg-black/60 backdrop-blur-md border border-white/10 px-4 py-2">
                   <MapPin size={13} className="text-amber-400" />
-                  <span className="text-xs text-white font-medium">42 Roaster Lane, Coffeeville</span>
+                  <span className="text-xs text-white font-medium">
+                    42 Roaster Lane, Coffeeville
+                  </span>
                 </div>
               </div>
             </div>
@@ -848,7 +949,8 @@ export default function Home() {
             Stay in the loop
           </h2>
           <p className="text-stone-400 mb-8 text-sm">
-            Get weekly specials, new menu drops, and exclusive offers straight to your inbox.
+            Get weekly specials, new menu drops, and exclusive offers straight
+            to your inbox.
           </p>
           <form
             className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
@@ -879,12 +981,16 @@ export default function Home() {
                 <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-amber-400 to-orange-600">
                   <Coffee size={16} className="text-white" />
                 </span>
-                <span className="font-bold" style={{ fontFamily: "var(--font-playfair)" }}>
+                <span
+                  className="font-bold"
+                  style={{ fontFamily: "var(--font-playfair)" }}
+                >
                   Brew<span className="text-amber-400"> Haven</span>
                 </span>
               </Link>
               <p className="text-xs text-stone-500 leading-relaxed max-w-xs">
-                Artisan coffee, ethically sourced. A space to work, connect, and savour the moment.
+                Artisan coffee, ethically sourced. A space to work, connect, and
+                savour the moment.
               </p>
               <div className="flex gap-3 mt-5">
                 {[Globe, Share2, Heart].map((Icon, i) => (
@@ -902,24 +1008,41 @@ export default function Home() {
 
             {/* Links */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">Explore</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
+                Explore
+              </p>
               <div className="flex flex-col gap-2.5">
-                {["Menu", "About", "Gallery", "AI Chat", "Location"].map((l) => (
-                  <a key={l} href={l === "AI Chat" ? "/ai-chat" : `#${l.toLowerCase()}`} className="text-sm text-stone-500 hover:text-white transition-colors">
-                    {l}
-                  </a>
-                ))}
+                {["Menu", "About", "Gallery", "AI Chat", "Location"].map(
+                  (l) => (
+                    <a
+                      key={l}
+                      href={
+                        l === "AI Chat" ? "/ai-chat" : `#${l.toLowerCase()}`
+                      }
+                      className="text-sm text-stone-500 hover:text-white transition-colors"
+                    >
+                      {l}
+                    </a>
+                  ),
+                )}
               </div>
             </div>
 
             {/* Contact */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">Visit Us</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
+                Visit Us
+              </p>
               <div className="flex flex-col gap-2.5 text-sm text-stone-500">
                 <span>42 Roaster Lane, Coffeeville CA</span>
                 <span>Mon–Fri 6AM–11PM</span>
                 <span>Sat–Sun 7AM–12AM</span>
-                <a href="tel:+14155550182" className="hover:text-amber-400 transition-colors">+1 (415) 555-0182</a>
+                <a
+                  href="tel:+14155550182"
+                  className="hover:text-amber-400 transition-colors"
+                >
+                  +1 (415) 555-0182
+                </a>
               </div>
             </div>
           </div>
@@ -929,9 +1052,15 @@ export default function Home() {
               © {new Date().getFullYear()} Brew Haven. Crafted with ☕ and AI.
             </p>
             <div className="flex gap-5 text-xs text-stone-600">
-              <a href="#" className="hover:text-stone-400 transition-colors">Privacy</a>
-              <a href="#" className="hover:text-stone-400 transition-colors">Terms</a>
-              <a href="#" className="hover:text-stone-400 transition-colors">Cookies</a>
+              <a href="#" className="hover:text-stone-400 transition-colors">
+                Privacy
+              </a>
+              <a href="#" className="hover:text-stone-400 transition-colors">
+                Terms
+              </a>
+              <a href="#" className="hover:text-stone-400 transition-colors">
+                Cookies
+              </a>
             </div>
           </div>
         </div>
@@ -942,5 +1071,3 @@ export default function Home() {
     </div>
   );
 }
-
-

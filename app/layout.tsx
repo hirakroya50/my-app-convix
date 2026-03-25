@@ -19,7 +19,8 @@ export const metadata: Metadata = {
   title: "Brew Haven — Artisan Coffee & AI Barista",
   description:
     "Brew Haven blends artisan coffee craft with cutting-edge AI. Explore our menu, get personalized recommendations, and order through a natural conversation with our AI barista.",
-  keywords: "coffee shop, artisan coffee, AI barista, specialty coffee, cold brew, espresso",
+  keywords:
+    "coffee shop, artisan coffee, AI barista, specialty coffee, cold brew, espresso",
   openGraph: {
     title: "Brew Haven — Artisan Coffee & AI Barista",
     description:
