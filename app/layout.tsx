@@ -1,21 +1,31 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display, Inter } from "next/font/google";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Brew Haven - AI Coffee Assistant",
-  description: "Your friendly AI-powered coffee shop assistant",
+  title: "Brew Haven — Artisan Coffee & AI Barista",
+  description:
+    "Brew Haven blends artisan coffee craft with cutting-edge AI. Explore our menu, get personalized recommendations, and order through a natural conversation with our AI barista.",
+  keywords: "coffee shop, artisan coffee, AI barista, specialty coffee, cold brew, espresso",
+  openGraph: {
+    title: "Brew Haven — Artisan Coffee & AI Barista",
+    description:
+      "Brew Haven blends artisan coffee craft with cutting-edge AI. Explore our menu, get personalized recommendations, and order through a natural conversation with our AI barista.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -26,7 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="h-full" suppressHydrationWarning>
         <ConvexClientProvider>{children}</ConvexClientProvider>
