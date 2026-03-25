@@ -44,14 +44,19 @@ export async function POST(req: Request) {
     for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
       const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
-        messages: allMessages as Parameters<typeof openai.chat.completions.create>[0]["messages"],
+        messages: allMessages as Parameters<
+          typeof openai.chat.completions.create
+        >[0]["messages"],
         tools,
       });
 
       const choice = response.choices[0];
 
       // If no tool calls, we have a final text answer — stream it
-      if (!choice.message.tool_calls || choice.message.tool_calls.length === 0) {
+      if (
+        !choice.message.tool_calls ||
+        choice.message.tool_calls.length === 0
+      ) {
         const text = choice.message.content || "";
         await convex.mutation(api.messages.send, {
           text,
@@ -70,13 +75,19 @@ export async function POST(req: Request) {
               tc.type === "function",
           )
           .map(async (tc) => {
-            console.log(`[Tool call] ${tc.function.name}`, tc.function.arguments);
+            console.log(
+              `[Tool call] ${tc.function.name}`,
+              tc.function.arguments,
+            );
             const result = await executeTool(
               convex,
               tc.function.name,
               tc.function.arguments,
             );
-            console.log(`[Tool result] ${tc.function.name}:`, result.slice(0, 200));
+            console.log(
+              `[Tool result] ${tc.function.name}:`,
+              result.slice(0, 200),
+            );
             return {
               role: "tool" as const,
               tool_call_id: tc.id,
@@ -93,7 +104,9 @@ export async function POST(req: Request) {
     // If we exhausted rounds, do one final streaming call WITHOUT tools
     const stream = await openai.chat.completions.create({
       model: "gpt-4o-mini",
-      messages: allMessages as Parameters<typeof openai.chat.completions.create>[0]["messages"],
+      messages: allMessages as Parameters<
+        typeof openai.chat.completions.create
+      >[0]["messages"],
       stream: true,
     });
 
