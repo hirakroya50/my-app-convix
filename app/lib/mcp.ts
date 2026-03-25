@@ -87,21 +87,22 @@ export async function executeTool(
     case "getServices":
       return JSON.stringify(await convex.query(api.tools.getServices));
     case "placeOrder": {
-      const args = JSON.parse(toolArgs || "{}");
-      const items = args.items as Array<{
-        menuItemId: string;
-        name: string;
-        price: number;
-        quantity: number;
-      }>;
-      if (!items || items.length === 0) {
-        return JSON.stringify({ error: "No items provided" });
-      }
-      const totalPrice = items.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0,
-      );
       try {
+        const args = JSON.parse(toolArgs || "{}");
+        const items = args.items as Array<{
+          menuItemId: string;
+          name: string;
+          price: number;
+          quantity: number;
+        }>;
+        if (!items || items.length === 0) {
+          return JSON.stringify({ error: "No items provided" });
+        }
+        console.log("[placeOrder] Received items:", JSON.stringify(items));
+        const totalPrice = items.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0,
+        );
         const orderId = await convex.mutation(api.orders.create, {
           items: items.map((item) => ({
             menuItemId: item.menuItemId as Id<"menu">,
@@ -111,6 +112,7 @@ export async function executeTool(
           })),
           totalPrice,
         });
+        console.log("[placeOrder] Order created:", orderId);
         return JSON.stringify({
           success: true,
           orderId,
@@ -118,7 +120,8 @@ export async function executeTool(
           message: "Order placed and paid successfully!",
         });
       } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : "Order failed";
+        console.error("[placeOrder] Error:", err);
+        const message = err instanceof Error ? err.message : String(err);
         return JSON.stringify({ success: false, error: message });
       }
     }
