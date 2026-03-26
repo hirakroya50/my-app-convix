@@ -296,6 +296,12 @@ export default function Home() {
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
             <Link
+              href="/admin/menu"
+              className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm px-5 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300"
+            >
+              Admin Dashboard
+            </Link>
+            <Link
               href="/ai-chat"
               className="group relative flex items-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:brightness-110 transition-all duration-300 overflow-hidden"
             >
@@ -335,6 +341,13 @@ export default function Home() {
             >
               <Sparkles size={14} />
               Try AI Chat
+            </Link>
+            <Link
+              href="/admin/menu"
+              className="flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white mt-1 hover:bg-white/10 hover:border-white/30 transition-all duration-300"
+              onClick={() => setMobileOpen(false)}
+            >
+              Admin Dashboard
             </Link>
           </div>
         )}
