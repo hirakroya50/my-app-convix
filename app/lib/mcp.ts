@@ -134,13 +134,13 @@ export async function executeTool(
           }));
 
         const session = await stripe.checkout.sessions.create({
-          payment_method_types: ["card"],
           line_items: lineItems,
           mode: "payment",
           success_url: `${origin}/payment/success?orderId=${orderId}&session_id={CHECKOUT_SESSION_ID}`,
           cancel_url: `${origin}/?payment=cancelled`,
           metadata: { orderId },
         });
+        console.log("[placeOrder] Session id:", session.id, "url:", session.url);
 
         const url = session.url;
         console.log("[placeOrder] Stripe checkout URL:", url);

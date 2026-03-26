@@ -17,9 +17,17 @@ import {
 
 /* ─── detect Stripe payment links in text ────────────────────────── */
 function renderWithPaymentLinks(text: string) {
+  // First, strip markdown link syntax around Stripe URLs:
+  // [Any text](https://checkout.stripe.com/...) → just the URL
+  const cleaned = text.replace(
+    /\[([^\]]*?)\]\((https:\/\/checkout\.stripe\.com\/[^)]+)\)/g,
+    "$2",
+  );
+
   // Match Stripe checkout URLs
-  const urlRegex = /(https:\/\/checkout\.stripe\.com\/[^\s)]+)/g;
-  const parts = text.split(urlRegex);
+  const urlPattern = /https:\/\/checkout\.stripe\.com\/[^\s)]+/;
+  const urlPatternGlobal = /https:\/\/checkout\.stripe\.com\/[^\s)]+/g;
+  const parts = cleaned.split(new RegExp(`(${urlPattern.source})`, "g"));
 
   if (parts.length === 1) {
     return <span className="whitespace-pre-wrap">{text}</span>;
@@ -28,12 +36,16 @@ function renderWithPaymentLinks(text: string) {
   return (
     <span className="whitespace-pre-wrap">
       {parts.map((part, i) =>
-        urlRegex.test(part) ? (
+        urlPattern.test(part) ? (
           <a
             key={i}
             href={part}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => {
+              e.preventDefault();
+              window.open(part, "_blank", "noopener,noreferrer");
+            }}
             className="mt-2 mb-1 flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-white px-3.5 py-2.5 text-xs font-semibold transition-colors no-underline w-fit"
           >
             <CreditCard size={14} />
