@@ -39,29 +39,11 @@ export async function POST(req: Request) {
     if (orderId) {
       try {
         console.log("[Webhook] Payment confirmed for order:", orderId);
-        const changed = await convex.mutation(api.orders.markPaid, {
+        // markPaid atomically: updates status, decrements stock, sends chat message
+        await convex.mutation(api.orders.markPaid, {
           id: orderId as Id<"orders">,
         });
-
-        // Send chat confirmation only if this call actually changed the status
-        // (avoids duplicate messages when success page also processes)
-        if (changed) {
-          const order = await convex.query(api.orders.get, {
-            id: orderId as Id<"orders">,
-          });
-          if (order) {
-            const itemList = order.items
-              .map((i) => `${i.quantity}× ${i.name}`)
-              .join(", ");
-            await convex.mutation(api.messages.send, {
-              text: `✅ Payment confirmed! Your order (${itemList}) for $${order.totalPrice.toFixed(2)} has been paid. Thank you! ☕`,
-              role: "assistant",
-            });
-            console.log("[Webhook] Confirmation message sent to chat");
-          }
-        } else {
-          console.log("[Webhook] Order already paid, skipping message");
-        }
+        console.log("[Webhook] Order processed successfully");
       } catch (err) {
         console.error("[Webhook] Failed to mark order paid:", err);
         return new Response("Failed to process webhook", { status: 500 });

@@ -41,16 +41,16 @@ export const create = mutation({
   },
 });
 
-// Mark order as paid and decrement stock (called by Stripe webhook or success page)
-// Returns true if status was changed, false if already paid (for deduplication)
+// Mark order as paid, decrement stock, and send chat confirmation.
+// All happens in one atomic transaction. Idempotent — safe to call multiple times.
 export const markPaid = mutation({
   args: { id: v.id("orders") },
   handler: async (ctx, args) => {
     const order = await ctx.db.get(args.id);
     if (!order) throw new Error("Order not found");
-    if (order.status === "paid") return false; // idempotent
+    if (order.status === "paid") return; // already processed — skip everything
 
-    // Decrement stock
+    // Decrement stock for each item
     for (const item of order.items) {
       const menuItem = await ctx.db.get(item.menuItemId);
       if (menuItem) {
@@ -62,7 +62,16 @@ export const markPaid = mutation({
 
     // Update order status
     await ctx.db.patch(args.id, { status: "paid" });
-    return true;
+
+    // Send confirmation message to chat (atomic — same transaction)
+    const itemList = order.items
+      .map((i) => `${i.quantity}× ${i.name}`)
+      .join(", ");
+    await ctx.db.insert("messages", {
+      text: `✅ Payment confirmed! Your order (${itemList}) for $${order.totalPrice.toFixed(2)} has been paid. Thank you! ☕`,
+      role: "assistant",
+      timestamp: Date.now(),
+    });
   },
 });
 

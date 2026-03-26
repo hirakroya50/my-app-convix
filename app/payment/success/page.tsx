@@ -20,7 +20,6 @@ function PaymentSuccessContent() {
 
   const order = useQuery(api.orders.get, orderId ? { id: orderId } : "skip");
   const markPaid = useMutation(api.orders.markPaid);
-  const sendMessage = useMutation(api.messages.send);
 
   const [confirmed, setConfirmed] = useState(false);
   const [confirming, setConfirming] = useState(false);
@@ -32,23 +31,11 @@ function PaymentSuccessContent() {
       return;
     }
 
-    // Mark ORDER as paid and send confirmation to chat
+    // markPaid atomically: updates status, decrements stock, sends chat message
     const confirm = async () => {
       setConfirming(true);
       try {
-        // markPaid returns true if this call changed the status,
-        // false if already paid (e.g. webhook beat us to it)
-        const changed = await markPaid({ id: orderId });
-
-        if (changed) {
-          // Build order summary for chat
-          const itemList = order.items
-            .map((i) => `${i.quantity}× ${i.name}`)
-            .join(", ");
-          const msg = `✅ Payment confirmed! Your order (${itemList}) for $${order.totalPrice.toFixed(2)} has been paid. Thank you! ☕`;
-          await sendMessage({ text: msg, role: "assistant" });
-        }
-
+        await markPaid({ id: orderId });
         setConfirmed(true);
       } catch (err) {
         console.error("Failed to confirm order:", err);
@@ -57,7 +44,7 @@ function PaymentSuccessContent() {
       }
     };
     confirm();
-  }, [orderId, order, confirmed, confirming, markPaid, sendMessage]);
+  }, [orderId, order, confirmed, confirming, markPaid]);
 
   if (!orderId) {
     return (
