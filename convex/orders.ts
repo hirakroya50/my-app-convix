@@ -42,12 +42,13 @@ export const create = mutation({
 });
 
 // Mark order as paid and decrement stock (called by Stripe webhook or success page)
+// Returns true if status was changed, false if already paid (for deduplication)
 export const markPaid = mutation({
   args: { id: v.id("orders") },
   handler: async (ctx, args) => {
     const order = await ctx.db.get(args.id);
     if (!order) throw new Error("Order not found");
-    if (order.status === "paid") return; // idempotent
+    if (order.status === "paid") return false; // idempotent
 
     // Decrement stock
     for (const item of order.items) {
@@ -61,6 +62,7 @@ export const markPaid = mutation({
 
     // Update order status
     await ctx.db.patch(args.id, { status: "paid" });
+    return true;
   },
 });
 

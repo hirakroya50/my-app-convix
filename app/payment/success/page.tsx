@@ -36,14 +36,18 @@ function PaymentSuccessContent() {
     const confirm = async () => {
       setConfirming(true);
       try {
-        await markPaid({ id: orderId });
+        // markPaid returns true if this call changed the status,
+        // false if already paid (e.g. webhook beat us to it)
+        const changed = await markPaid({ id: orderId });
 
-        // Build order summary for chat
-        const itemList = order.items
-          .map((i) => `${i.quantity}× ${i.name}`)
-          .join(", ");
-        const msg = `✅ Payment confirmed! Your order (${itemList}) for $${order.totalPrice.toFixed(2)} has been paid. Thank you! ☕`;
-        await sendMessage({ text: msg, role: "assistant" });
+        if (changed) {
+          // Build order summary for chat
+          const itemList = order.items
+            .map((i) => `${i.quantity}× ${i.name}`)
+            .join(", ");
+          const msg = `✅ Payment confirmed! Your order (${itemList}) for $${order.totalPrice.toFixed(2)} has been paid. Thank you! ☕`;
+          await sendMessage({ text: msg, role: "assistant" });
+        }
 
         setConfirmed(true);
       } catch (err) {
