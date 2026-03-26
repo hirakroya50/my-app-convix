@@ -140,7 +140,12 @@ export async function executeTool(
           cancel_url: `${origin}/?payment=cancelled`,
           metadata: { orderId },
         });
-        console.log("[placeOrder] Session id:", session.id, "url:", session.url);
+        console.log(
+          "[placeOrder] Session id:",
+          session.id,
+          "url:",
+          session.url,
+        );
 
         const url = session.url;
         console.log("[placeOrder] Stripe checkout URL:", url);
