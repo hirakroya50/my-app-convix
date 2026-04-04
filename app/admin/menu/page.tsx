@@ -106,6 +106,21 @@ export default function AdminMenuPage() {
     setForm(emptyForm);
   };
 
+  const getOrderStatusBadgeClass = (
+    status: "pending" | "paid" | "cancelled",
+  ) => {
+    switch (status) {
+      case "paid":
+        return "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30";
+      case "pending":
+        return "bg-amber-500/15 text-amber-400 border border-amber-500/30";
+      case "cancelled":
+        return "bg-rose-500/15 text-rose-400 border border-rose-500/30";
+      default:
+        return "bg-white/10 text-stone-300 border border-white/15";
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0908] text-stone-100">
       {/* Header */}
@@ -353,7 +368,9 @@ export default function AdminMenuPage() {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-medium uppercase">
+                      <span
+                        className={`text-[10px] px-2 py-0.5 rounded font-semibold uppercase tracking-wide ${getOrderStatusBadgeClass(order.status)}`}
+                      >
                         {order.status}
                       </span>
                       <span className="text-xs text-stone-600">

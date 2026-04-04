@@ -1,7 +1,10 @@
 import OpenAI from "openai";
+import Stripe from "stripe";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // MCP-style tool definitions for OpenAI function calling
 export const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
@@ -103,6 +106,8 @@ export async function executeTool(
           (sum, item) => sum + item.price * item.quantity,
           0,
         );
+
+        // 1. Create a pending order in Convex
         const orderId = await convex.mutation(api.orders.create, {
           items: items.map((item) => ({
             menuItemId: item.menuItemId as Id<"menu">,
@@ -112,12 +117,45 @@ export async function executeTool(
           })),
           totalPrice,
         });
-        console.log("[placeOrder] Order created:", orderId);
+        console.log("[placeOrder] Pending order created:", orderId);
+
+        // 2. Create a Stripe Checkout Session directly
+        const origin =
+          process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+        const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
+          items.map((item) => ({
+            price_data: {
+              currency: "usd",
+              product_data: { name: item.name },
+              unit_amount: Math.round(item.price * 100),
+            },
+            quantity: item.quantity,
+          }));
+
+        const session = await stripe.checkout.sessions.create({
+          line_items: lineItems,
+          mode: "payment",
+          success_url: `${origin}/payment/success?orderId=${orderId}&session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${origin}/?payment=cancelled`,
+          metadata: { orderId },
+        });
+        console.log(
+          "[placeOrder] Session id:",
+          session.id,
+          "url:",
+          session.url,
+        );
+
+        const url = session.url;
+        console.log("[placeOrder] Stripe checkout URL:", url);
+
         return JSON.stringify({
           success: true,
           orderId,
           totalPrice: totalPrice.toFixed(2),
-          message: "Order placed and paid successfully!",
+          paymentUrl: url,
+          message: `Order created! Total: $${totalPrice.toFixed(2)}. Please complete payment using the link below.`,
         });
       } catch (err: unknown) {
         console.error("[placeOrder] Error:", err);

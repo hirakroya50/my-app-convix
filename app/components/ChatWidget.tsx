@@ -6,13 +6,59 @@ import { api } from "@/convex/_generated/api";
 import {
   Coffee,
   X,
-  Plus,
   Send,
   Loader2,
   Sparkles,
   ChevronDown,
   RotateCcw,
+  CreditCard,
+  ExternalLink,
 } from "lucide-react";
+
+/* ─── detect Stripe payment links in text ────────────────────────── */
+function renderWithPaymentLinks(text: string) {
+  // First, strip markdown link syntax around Stripe URLs:
+  // [Any text](https://checkout.stripe.com/...) → just the URL
+  const cleaned = text.replace(
+    /\[([^\]]*?)\]\((https:\/\/checkout\.stripe\.com\/[^)]+)\)/g,
+    "$2",
+  );
+
+  // Match Stripe checkout URLs
+  const urlPattern = /https:\/\/checkout\.stripe\.com\/[^\s)]+/;
+  const urlPatternGlobal = /https:\/\/checkout\.stripe\.com\/[^\s)]+/g;
+  const parts = cleaned.split(new RegExp(`(${urlPattern.source})`, "g"));
+
+  if (parts.length === 1) {
+    return <span className="whitespace-pre-wrap">{text}</span>;
+  }
+
+  return (
+    <span className="whitespace-pre-wrap">
+      {parts.map((part, i) =>
+        urlPattern.test(part) ? (
+          <a
+            key={i}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.preventDefault();
+              window.open(part, "_blank", "noopener,noreferrer");
+            }}
+            className="mt-2 mb-1 flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-white px-3.5 py-2.5 text-xs font-semibold transition-colors no-underline w-fit"
+          >
+            <CreditCard size={14} />
+            Complete Payment
+            <ExternalLink size={11} />
+          </a>
+        ) : (
+          <span key={i}>{part}</span>
+        ),
+      )}
+    </span>
+  );
+}
 
 /* ─── tiny inline message bubble ─────────────────────────────────── */
 function Bubble({ role, text }: { role: "user" | "assistant"; text: string }) {
@@ -30,8 +76,8 @@ function Bubble({ role, text }: { role: "user" | "assistant"; text: string }) {
       <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-700 shadow-inner">
         <Coffee size={13} className="text-amber-400" />
       </div>
-      <div className="max-w-[80%] rounded-2xl rounded-tl-sm bg-zinc-700/80 px-3.5 py-2.5 text-sm text-zinc-100 leading-relaxed shadow-md whitespace-pre-wrap">
-        {text}
+      <div className="max-w-[80%] rounded-2xl rounded-tl-sm bg-zinc-700/80 px-3.5 py-2.5 text-sm text-zinc-100 leading-relaxed shadow-md">
+        {renderWithPaymentLinks(text)}
       </div>
     </div>
   );
