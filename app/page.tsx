@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useConvexAuth, useQuery } from "convex/react";
 import {
   Coffee,
   Sparkles,
@@ -12,7 +13,6 @@ import {
   Leaf,
   MapPin,
   ArrowRight,
-  Bot,
   Menu,
   X,
   ChevronDown,
@@ -24,7 +24,10 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { api } from "@/convex/_generated/api";
 import ChatWidget from "./components/ChatWidget";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 const NAV_LINKS = ["Menu", "About", "Gallery", "Location"];
 
@@ -37,8 +40,8 @@ const STATS = [
 
 const FEATURES = [
   {
-    icon: Bot,
-    title: "AI-Powered Barista",
+    icon: MessageCircle,
+    title: "AI-Powered Ordering",
     desc: "Chat naturally to explore the menu, get curated recommendations, and place orders — no app download needed.",
     glow: "from-amber-500/15 to-orange-500/5",
     iconBg: "bg-amber-500/10 border-amber-500/20",
@@ -234,10 +237,25 @@ function StatCard({
 
 /* ─── Main Component ─────────────────────────────────────── */
 export default function Home() {
+  const router = useRouter();
+  const { isAuthenticated, isLoading: authLoading } = useConvexAuth();
+  const { signOut } = useAuthActions();
+  const currentUser = useQuery(api.users.currentUser);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [statsStarted, setStatsStarted] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
+
+  const signedInLabel =
+    currentUser?.name ||
+    currentUser?.email ||
+    (isAuthenticated ? "Signed in" : null);
+
+  useEffect(() => {
+    if (currentUser?.role === "owner") {
+      router.replace("/admin/menu");
+    }
+  }, [currentUser, router]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -295,20 +313,42 @@ export default function Home() {
 
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="/admin/menu"
-              className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm px-5 py-2.5 text-sm font-semibold text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300"
-            >
-              Admin Dashboard
-            </Link>
-            <Link
-              href="/ai-chat"
-              className="group relative flex items-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:brightness-110 transition-all duration-300 overflow-hidden"
-            >
-              <span className="absolute inset-0 bg-linear-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
-              <Sparkles size={14} />
-              Try AI Chat
-            </Link>
+            {!authLoading && isAuthenticated && signedInLabel && (
+              <div className="flex items-center gap-2">
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-stone-300">
+                  Signed in as{" "}
+                  <span className="font-semibold text-white">
+                    {signedInLabel}
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => void signOut()}
+                  className="rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-stone-200 hover:bg-white/8 hover:text-white transition-colors"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
+            {currentUser?.role === "owner" ? (
+              <Link
+                href="/admin/menu"
+                className="group relative flex items-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:brightness-110 transition-all duration-300 overflow-hidden"
+              >
+                <span className="absolute inset-0 bg-linear-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
+                <Coffee size={14} />
+                Owner Dashboard
+              </Link>
+            ) : (
+              <a
+                href="#menu"
+                className="group relative flex items-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:brightness-110 transition-all duration-300 overflow-hidden"
+              >
+                <span className="absolute inset-0 bg-linear-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
+                <Coffee size={14} />
+                Order Now
+              </a>
+            )}
           </div>
 
           {/* Mobile toggle */}
@@ -334,21 +374,32 @@ export default function Home() {
                 {l}
               </a>
             ))}
-            <Link
-              href="/ai-chat"
+            {!authLoading && isAuthenticated && signedInLabel && (
+              <div className="rounded-2xl border border-white/8 bg-white/3 px-4 py-3">
+                <p className="text-[11px] text-stone-500">Signed in as</p>
+                <p className="text-sm font-semibold text-white truncate">
+                  {signedInLabel}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    void signOut();
+                    setMobileOpen(false);
+                  }}
+                  className="mt-3 w-full rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-stone-200 hover:bg-white/8 hover:text-white transition-colors"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
+            <a
+              href={currentUser?.role === "owner" ? "/admin/menu" : "#menu"}
               className="flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-3 text-sm font-semibold text-white mt-1"
               onClick={() => setMobileOpen(false)}
             >
-              <Sparkles size={14} />
-              Try AI Chat
-            </Link>
-            <Link
-              href="/admin/menu"
-              className="flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white mt-1 hover:bg-white/10 hover:border-white/30 transition-all duration-300"
-              onClick={() => setMobileOpen(false)}
-            >
-              Admin Dashboard
-            </Link>
+              <Coffee size={14} />
+              {currentUser?.role === "owner" ? "Owner Dashboard" : "Order Now"}
+            </a>
           </div>
         )}
       </header>
@@ -400,18 +451,6 @@ export default function Home() {
 
           {/* CTA buttons */}
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4 animate-fade-in-up delay-300">
-            <Link
-              href="/ai-chat"
-              className="group relative flex items-center gap-2.5 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-8 py-4 text-base font-semibold text-white shadow-2xl shadow-amber-500/30 hover:shadow-amber-500/50 hover:brightness-110 transition-all duration-300 overflow-hidden"
-            >
-              <span className="absolute inset-0 bg-linear-to-r from-white/0 via-white/15 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
-              <MessageCircle size={18} />
-              Chat with AI Barista
-              <ArrowRight
-                size={16}
-                className="group-hover:translate-x-1 transition-transform duration-200"
-              />
-            </Link>
             <a
               href="#menu"
               className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm px-8 py-4 text-base font-semibold text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300"
@@ -622,16 +661,16 @@ export default function Home() {
                 <span className="gradient-text-amber">perfection</span>
               </h2>
             </div>
-            <Link
-              href="/ai-chat"
+            <a
+              href="#menu"
               className="group flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 font-medium transition-colors"
             >
-              Get AI recommendations
+              View full menu
               <ArrowRight
                 size={14}
                 className="group-hover:translate-x-1 transition-transform"
               />
-            </Link>
+            </a>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -708,107 +747,6 @@ export default function Home() {
                 <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── AI CHAT PROMO ─────────────────────────────────────── */}
-      <section className="px-6 py-10 pb-28">
-        <div className="mx-auto max-w-6xl">
-          <div className="relative overflow-hidden rounded-[2.5rem] border border-amber-500/15">
-            {/* Background image */}
-            <div className="absolute inset-0">
-              <Image
-                src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1400&q=80"
-                alt="Cozy coffee shop corner"
-                fill
-                className="object-cover object-center"
-                sizes="100vw"
-              />
-              <div className="absolute inset-0 bg-linear-to-r from-[#0a0908]/95 via-[#0a0908]/85 to-[#0a0908]/70" />
-              <div className="absolute inset-0 bg-linear-to-t from-[#0a0908]/60 via-transparent to-transparent" />
-            </div>
-
-            <div className="relative px-8 sm:px-16 py-20 flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-              {/* Text */}
-              <div className="flex-1 text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/8 px-4 py-1.5 text-xs font-medium text-amber-300 mb-6">
-                  <Bot size={12} />
-                  Powered by GPT-4o
-                </div>
-                <h2
-                  className="text-4xl sm:text-5xl font-bold tracking-tight text-white mb-5 leading-tight"
-                  style={{ fontFamily: "var(--font-playfair)" }}
-                >
-                  Meet your
-                  <br />
-                  <span className="gradient-text-amber">AI barista</span>
-                </h2>
-                <p className="text-stone-300 text-base leading-relaxed max-w-md mb-8">
-                  Not sure what to order? Our AI knows every drink, every
-                  ingredient, and every special. Just ask — it&apos;s like
-                  having your own personal coffee expert on demand.
-                </p>
-                <Link
-                  href="/ai-chat"
-                  className="group inline-flex items-center gap-2.5 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-8 py-4 text-base font-semibold text-white shadow-2xl shadow-amber-500/30 hover:shadow-amber-500/50 hover:brightness-110 transition-all duration-300"
-                >
-                  <Sparkles size={16} />
-                  Start Chatting
-                  <ArrowRight
-                    size={16}
-                    className="group-hover:translate-x-1 transition-transform"
-                  />
-                </Link>
-              </div>
-
-              {/* Chat preview card */}
-              <div className="shrink-0 w-full max-w-sm">
-                <div className="glass-card rounded-3xl p-6 shadow-2xl backdrop-blur-2xl bg-white/5 border border-white/10">
-                  <div className="flex items-center gap-3 mb-5 pb-4 border-b border-white/8">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-amber-500 to-orange-600 shadow-lg shadow-amber-500/30">
-                      <Bot size={16} className="text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-sm text-white">
-                        AI Barista
-                      </p>
-                      <div className="flex items-center gap-1.5">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        <span className="text-xs text-stone-400">Online</span>
-                      </div>
-                    </div>
-                  </div>
-                  {[
-                    { side: "left", text: "Hi! What's your best cold brew?" },
-                    {
-                      side: "right",
-                      text: "Our Signature Cold Brew is 18-hour steeped with nitrogen. Want to try it with oat milk? ☕",
-                    },
-                    { side: "left", text: "That sounds perfect. Can I order?" },
-                    {
-                      side: "right",
-                      text: "Absolutely! I'll add one Signature Cold Brew w/ oat milk. Anything else? 😊",
-                    },
-                  ].map(({ side, text }, i) => (
-                    <div
-                      key={i}
-                      className={`flex mb-3 ${side === "right" ? "justify-end" : "justify-start"}`}
-                    >
-                      <div
-                        className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
-                          side === "right"
-                            ? "bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-br-sm"
-                            : "bg-white/8 text-stone-200 rounded-bl-sm"
-                        }`}
-                      >
-                        {text}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -953,7 +891,7 @@ export default function Home() {
       </section>
 
       {/* ── NEWSLETTER ───────────────────────────────────────── */}
-      <section className="px-6 py-20">
+      {/* <section className="px-6 py-20">
         <div className="mx-auto max-w-2xl text-center">
           <h2
             className="text-3xl sm:text-4xl font-bold text-white mb-4"
@@ -982,7 +920,7 @@ export default function Home() {
             </button>
           </form>
         </div>
-      </section>
+      </section> */}
 
       {/* ── FOOTER ───────────────────────────────────────────── */}
       <footer className="border-t border-white/5 px-6 pt-14 pb-8">
@@ -1025,19 +963,15 @@ export default function Home() {
                 Explore
               </p>
               <div className="flex flex-col gap-2.5">
-                {["Menu", "About", "Gallery", "AI Chat", "Location"].map(
-                  (l) => (
-                    <a
-                      key={l}
-                      href={
-                        l === "AI Chat" ? "/ai-chat" : `#${l.toLowerCase()}`
-                      }
-                      className="text-sm text-stone-500 hover:text-white transition-colors"
-                    >
-                      {l}
-                    </a>
-                  ),
-                )}
+                {["Menu", "About", "Gallery", "Location"].map((l) => (
+                  <a
+                    key={l}
+                    href={`#${l.toLowerCase()}`}
+                    className="text-sm text-stone-500 hover:text-white transition-colors"
+                  >
+                    {l}
+                  </a>
+                ))}
               </div>
             </div>
 

@@ -1,10 +1,10 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
-import { useEffect, useState, Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   CheckCircle2,
@@ -12,39 +12,50 @@ import {
   ArrowLeft,
   Loader2,
   XCircle,
+  Clock,
 } from "lucide-react";
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId") as Id<"orders"> | null;
+  const sessionId = searchParams.get("session_id");
+  const [confirmError, setConfirmError] = useState<string | null>(null);
 
   const order = useQuery(api.orders.get, orderId ? { id: orderId } : "skip");
-  const markPaid = useMutation(api.orders.markPaid);
-
-  const [confirmed, setConfirmed] = useState(false);
-  const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
-    if (!orderId || !order || confirmed || confirming) return;
-    if (order.status === "paid") {
-      setConfirmed(true);
+    if (!orderId || !sessionId || order?.status === "paid") {
       return;
     }
 
-    // markPaid atomically: updates status, decrements stock, sends chat message
-    const confirm = async () => {
-      setConfirming(true);
+    let cancelled = false;
+
+    const confirmPayment = async () => {
       try {
-        await markPaid({ id: orderId });
-        setConfirmed(true);
-      } catch (err) {
-        console.error("Failed to confirm order:", err);
-      } finally {
-        setConfirming(false);
+        const response = await fetch("/api/checkout/confirm", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ orderId, sessionId }),
+        });
+
+        if (!response.ok && !cancelled) {
+          setConfirmError("We could not confirm your payment yet.");
+        }
+      } catch {
+        if (!cancelled) {
+          setConfirmError("We could not confirm your payment yet.");
+        }
       }
     };
-    confirm();
-  }, [orderId, order, confirmed, confirming, markPaid]);
+
+    void confirmPayment();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [order?.status, orderId, sessionId]);
 
   if (!orderId) {
     return (
@@ -65,7 +76,7 @@ function PaymentSuccessContent() {
     );
   }
 
-  if (!order || confirming) {
+  if (order === undefined) {
     return (
       <div className="min-h-screen bg-[#0a0908] flex items-center justify-center px-6">
         <div className="text-center">
@@ -73,29 +84,67 @@ function PaymentSuccessContent() {
             size={32}
             className="text-amber-400 animate-spin mx-auto mb-4"
           />
-          <p className="text-stone-400 text-sm">Confirming your payment…</p>
+          <p className="text-stone-400 text-sm">Loading your order…</p>
         </div>
       </div>
     );
   }
 
+  if (order === null) {
+    return (
+      <div className="min-h-screen bg-[#0a0908] flex items-center justify-center px-6">
+        <div className="text-center">
+          <XCircle size={48} className="text-red-400 mx-auto mb-4" />
+          <h1 className="text-xl font-bold text-white mb-2">Order Not Found</h1>
+          <p className="text-stone-400 text-sm mb-6">
+            This order may not belong to your account.
+          </p>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 text-sm"
+          >
+            <ArrowLeft size={14} />
+            Go Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const isPaid = order.status !== "pending";
+
   return (
     <div className="min-h-screen bg-[#0a0908] flex items-center justify-center px-6">
       <div className="max-w-md w-full text-center">
-        {/* Success animation */}
-        <div className="mb-6 inline-flex items-center justify-center h-20 w-20 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-          <CheckCircle2 size={40} className="text-emerald-400" />
+        {/* Status icon */}
+        <div
+          className={`mb-6 inline-flex items-center justify-center h-20 w-20 rounded-full ${
+            isPaid
+              ? "bg-emerald-500/10 border border-emerald-500/20"
+              : "bg-amber-500/10 border border-amber-500/20"
+          }`}
+        >
+          {isPaid ? (
+            <CheckCircle2 size={40} className="text-emerald-400" />
+          ) : (
+            <Clock size={40} className="text-amber-400 animate-pulse" />
+          )}
         </div>
 
         <h1
           className="text-3xl font-bold text-white mb-2"
           style={{ fontFamily: "var(--font-playfair)" }}
         >
-          Payment Successful!
+          {isPaid ? "Payment Successful!" : "Processing Payment…"}
         </h1>
         <p className="text-stone-400 mb-8">
-          Your order has been confirmed and is being prepared.
+          {isPaid
+            ? "Your order has been confirmed. We'll start preparing it shortly."
+            : "Your payment is being processed. This page will update automatically."}
         </p>
+        {confirmError && !isPaid && (
+          <p className="mb-6 text-sm text-amber-300">{confirmError}</p>
+        )}
 
         {/* Order summary card */}
         <div className="rounded-2xl border border-white/6 bg-white/3 p-6 text-left mb-8">
@@ -125,13 +174,31 @@ function PaymentSuccessContent() {
             </span>
           </div>
           <div className="mt-3 flex items-center gap-2">
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-semibold uppercase">
-              {order.status}
+            <span
+              className={`text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase ${
+                order.status === "paid" ||
+                order.status === "preparing" ||
+                order.status === "ready"
+                  ? "bg-emerald-500/15 text-emerald-400"
+                  : order.status === "pending"
+                    ? "bg-amber-500/15 text-amber-400"
+                    : order.status === "picked_up"
+                      ? "bg-sky-500/15 text-sky-400"
+                      : "bg-red-500/15 text-red-400"
+              }`}
+            >
+              {order.status === "picked_up" ? "Picked Up" : order.status}
             </span>
             <span className="text-xs text-stone-600">
               {new Date(order.timestamp).toLocaleString()}
             </span>
           </div>
+          {order.pickupName && (
+            <p className="mt-2 text-xs text-stone-500">
+              Pickup name:{" "}
+              <span className="text-stone-300">{order.pickupName}</span>
+            </p>
+          )}
         </div>
 
         {/* Actions */}
@@ -143,9 +210,12 @@ function PaymentSuccessContent() {
             <Coffee size={16} />
             Back to Brew Haven
           </Link>
-          <p className="text-xs text-stone-600">
-            A confirmation message has been sent to your chat.
-          </p>
+          {isPaid && (
+            <p className="text-xs text-stone-600">
+              A confirmation message has been sent to your chat. Please pick up
+              at the counter.
+            </p>
+          )}
         </div>
       </div>
     </div>

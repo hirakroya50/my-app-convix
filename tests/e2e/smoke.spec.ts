@@ -10,8 +10,10 @@ test("home page loads", async ({ page }) => {
 
 test("admin menu page loads", async ({ page }) => {
   await page.goto("/admin/menu");
-  await expect(page.getByText("Admin Dashboard")).toBeVisible();
-  await expect(page.getByText("Menu Management")).toBeVisible();
+  await expect(page).toHaveURL(/\/signin$/);
+  await expect(
+    page.getByRole("heading", { name: /welcome back/i }),
+  ).toBeVisible();
 });
 
 test("payment success page handles missing orderId", async ({ page }) => {

@@ -3,6 +3,8 @@
 :root {
   --background: #0a0908;
   --foreground: #fafaf9;
+  --font-inter: "Avenir Next", "Segoe UI", sans-serif;
+  --font-playfair: "Iowan Old Style", "Palatino Linotype", serif;
 }
 
 @theme inline {
@@ -39,6 +41,13 @@ body {
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable both-edges;
+  /* overflow-y: scroll; */
+}
+
+body {
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 /* Noise texture overlay for depth */

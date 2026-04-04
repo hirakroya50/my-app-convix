@@ -8,11 +8,14 @@
  * @module
  */
 
-import type * as aiChat from "../aiChat.js";
+import type * as auth from "../auth.js";
+import type * as http from "../http.js";
 import type * as menu from "../menu.js";
 import type * as messages from "../messages.js";
 import type * as orders from "../orders.js";
+import type * as shopSettings from "../shopSettings.js";
 import type * as tools from "../tools.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -21,11 +24,14 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  aiChat: typeof aiChat;
+  auth: typeof auth;
+  http: typeof http;
   menu: typeof menu;
   messages: typeof messages;
   orders: typeof orders;
+  shopSettings: typeof shopSettings;
   tools: typeof tools;
+  users: typeof users;
 }>;
 
 /**

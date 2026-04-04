@@ -1,31 +1,42 @@
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "../../../convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { openai, SYSTEM_PROMPT } from "../../lib/openai";
 import { tools, executeTool } from "../../lib/mcp";
-
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+import { requireAuthenticatedConvex } from "../../lib/auth";
 
 export async function POST(req: Request) {
   try {
+    const { convex } = await requireAuthenticatedConvex(req);
     const { message } = await req.json();
+    const origin = req.headers.get("origin") ?? new URL(req.url).origin;
     if (!message || typeof message !== "string") {
       return new Response("Message is required", { status: 400 });
     }
+    const trimmedMessage = message.trim();
+    if (!trimmedMessage) {
+      return new Response("Message is required", { status: 400 });
+    }
+    if (trimmedMessage.length > 1000) {
+      return new Response("Message is too long", { status: 400 });
+    }
 
-    // Get conversation history from Convex
     const history = await convex.query(api.messages.list);
     const chatMessages: Array<{
       role: "user" | "assistant";
       content: string;
-    }> = history.map((m) => ({
-      role: m.role as "user" | "assistant",
-      content: m.text,
-    }));
+    }> = Array.isArray(history)
+      ? history.slice(-40).map((m: { role: string; text: string }) => ({
+          role: m.role as "user" | "assistant",
+          content: m.text,
+        }))
+      : [];
 
-    // Ensure the current user message is included
     const lastMsg = chatMessages[chatMessages.length - 1];
-    if (!lastMsg || lastMsg.content !== message || lastMsg.role !== "user") {
-      chatMessages.push({ role: "user", content: message });
+    if (
+      !lastMsg ||
+      lastMsg.content !== trimmedMessage ||
+      lastMsg.role !== "user"
+    ) {
+      chatMessages.push({ role: "user", content: trimmedMessage });
     }
 
     // Build the initial messages array
@@ -52,16 +63,13 @@ export async function POST(req: Request) {
 
       const choice = response.choices[0];
 
-      // If no tool calls, we have a final text answer — stream it
+      // If no tool calls, we have a final text answer
       if (
         !choice.message.tool_calls ||
         choice.message.tool_calls.length === 0
       ) {
         const text = choice.message.content || "";
-        await convex.mutation(api.messages.send, {
-          text,
-          role: "assistant",
-        });
+        // Client saves the assistant response via authenticated mutation
         return new Response(text, {
           headers: { "Content-Type": "text/plain; charset=utf-8" },
         });
@@ -83,6 +91,7 @@ export async function POST(req: Request) {
               convex,
               tc.function.name,
               tc.function.arguments,
+              origin,
             );
             console.log(
               `[Tool result] ${tc.function.name}:`,
@@ -111,21 +120,16 @@ export async function POST(req: Request) {
     });
 
     const encoder = new TextEncoder();
-    let fullText = "";
     const readable = new ReadableStream({
       async start(controller) {
         try {
           for await (const chunk of stream) {
             const content = chunk.choices[0]?.delta?.content;
             if (content) {
-              fullText += content;
               controller.enqueue(encoder.encode(content));
             }
           }
-          await convex.mutation(api.messages.send, {
-            text: fullText,
-            role: "assistant",
-          });
+          // Client saves the assistant response via authenticated mutation
           controller.close();
         } catch (err) {
           controller.error(err);
@@ -140,6 +144,16 @@ export async function POST(req: Request) {
       },
     });
   } catch (error: unknown) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "status" in error &&
+      "message" in error
+    ) {
+      return new Response(String(error.message), {
+        status: Number(error.status),
+      });
+    }
     console.error("Chat API error:", error);
     const apiError = error as { status?: number; code?: string };
     if (apiError?.status === 429 || apiError?.code === "insufficient_quota") {

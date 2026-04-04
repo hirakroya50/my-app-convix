@@ -30,7 +30,7 @@ export const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
     function: {
       name: "getServices",
       description:
-        "Get the list of services offered by Brew Haven coffee shop (WiFi, takeaway, dine-in, etc.)",
+        "Get the list of services offered by Brew Haven coffee shop (WiFi, takeaway, dine-in, pickup, etc.)",
       parameters: { type: "object", properties: {}, required: [] },
     },
   },
@@ -39,7 +39,7 @@ export const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
     function: {
       name: "placeOrder",
       description:
-        "Place an order for the customer. Call this ONLY after the customer has confirmed the items they want. Pass the items array with each item's menuItemId, name, price, and quantity.",
+        "Place an order for the customer. Call this ONLY after the customer has confirmed the items they want. Pass the items array with each item's menuItemId and quantity. Prices are verified server-side.",
       parameters: {
         type: "object",
         properties: {
@@ -52,22 +52,18 @@ export const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
                   type: "string",
                   description: "The menu item ID from getMenu results",
                 },
-                name: {
-                  type: "string",
-                  description: "The display name of the item",
-                },
-                price: {
-                  type: "number",
-                  description: "The price per unit as a number",
-                },
                 quantity: {
                   type: "number",
                   description: "How many of this item",
                 },
               },
-              required: ["menuItemId", "name", "price", "quantity"],
+              required: ["menuItemId", "quantity"],
             },
             description: "Array of items to order",
+          },
+          pickupName: {
+            type: "string",
+            description: "Name for pickup (optional)",
           },
         },
         required: ["items"],
@@ -81,6 +77,7 @@ export async function executeTool(
   convex: ConvexHttpClient,
   toolName: string,
   toolArgs?: string,
+  origin?: string,
 ): Promise<string> {
   switch (toolName) {
     case "getMenu":
@@ -94,37 +91,33 @@ export async function executeTool(
         const args = JSON.parse(toolArgs || "{}");
         const items = args.items as Array<{
           menuItemId: string;
-          name: string;
-          price: number;
           quantity: number;
         }>;
         if (!items || items.length === 0) {
           return JSON.stringify({ error: "No items provided" });
         }
-        console.log("[placeOrder] Received items:", JSON.stringify(items));
-        const totalPrice = items.reduce(
-          (sum, item) => sum + item.price * item.quantity,
-          0,
-        );
 
-        // 1. Create a pending order in Convex
         const orderId = await convex.mutation(api.orders.create, {
           items: items.map((item) => ({
             menuItemId: item.menuItemId as Id<"menu">,
-            name: item.name,
-            price: item.price,
             quantity: item.quantity,
           })),
-          totalPrice,
+          pickupName: args.pickupName,
         });
-        console.log("[placeOrder] Pending order created:", orderId);
 
-        // 2. Create a Stripe Checkout Session directly
-        const origin =
-          process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        const result = await convex.query(api.orders.get, {
+          id: orderId,
+        });
+        if (!result) {
+          return JSON.stringify({ success: false, error: "Order not found" });
+        }
+
+        // Create a Stripe Checkout Session using the returned data
+        const appOrigin =
+          origin || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
         const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
-          items.map((item) => ({
+          result.items.map((item) => ({
             price_data: {
               currency: "usd",
               product_data: { name: item.name },
@@ -136,26 +129,17 @@ export async function executeTool(
         const session = await stripe.checkout.sessions.create({
           line_items: lineItems,
           mode: "payment",
-          success_url: `${origin}/payment/success?orderId=${orderId}&session_id={CHECKOUT_SESSION_ID}`,
-          cancel_url: `${origin}/?payment=cancelled`,
+          success_url: `${appOrigin}/payment/success?orderId=${orderId}&session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${appOrigin}/?payment=cancelled`,
           metadata: { orderId },
         });
-        console.log(
-          "[placeOrder] Session id:",
-          session.id,
-          "url:",
-          session.url,
-        );
-
-        const url = session.url;
-        console.log("[placeOrder] Stripe checkout URL:", url);
 
         return JSON.stringify({
           success: true,
           orderId,
-          totalPrice: totalPrice.toFixed(2),
-          paymentUrl: url,
-          message: `Order created! Total: $${totalPrice.toFixed(2)}. Please complete payment using the link below.`,
+          totalPrice: result.totalPrice.toFixed(2),
+          paymentUrl: session.url,
+          message: `Order created! Total: $${result.totalPrice.toFixed(2)}. Please complete payment using the link below.`,
         });
       } catch (err: unknown) {
         console.error("[placeOrder] Error:", err);
