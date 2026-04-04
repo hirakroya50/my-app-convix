@@ -3,6 +3,8 @@
 :root {
   --background: #0a0908;
   --foreground: #fafaf9;
+  --font-inter: "Avenir Next", "Segoe UI", sans-serif;
+  --font-playfair: "Iowan Old Style", "Palatino Linotype", serif;
 }
 
 @theme inline {

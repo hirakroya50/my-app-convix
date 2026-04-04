@@ -1,18 +1,36 @@
 "use client";
 
 import { useAuthActions } from "@convex-dev/auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useConvexAuth, useQuery } from "convex/react";
 import { Coffee, Loader2, Mail, Lock, User, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { api } from "@/convex/_generated/api";
 
 export default function SignInPage() {
   const { signIn } = useAuthActions();
+  const { isAuthenticated, isLoading: authLoading } = useConvexAuth();
+  const currentUser = useQuery(
+    api.users.currentUser,
+    !isAuthenticated ? "skip" : {},
+  );
+  const router = useRouter();
   const [flow, setFlow] = useState<"signIn" | "signUp">("signIn");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && currentUser?.role === "owner") {
+      router.replace("/admin/menu");
+    }
+    if (!authLoading && currentUser?.role === "customer") {
+      router.replace("/");
+    }
+  }, [authLoading, currentUser, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,10 +39,10 @@ export default function SignInPage() {
 
     try {
       await signIn("password", {
-        email,
+        email: email.trim().toLowerCase(),
         password,
         flow,
-        ...(flow === "signUp" ? { name } : {}),
+        ...(flow === "signUp" ? { name: name.trim() } : {}),
       });
     } catch (err) {
       setError(

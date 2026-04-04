@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useQuery } from "convex/react";
 import {
   Coffee,
   Sparkles,
@@ -23,6 +24,8 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { api } from "@/convex/_generated/api";
 import ChatWidget from "./components/ChatWidget";
 
 const NAV_LINKS = ["Menu", "About", "Gallery", "Location"];
@@ -233,10 +236,18 @@ function StatCard({
 
 /* ─── Main Component ─────────────────────────────────────── */
 export default function Home() {
+  const router = useRouter();
+  const currentUser = useQuery(api.users.currentUser);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [statsStarted, setStatsStarted] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (currentUser?.role === "owner") {
+      router.replace("/admin/menu");
+    }
+  }, [currentUser, router]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -910,17 +921,15 @@ export default function Home() {
                 Explore
               </p>
               <div className="flex flex-col gap-2.5">
-                {["Menu", "About", "Gallery", "Location"].map(
-                  (l) => (
-                    <a
-                      key={l}
-                      href={`#${l.toLowerCase()}`}
-                      className="text-sm text-stone-500 hover:text-white transition-colors"
-                    >
-                      {l}
-                    </a>
-                  ),
-                )}
+                {["Menu", "About", "Gallery", "Location"].map((l) => (
+                  <a
+                    key={l}
+                    href={`#${l.toLowerCase()}`}
+                    className="text-sm text-stone-500 hover:text-white transition-colors"
+                  >
+                    {l}
+                  </a>
+                ))}
               </div>
             </div>
 

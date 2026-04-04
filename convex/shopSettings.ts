@@ -61,10 +61,22 @@ export const seedDefaults = mutation({
       {
         key: "services",
         value: JSON.stringify([
-          { name: "Free WiFi", description: "High-speed internet throughout the shop" },
-          { name: "Takeaway", description: "Grab your favorite drink on the go" },
-          { name: "Dine-in", description: "Cozy seating for a relaxed experience" },
-          { name: "Pickup", description: "Order online, pick up at the counter" },
+          {
+            name: "Free WiFi",
+            description: "High-speed internet throughout the shop",
+          },
+          {
+            name: "Takeaway",
+            description: "Grab your favorite drink on the go",
+          },
+          {
+            name: "Dine-in",
+            description: "Cozy seating for a relaxed experience",
+          },
+          {
+            name: "Pickup",
+            description: "Order online, pick up at the counter",
+          },
         ]),
       },
     ];

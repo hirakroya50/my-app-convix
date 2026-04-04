@@ -6,6 +6,7 @@ import { requireOwner } from "./users";
 export const list = query({
   args: {},
   handler: async (ctx) => {
+    await requireOwner(ctx);
     return await ctx.db.query("menu").collect();
   },
 });

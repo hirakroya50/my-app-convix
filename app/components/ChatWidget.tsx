@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { useAuthToken } from "@convex-dev/auth/react";
 import {
   Coffee,
   X,
@@ -88,6 +89,7 @@ function Bubble({ role, text }: { role: "user" | "assistant"; text: string }) {
 /* ─── main widget ─────────────────────────────────────────────────── */
 export default function ChatWidget() {
   const { isAuthenticated } = useConvexAuth();
+  const authToken = useAuthToken();
   const [open, setOpen] = useState(false);
   const [inputText, setInputText] = useState("");
   const [streamingText, setStreamingText] = useState("");
@@ -97,6 +99,10 @@ export default function ChatWidget() {
   const messages = useQuery(
     api.messages.list,
     !isAuthenticated ? "skip" : undefined,
+  );
+  const currentUser = useQuery(
+    api.users.currentUser,
+    !isAuthenticated ? "skip" : {},
   );
   const clearMessages = useMutation(api.messages.clear);
   const sendMessage = useMutation(api.messages.send);
@@ -127,17 +133,18 @@ export default function ChatWidget() {
 
     try {
       await sendMessage({ text, role: "user" });
-
-      // Send current history so the API route doesn't need Convex auth
-      const history = (messages || []).map((m) => ({
-        role: m.role,
-        text: m.text,
-      }));
+      if (!authToken) {
+        setErrorMsg("Your session has expired. Please sign in again.");
+        return;
+      }
 
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, history }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ message: text }),
       });
 
       if (!response.ok) {
@@ -190,6 +197,11 @@ export default function ChatWidget() {
   };
 
   const isEmpty = !messages?.length && !streamingText && !isLoading;
+  const isOwner = currentUser?.role === "owner";
+
+  if (isOwner) {
+    return null;
+  }
 
   return (
     <>
@@ -220,9 +232,14 @@ export default function ChatWidget() {
           </div>
           <div className="flex items-center gap-1">
             <button
-              onClick={() => clearMessages()}
+              onClick={() => {
+                if (isAuthenticated) {
+                  void clearMessages();
+                }
+              }}
               title="New chat"
-              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
+              disabled={!isAuthenticated}
+              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-zinc-500"
             >
               <RotateCcw size={15} />
             </button>
@@ -344,7 +361,9 @@ export default function ChatWidget() {
               value={inputText}
               onChange={handleInput}
               onKeyDown={handleKeyDown}
-              placeholder={isAuthenticated ? "Ask me anything…" : "Sign in to chat"}
+              placeholder={
+                isAuthenticated ? "Ask me anything…" : "Sign in to chat"
+              }
               disabled={isLoading || !isAuthenticated}
               rows={1}
               className="flex-1 resize-none bg-transparent text-sm text-white placeholder-zinc-500 focus:outline-none disabled:opacity-50 max-h-30"

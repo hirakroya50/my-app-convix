@@ -1,13 +1,13 @@
 import Stripe from "stripe";
-import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
+import { requireAuthenticatedConvex } from "@/app/lib/auth";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export async function POST(req: Request) {
   try {
+    const { convex } = await requireAuthenticatedConvex(req);
     const { orderId } = await req.json();
     if (!orderId || typeof orderId !== "string") {
       return Response.json({ error: "orderId is required" }, { status: 400 });
@@ -39,9 +39,9 @@ export async function POST(req: Request) {
 
     // Determine base URL
     const origin =
-      process.env.NEXT_PUBLIC_APP_URL ||
       req.headers.get("origin") ||
-      "http://localhost:3000";
+      process.env.NEXT_PUBLIC_APP_URL ||
+      new URL(req.url).origin;
 
     // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
@@ -56,6 +56,17 @@ export async function POST(req: Request) {
 
     return Response.json({ url: session.url });
   } catch (error) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "status" in error &&
+      "message" in error
+    ) {
+      return Response.json(
+        { error: String(error.message) },
+        { status: Number(error.status) },
+      );
+    }
     console.error("[Checkout] Error:", error);
     return Response.json(
       { error: "Failed to create checkout session" },

@@ -7,9 +7,11 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   callbacks: {
     async afterUserCreatedOrUpdated(ctx, { userId, existingUserId }) {
       if (!existingUserId) {
-        // New user — assign role
         await ctx.runMutation(internal.users.setInitialRole, { userId });
       }
+    },
+    async beforeSessionCreation(ctx, { userId }) {
+      await ctx.runMutation(internal.users.setInitialRole, { userId });
     },
   },
 });

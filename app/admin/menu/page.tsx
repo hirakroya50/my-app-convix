@@ -66,6 +66,7 @@ export default function AdminMenuPage() {
   const { signOut } = useAuthActions();
   const router = useRouter();
   const currentUser = useQuery(api.users.currentUser);
+  const canLoadAdminData = currentUser?.role === "owner";
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -79,8 +80,8 @@ export default function AdminMenuPage() {
     }
   }, [currentUser, router]);
 
-  const menuItems = useQuery(api.menu.list);
-  const orders = useQuery(api.orders.list);
+  const menuItems = useQuery(api.menu.list, canLoadAdminData ? {} : "skip");
+  const orders = useQuery(api.orders.list, canLoadAdminData ? {} : "skip");
   const addItem = useMutation(api.menu.add);
   const updateItem = useMutation(api.menu.update);
   const removeItem = useMutation(api.menu.remove);
@@ -92,7 +93,7 @@ export default function AdminMenuPage() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [activeTab, setActiveTab] = useState<"menu" | "orders">("orders");
 
-  if (authLoading || !currentUser) {
+  if (authLoading || currentUser === undefined) {
     return (
       <div className="min-h-screen bg-[#0a0908] flex items-center justify-center">
         <Loader2 size={32} className="text-amber-400 animate-spin" />
@@ -100,7 +101,7 @@ export default function AdminMenuPage() {
     );
   }
 
-  if (currentUser.role !== "owner") {
+  if (!currentUser || currentUser.role !== "owner") {
     return null;
   }
 
@@ -109,7 +110,7 @@ export default function AdminMenuPage() {
     name: string;
     price: number;
     description: string;
-    category: string;
+    category?: string;
     available: boolean;
     quantity: number;
     imageEmoji?: string;
@@ -119,7 +120,7 @@ export default function AdminMenuPage() {
       name: item.name,
       price: item.price.toString(),
       description: item.description,
-      category: item.category,
+      category: item.category || "Other",
       available: item.available,
       quantity: item.quantity.toString(),
       imageEmoji: item.imageEmoji || "☕",
@@ -174,9 +175,11 @@ export default function AdminMenuPage() {
   };
 
   // Group orders by status for the dashboard
-  const activeOrders = orders?.filter(
-    (o) => o.status === "paid" || o.status === "preparing" || o.status === "ready",
-  ) ?? [];
+  const activeOrders =
+    orders?.filter(
+      (o) =>
+        o.status === "paid" || o.status === "preparing" || o.status === "ready",
+    ) ?? [];
   const recentOrders = orders?.slice(0, 20) ?? [];
 
   return (
@@ -219,16 +222,29 @@ export default function AdminMenuPage() {
         {/* Stats row */}
         <div className="grid grid-cols-4 gap-4 mb-8">
           {[
-            { label: "Menu Items", value: menuItems?.length ?? 0, icon: Package },
+            {
+              label: "Menu Items",
+              value: menuItems?.length ?? 0,
+              icon: Package,
+            },
             {
               label: "Available",
-              value: menuItems?.filter((i) => i.available && i.quantity > 0).length ?? 0,
+              value:
+                menuItems?.filter((i) => i.available && i.quantity > 0)
+                  .length ?? 0,
               icon: Coffee,
             },
             { label: "Active Orders", value: activeOrders.length, icon: Clock },
-            { label: "Total Orders", value: orders?.length ?? 0, icon: ShoppingBag },
+            {
+              label: "Total Orders",
+              value: orders?.length ?? 0,
+              icon: ShoppingBag,
+            },
           ].map(({ label, value, icon: Icon }) => (
-            <div key={label} className="rounded-2xl border border-white/6 bg-white/3 p-5">
+            <div
+              key={label}
+              className="rounded-2xl border border-white/6 bg-white/3 p-5"
+            >
               <div className="flex items-center gap-3 mb-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 border border-amber-500/20">
                   <Icon size={14} className="text-amber-400" />
@@ -276,7 +292,9 @@ export default function AdminMenuPage() {
                           <span
                             className={`text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wide border ${STATUS_COLORS[order.status] || ""}`}
                           >
-                            {order.status === "picked_up" ? "Picked Up" : order.status}
+                            {order.status === "picked_up"
+                              ? "Picked Up"
+                              : order.status}
                           </span>
                           <span className="text-xs text-stone-500">
                             {order.pickupName || "Customer"}
@@ -291,30 +309,41 @@ export default function AdminMenuPage() {
                       </div>
                       <div className="flex items-center justify-between">
                         <p className="text-xs text-stone-400">
-                          {order.items.map((i) => `${i.quantity}× ${i.name}`).join(", ")}
+                          {order.items
+                            .map((i) => `${i.quantity}× ${i.name}`)
+                            .join(", ")}
                         </p>
                         <div className="flex gap-1.5">
-                          {(STATUS_FLOW[order.status] || []).map((nextStatus) => (
-                            <button
-                              key={nextStatus}
-                              onClick={() =>
-                                updateOrderStatus({
-                                  id: order._id,
-                                  status: nextStatus as "preparing" | "ready" | "picked_up" | "cancelled",
-                                })
-                              }
-                              className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-all"
-                            >
-                              <ChevronRight size={12} />
-                              {nextStatus === "picked_up"
-                                ? "Mark Picked Up"
-                                : `Mark ${nextStatus.charAt(0).toUpperCase() + nextStatus.slice(1)}`}
-                            </button>
-                          ))}
+                          {(STATUS_FLOW[order.status] || []).map(
+                            (nextStatus) => (
+                              <button
+                                key={nextStatus}
+                                onClick={() =>
+                                  updateOrderStatus({
+                                    id: order._id,
+                                    status: nextStatus as
+                                      | "preparing"
+                                      | "ready"
+                                      | "picked_up"
+                                      | "cancelled",
+                                  })
+                                }
+                                className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-all"
+                              >
+                                <ChevronRight size={12} />
+                                {nextStatus === "picked_up"
+                                  ? "Mark Picked Up"
+                                  : `Mark ${nextStatus.charAt(0).toUpperCase() + nextStatus.slice(1)}`}
+                              </button>
+                            ),
+                          )}
                           {order.status !== "cancelled" && (
                             <button
                               onClick={() =>
-                                updateOrderStatus({ id: order._id, status: "cancelled" })
+                                updateOrderStatus({
+                                  id: order._id,
+                                  status: "cancelled",
+                                })
                               }
                               className="text-xs px-2 py-1.5 rounded-lg text-rose-400 hover:bg-rose-500/10 transition-all"
                             >
@@ -339,7 +368,10 @@ export default function AdminMenuPage() {
                 </div>
               ) : orders.length === 0 ? (
                 <div className="px-5 py-12 text-center">
-                  <ShoppingBag size={32} className="text-stone-700 mx-auto mb-3" />
+                  <ShoppingBag
+                    size={32}
+                    className="text-stone-700 mx-auto mb-3"
+                  />
                   <p className="text-stone-500 text-sm">No orders yet</p>
                 </div>
               ) : (
@@ -354,7 +386,9 @@ export default function AdminMenuPage() {
                           <span
                             className={`text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wide border ${STATUS_COLORS[order.status] || ""}`}
                           >
-                            {order.status === "picked_up" ? "Picked Up" : order.status}
+                            {order.status === "picked_up"
+                              ? "Picked Up"
+                              : order.status}
                           </span>
                           <span className="text-xs text-stone-500">
                             {order.pickupName || "Customer"}
@@ -368,7 +402,9 @@ export default function AdminMenuPage() {
                         </span>
                       </div>
                       <p className="text-xs text-stone-400">
-                        {order.items.map((i) => `${i.quantity}× ${i.name}`).join(", ")}
+                        {order.items
+                          .map((i) => `${i.quantity}× ${i.name}`)
+                          .join(", ")}
                       </p>
                     </div>
                   ))}
@@ -407,7 +443,10 @@ export default function AdminMenuPage() {
                   <h2 className="font-semibold text-sm text-amber-400">
                     {editingId ? "Edit Item" : "Add New Item"}
                   </h2>
-                  <button onClick={handleCancel} className="text-stone-500 hover:text-white">
+                  <button
+                    onClick={handleCancel}
+                    className="text-stone-500 hover:text-white"
+                  >
                     <X size={16} />
                   </button>
                 </div>
@@ -425,19 +464,25 @@ export default function AdminMenuPage() {
                     min="0"
                     placeholder="Price (e.g. 4.50)"
                     value={form.price}
-                    onChange={(e) => setForm({ ...form, price: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, price: e.target.value })
+                    }
                     className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50"
                   />
                   <input
                     type="text"
                     placeholder="Description"
                     value={form.description}
-                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, description: e.target.value })
+                    }
                     className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50"
                   />
                   <select
                     value={form.category}
-                    onChange={(e) => setForm({ ...form, category: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, category: e.target.value })
+                    }
                     className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500/50"
                   >
                     {CATEGORIES.map((c) => (
@@ -451,14 +496,18 @@ export default function AdminMenuPage() {
                     min="0"
                     placeholder="Quantity in stock"
                     value={form.quantity}
-                    onChange={(e) => setForm({ ...form, quantity: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, quantity: e.target.value })
+                    }
                     className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50"
                   />
                   <input
                     type="text"
                     placeholder="Emoji (e.g. ☕)"
                     value={form.imageEmoji}
-                    onChange={(e) => setForm({ ...form, imageEmoji: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, imageEmoji: e.target.value })
+                    }
                     className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50"
                   />
                 </div>
@@ -467,7 +516,9 @@ export default function AdminMenuPage() {
                     <input
                       type="checkbox"
                       checked={form.available}
-                      onChange={(e) => setForm({ ...form, available: e.target.checked })}
+                      onChange={(e) =>
+                        setForm({ ...form, available: e.target.checked })
+                      }
                       className="h-4 w-4 rounded border-stone-600 accent-amber-500"
                     />
                     Available for sale
@@ -495,9 +546,12 @@ export default function AdminMenuPage() {
               ) : menuItems.length === 0 ? (
                 <div className="px-5 py-12 text-center">
                   <Package size={32} className="text-stone-700 mx-auto mb-3" />
-                  <p className="text-stone-500 text-sm mb-1">No menu items yet</p>
+                  <p className="text-stone-500 text-sm mb-1">
+                    No menu items yet
+                  </p>
                   <p className="text-stone-600 text-xs">
-                    Click &ldquo;Seed Default Items&rdquo; or &ldquo;Add Item&rdquo; to get started.
+                    Click &ldquo;Seed Default Items&rdquo; or &ldquo;Add
+                    Item&rdquo; to get started.
                   </p>
                 </div>
               ) : (
@@ -509,7 +563,9 @@ export default function AdminMenuPage() {
                     >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2.5">
-                          <span className="text-lg">{item.imageEmoji || "☕"}</span>
+                          <span className="text-lg">
+                            {item.imageEmoji || "☕"}
+                          </span>
                           <p className="font-medium text-sm text-white truncate">
                             {item.name}
                           </p>
@@ -536,7 +592,9 @@ export default function AdminMenuPage() {
                           <p className="text-sm font-semibold text-amber-400">
                             ${item.price.toFixed(2)}
                           </p>
-                          <p className="text-[10px] text-stone-600">Qty: {item.quantity}</p>
+                          <p className="text-[10px] text-stone-600">
+                            Qty: {item.quantity}
+                          </p>
                         </div>
                         <div className="flex gap-1">
                           <button

@@ -77,6 +77,7 @@ export async function executeTool(
   convex: ConvexHttpClient,
   toolName: string,
   toolArgs?: string,
+  origin?: string,
 ): Promise<string> {
   switch (toolName) {
     case "getMenu":
@@ -96,8 +97,7 @@ export async function executeTool(
           return JSON.stringify({ error: "No items provided" });
         }
 
-        // Create a pending order via the chat-specific mutation (no auth needed)
-        const result = await convex.mutation(api.orders.createFromChat, {
+        const orderId = await convex.mutation(api.orders.create, {
           items: items.map((item) => ({
             menuItemId: item.menuItemId as Id<"menu">,
             quantity: item.quantity,
@@ -105,9 +105,16 @@ export async function executeTool(
           pickupName: args.pickupName,
         });
 
+        const result = await convex.query(api.orders.get, {
+          id: orderId,
+        });
+        if (!result) {
+          return JSON.stringify({ success: false, error: "Order not found" });
+        }
+
         // Create a Stripe Checkout Session using the returned data
-        const origin =
-          process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+        const appOrigin =
+          origin || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
         const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
           result.items.map((item) => ({
@@ -122,14 +129,14 @@ export async function executeTool(
         const session = await stripe.checkout.sessions.create({
           line_items: lineItems,
           mode: "payment",
-          success_url: `${origin}/payment/success?orderId=${result.orderId}&session_id={CHECKOUT_SESSION_ID}`,
-          cancel_url: `${origin}/?payment=cancelled`,
-          metadata: { orderId: result.orderId },
+          success_url: `${appOrigin}/payment/success?orderId=${orderId}&session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${appOrigin}/?payment=cancelled`,
+          metadata: { orderId },
         });
 
         return JSON.stringify({
           success: true,
-          orderId: result.orderId,
+          orderId,
           totalPrice: result.totalPrice.toFixed(2),
           paymentUrl: session.url,
           message: `Order created! Total: $${result.totalPrice.toFixed(2)}. Please complete payment using the link below.`,

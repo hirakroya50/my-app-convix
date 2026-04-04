@@ -1,28 +1,57 @@
+import { getAuthUserId } from "@convex-dev/auth/server";
 import { query, mutation, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
 import type { QueryCtx, MutationCtx } from "./_generated/server";
-import type { Id } from "./_generated/dataModel";
+import type { Doc } from "./_generated/dataModel";
 
-// ── Helper: get authenticated user from ctx ──────────────────────
+type AuthCtx = QueryCtx | MutationCtx;
 
-export async function getAuthUser(ctx: QueryCtx | MutationCtx) {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) return null;
+async function assignRoleIfMissing(
+  ctx: MutationCtx,
+  user: Doc<"users"> | null,
+): Promise<Doc<"users"> | null> {
+  if (!user || user.role) {
+    return user;
+  }
 
-  // Convex Auth stores users with the subject as ID reference
-  const userId = identity.subject as Id<"users">;
-  return await ctx.db.get(userId);
+  const existingOwner = await ctx.db
+    .query("users")
+    .withIndex("by_role", (q) => q.eq("role", "owner"))
+    .first();
+
+  const role = existingOwner ? "customer" : "owner";
+  await ctx.db.patch(user._id, { role });
+
+  return { ...user, role };
 }
 
-export async function requireAuth(ctx: QueryCtx | MutationCtx) {
+export async function getAuthUser(ctx: AuthCtx) {
+  try {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return null;
+
+    const normalizedUserId = await ctx.db.normalizeId("users", String(userId));
+    if (!normalizedUserId) {
+      return null;
+    }
+
+    return await ctx.db.get(normalizedUserId);
+  } catch (error) {
+    console.warn("[auth] Failed to resolve authenticated user", error);
+    return null;
+  }
+}
+
+export async function requireAuth(ctx: AuthCtx) {
   const user = await getAuthUser(ctx);
   if (!user) throw new Error("Not authenticated");
   return user;
 }
 
-export async function requireOwner(ctx: QueryCtx | MutationCtx) {
+export async function requireOwner(ctx: AuthCtx) {
   const user = await requireAuth(ctx);
-  if (user.role !== "owner") throw new Error("Unauthorized: owner access required");
+  if (user.role !== "owner")
+    throw new Error("Unauthorized: owner access required");
   return user;
 }
 
@@ -42,18 +71,19 @@ export const setInitialRole = internalMutation({
   args: { userId: v.id("users") },
   handler: async (ctx, args) => {
     const user = await ctx.db.get(args.userId);
-    if (!user) return;
-    // If user already has a role, don't overwrite
-    if (user.role) return;
+    await assignRoleIfMissing(ctx, user);
+  },
+});
 
-    // Check if any owner exists
-    const existingOwner = await ctx.db
-      .query("users")
-      .withIndex("by_role", (q) => q.eq("role", "owner"))
-      .first();
-
-    const role = existingOwner ? "customer" : "owner";
-    await ctx.db.patch(args.userId, { role });
+export const ensureCurrentUserRole = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const user = await requireAuth(ctx);
+    const updatedUser = await assignRoleIfMissing(ctx, user);
+    if (!updatedUser?.role) {
+      throw new Error("Unable to assign user role");
+    }
+    return updatedUser.role;
   },
 });
 

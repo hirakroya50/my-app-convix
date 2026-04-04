@@ -1,6 +1,31 @@
 import { query, mutation, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
-import { requireAuth, requireOwner } from "./users";
+import { getAuthUser, requireAuth, requireOwner } from "./users";
+import type { MutationCtx } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
+
+function normalizePickupName(name: string | undefined, fallback: string) {
+  const trimmed = name?.trim();
+  if (!trimmed) return fallback;
+  if (trimmed.length > 80) {
+    throw new Error("Pickup name must be 80 characters or less");
+  }
+  return trimmed;
+}
+
+function validateOrderItems(
+  items: Array<{
+    menuItemId: string;
+    quantity: number;
+  }>,
+) {
+  if (items.length === 0) {
+    throw new Error("Order must include at least one item");
+  }
+  if (items.length > 20) {
+    throw new Error("Order exceeds the maximum number of items");
+  }
+}
 
 // Create a new order with status "pending" (before payment)
 // Prices are verified server-side from the menu table to prevent tampering.
@@ -16,6 +41,7 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     const user = await requireAuth(ctx);
+    validateOrderItems(args.items);
 
     // Build order items with server-verified prices
     const orderItems = [];
@@ -52,7 +78,7 @@ export const create = mutation({
       items: orderItems,
       totalPrice: Math.round(totalPrice * 100) / 100,
       status: "pending",
-      pickupName: args.pickupName || user.name || "Customer",
+      pickupName: normalizePickupName(args.pickupName, user.name || "Customer"),
       timestamp: Date.now(),
     });
   },
@@ -71,17 +97,22 @@ export const createFromChat = mutation({
     pickupName: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    validateOrderItems(args.items);
     const orderItems = [];
     let totalPrice = 0;
 
     for (const item of args.items) {
       const menuItem = await ctx.db.get(item.menuItemId);
       if (!menuItem) throw new Error("Menu item not found");
-      if (!menuItem.available) throw new Error(`${menuItem.name} is currently unavailable`);
+      if (!menuItem.available)
+        throw new Error(`${menuItem.name} is currently unavailable`);
       if (menuItem.quantity < item.quantity) {
-        throw new Error(`Not enough stock for ${menuItem.name}. Available: ${menuItem.quantity}`);
+        throw new Error(
+          `Not enough stock for ${menuItem.name}. Available: ${menuItem.quantity}`,
+        );
       }
-      if (item.quantity < 1) throw new Error(`Invalid quantity for ${menuItem.name}`);
+      if (item.quantity < 1)
+        throw new Error(`Invalid quantity for ${menuItem.name}`);
 
       orderItems.push({
         menuItemId: item.menuItemId,
@@ -98,7 +129,7 @@ export const createFromChat = mutation({
       items: orderItems,
       totalPrice: computedTotal,
       status: "pending",
-      pickupName: args.pickupName || "Customer",
+      pickupName: normalizePickupName(args.pickupName, "Customer"),
       timestamp: Date.now(),
     });
 
@@ -114,40 +145,56 @@ export const markPaid = internalMutation({
     stripeSessionId: v.string(),
   },
   handler: async (ctx, args) => {
-    const order = await ctx.db.get(args.id);
-    if (!order) throw new Error("Order not found");
-    if (order.status === "paid") return; // idempotent
-
-    // Decrement stock for each item
-    for (const item of order.items) {
-      const menuItem = await ctx.db.get(item.menuItemId);
-      if (menuItem) {
-        await ctx.db.patch(item.menuItemId, {
-          quantity: Math.max(0, menuItem.quantity - item.quantity),
-        });
-      }
-    }
-
-    // Update order status and store Stripe session reference
-    await ctx.db.patch(args.id, {
-      status: "paid",
-      stripeSessionId: args.stripeSessionId,
-    });
-
-    // Send confirmation message to customer's chat (if user was authenticated)
-    if (order.userId) {
-      const itemList = order.items
-        .map((i) => `${i.quantity}× ${i.name}`)
-        .join(", ");
-      await ctx.db.insert("messages", {
-        userId: order.userId,
-        text: `✅ Payment confirmed! Your order (${itemList}) for $${order.totalPrice.toFixed(2)} has been paid. Please pick up at the counter. ☕`,
-        role: "assistant",
-        timestamp: Date.now(),
-      });
-    }
+    await markOrderPaid(ctx, args.id, args.stripeSessionId);
   },
 });
+
+export const confirmPaid = mutation({
+  args: {
+    id: v.id("orders"),
+    stripeSessionId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await markOrderPaid(ctx, args.id, args.stripeSessionId);
+    return { ok: true };
+  },
+});
+
+async function markOrderPaid(
+  ctx: { db: MutationCtx["db"] },
+  orderId: Id<"orders">,
+  stripeSessionId: string,
+) {
+  const order = await ctx.db.get(orderId);
+  if (!order) throw new Error("Order not found");
+  if (order.status === "paid") return;
+
+  for (const item of order.items) {
+    const menuItem = await ctx.db.get(item.menuItemId);
+    if (menuItem) {
+      await ctx.db.patch(item.menuItemId, {
+        quantity: Math.max(0, menuItem.quantity - item.quantity),
+      });
+    }
+  }
+
+  await ctx.db.patch(orderId, {
+    status: "paid",
+    stripeSessionId,
+  });
+
+  if (order.userId) {
+    const itemList = order.items
+      .map((i) => `${i.quantity}× ${i.name}`)
+      .join(", ");
+    await ctx.db.insert("messages", {
+      userId: order.userId,
+      text: `✅ Payment confirmed! Your order (${itemList}) for $${order.totalPrice.toFixed(2)} has been paid. Please pick up at the counter. ☕`,
+      role: "assistant",
+      timestamp: Date.now(),
+    });
+  }
+}
 
 // Owner: update order pickup status (preparing → ready → picked_up)
 export const updateStatus = mutation({
@@ -216,12 +263,7 @@ export const get = query({
     if (!order.userId) return order;
 
     // Check if the caller is authenticated
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) return null;
-    const user = await ctx.db
-      .query("users")
-      .withIndex("email", (q) => q.eq("email", identity.email))
-      .first();
+    const user = await getAuthUser(ctx);
     if (!user) return null;
 
     // Only the order owner or shop owner can see
