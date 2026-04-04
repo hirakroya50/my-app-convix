@@ -218,7 +218,7 @@ export const updateStatus = mutation({
     if (args.status === "ready" && order.userId) {
       await ctx.db.insert("messages", {
         userId: order.userId,
-        text: `🔔 Your order is ready for pickup! Please come to the counter.`,
+        text: `🔔 Your order is ready for pickup! Please come to the counter. contect : +1 1209202020`,
         role: "assistant",
         timestamp: Date.now(),
       });

@@ -188,14 +188,6 @@ export default function AdminMenuPage() {
       <header className="border-b border-white/5 bg-[#0a0908]/90 backdrop-blur-xl sticky top-0 z-30">
         <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="flex items-center gap-2 text-stone-400 hover:text-white transition-colors text-sm"
-            >
-              <ArrowLeft size={16} />
-              Home
-            </Link>
-            <div className="h-5 w-px bg-white/10" />
             <div className="flex items-center gap-2.5">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-amber-400 to-orange-600">
                 <Coffee size={16} className="text-white" />
@@ -308,7 +300,7 @@ export default function AdminMenuPage() {
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <p className="text-xs text-stone-400">
+                        <p className="text-sm text-stone-400">
                           {order.items
                             .map((i) => `${i.quantity}× ${i.name}`)
                             .join(", ")}
@@ -592,7 +584,7 @@ export default function AdminMenuPage() {
                           <p className="text-sm font-semibold text-amber-400">
                             ${item.price.toFixed(2)}
                           </p>
-                          <p className="text-xs font-medium text-stone-500">
+                          <p className="text-sm font-medium text-stone-500">
                             Qty: {item.quantity}
                           </p>
                         </div>
@@ -602,14 +594,14 @@ export default function AdminMenuPage() {
                             className="p-1.5 rounded-lg text-stone-500 hover:text-amber-400 hover:bg-amber-500/10 transition-all"
                             title="Edit"
                           >
-                            <Pencil size={14} />
+                            <Pencil size={17} />
                           </button>
                           <button
                             onClick={() => handleDelete(item._id)}
                             className="p-1.5 rounded-lg text-stone-500 hover:text-red-400 hover:bg-red-500/10 transition-all"
                             title="Delete"
                           >
-                            <Trash2 size={14} />
+                            <Trash2 size={17} />
                           </button>
                         </div>
                       </div>
