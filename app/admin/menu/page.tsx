@@ -430,9 +430,9 @@ export default function AdminMenuPage() {
                   setEditingId(null);
                   setForm(emptyForm);
                 }}
-                className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-amber-500 text-white hover:bg-amber-400 transition-colors"
+                className="flex items-center font-bold gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-amber-500 text-white hover:bg-amber-400 transition-colors"
               >
-                <Plus size={13} />
+                <Plus size={16} />
                 Add Item
               </button>
             </div>
@@ -592,7 +592,7 @@ export default function AdminMenuPage() {
                           <p className="text-sm font-semibold text-amber-400">
                             ${item.price.toFixed(2)}
                           </p>
-                          <p className="text-[10px] text-stone-600">
+                          <p className="text-xs font-medium text-stone-500">
                             Qty: {item.quantity}
                           </p>
                         </div>

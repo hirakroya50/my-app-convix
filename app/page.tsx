@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useQuery } from "convex/react";
+import { useConvexAuth, useQuery } from "convex/react";
 import {
   Coffee,
   Sparkles,
@@ -27,6 +27,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/convex/_generated/api";
 import ChatWidget from "./components/ChatWidget";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 const NAV_LINKS = ["Menu", "About", "Gallery", "Location"];
 
@@ -237,11 +238,18 @@ function StatCard({
 /* ─── Main Component ─────────────────────────────────────── */
 export default function Home() {
   const router = useRouter();
+  const { isAuthenticated, isLoading: authLoading } = useConvexAuth();
+  const { signOut } = useAuthActions();
   const currentUser = useQuery(api.users.currentUser);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [statsStarted, setStatsStarted] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
+
+  const signedInLabel =
+    currentUser?.name ||
+    currentUser?.email ||
+    (isAuthenticated ? "Signed in" : null);
 
   useEffect(() => {
     if (currentUser?.role === "owner") {
@@ -305,14 +313,42 @@ export default function Home() {
 
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
-            <a
-              href="#menu"
-              className="group relative flex items-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:brightness-110 transition-all duration-300 overflow-hidden"
-            >
-              <span className="absolute inset-0 bg-linear-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
-              <Coffee size={14} />
-              Order Now
-            </a>
+            {!authLoading && isAuthenticated && signedInLabel && (
+              <div className="flex items-center gap-2">
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-stone-300">
+                  Signed in as{" "}
+                  <span className="font-semibold text-white">
+                    {signedInLabel}
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => void signOut()}
+                  className="rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-stone-200 hover:bg-white/8 hover:text-white transition-colors"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
+            {currentUser?.role === "owner" ? (
+              <Link
+                href="/admin/menu"
+                className="group relative flex items-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:brightness-110 transition-all duration-300 overflow-hidden"
+              >
+                <span className="absolute inset-0 bg-linear-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
+                <Coffee size={14} />
+                Owner Dashboard
+              </Link>
+            ) : (
+              <a
+                href="#menu"
+                className="group relative flex items-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:brightness-110 transition-all duration-300 overflow-hidden"
+              >
+                <span className="absolute inset-0 bg-linear-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
+                <Coffee size={14} />
+                Order Now
+              </a>
+            )}
           </div>
 
           {/* Mobile toggle */}
@@ -338,13 +374,31 @@ export default function Home() {
                 {l}
               </a>
             ))}
+            {!authLoading && isAuthenticated && signedInLabel && (
+              <div className="rounded-2xl border border-white/8 bg-white/3 px-4 py-3">
+                <p className="text-[11px] text-stone-500">Signed in as</p>
+                <p className="text-sm font-semibold text-white truncate">
+                  {signedInLabel}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    void signOut();
+                    setMobileOpen(false);
+                  }}
+                  className="mt-3 w-full rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-stone-200 hover:bg-white/8 hover:text-white transition-colors"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
             <a
-              href="#menu"
+              href={currentUser?.role === "owner" ? "/admin/menu" : "#menu"}
               className="flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-3 text-sm font-semibold text-white mt-1"
               onClick={() => setMobileOpen(false)}
             >
               <Coffee size={14} />
-              Order Now
+              {currentUser?.role === "owner" ? "Owner Dashboard" : "Order Now"}
             </a>
           </div>
         )}
@@ -397,18 +451,6 @@ export default function Home() {
 
           {/* CTA buttons */}
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4 animate-fade-in-up delay-300">
-            <a
-              href="#menu"
-              className="group relative flex items-center gap-2.5 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-8 py-4 text-base font-semibold text-white shadow-2xl shadow-amber-500/30 hover:shadow-amber-500/50 hover:brightness-110 transition-all duration-300 overflow-hidden"
-            >
-              <span className="absolute inset-0 bg-linear-to-r from-white/0 via-white/15 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
-              <Coffee size={18} />
-              Order for Pickup
-              <ArrowRight
-                size={16}
-                className="group-hover:translate-x-1 transition-transform duration-200"
-              />
-            </a>
             <a
               href="#menu"
               className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm px-8 py-4 text-base font-semibold text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300"
@@ -849,7 +891,7 @@ export default function Home() {
       </section>
 
       {/* ── NEWSLETTER ───────────────────────────────────────── */}
-      <section className="px-6 py-20">
+      {/* <section className="px-6 py-20">
         <div className="mx-auto max-w-2xl text-center">
           <h2
             className="text-3xl sm:text-4xl font-bold text-white mb-4"
@@ -878,7 +920,7 @@ export default function Home() {
             </button>
           </form>
         </div>
-      </section>
+      </section> */}
 
       {/* ── FOOTER ───────────────────────────────────────────── */}
       <footer className="border-t border-white/5 px-6 pt-14 pb-8">

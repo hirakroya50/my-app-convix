@@ -41,6 +41,13 @@ body {
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable both-edges;
+  /* overflow-y: scroll; */
+}
+
+body {
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 /* Noise texture overlay for depth */
