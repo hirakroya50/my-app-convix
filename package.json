@@ -12,6 +12,8 @@
     "test:e2e:headed": "playwright test --headed"
   },
   "dependencies": {
+    "@auth/core": "^0.37.0",
+    "@convex-dev/auth": "^0.0.91",
     "convex": "^1.34.0",
     "lucide-react": "^1.6.0",
     "next": "16.2.1",

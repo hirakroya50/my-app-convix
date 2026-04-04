@@ -1,5 +1,4 @@
 import { ConvexHttpClient } from "convex/browser";
-import { api } from "../../../convex/_generated/api";
 import { openai, SYSTEM_PROMPT } from "../../lib/openai";
 import { tools, executeTool } from "../../lib/mcp";
 
@@ -7,20 +6,21 @@ const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export async function POST(req: Request) {
   try {
-    const { message } = await req.json();
+    const { message, history } = await req.json();
     if (!message || typeof message !== "string") {
       return new Response("Message is required", { status: 400 });
     }
 
-    // Get conversation history from Convex
-    const history = await convex.query(api.messages.list);
+    // Use history from client (already scoped to authenticated user)
     const chatMessages: Array<{
       role: "user" | "assistant";
       content: string;
-    }> = history.map((m) => ({
-      role: m.role as "user" | "assistant",
-      content: m.text,
-    }));
+    }> = Array.isArray(history)
+      ? history.map((m: { role: string; text: string }) => ({
+          role: m.role as "user" | "assistant",
+          content: m.text,
+        }))
+      : [];
 
     // Ensure the current user message is included
     const lastMsg = chatMessages[chatMessages.length - 1];
@@ -52,16 +52,13 @@ export async function POST(req: Request) {
 
       const choice = response.choices[0];
 
-      // If no tool calls, we have a final text answer — stream it
+      // If no tool calls, we have a final text answer
       if (
         !choice.message.tool_calls ||
         choice.message.tool_calls.length === 0
       ) {
         const text = choice.message.content || "";
-        await convex.mutation(api.messages.send, {
-          text,
-          role: "assistant",
-        });
+        // Client saves the assistant response via authenticated mutation
         return new Response(text, {
           headers: { "Content-Type": "text/plain; charset=utf-8" },
         });
@@ -111,21 +108,16 @@ export async function POST(req: Request) {
     });
 
     const encoder = new TextEncoder();
-    let fullText = "";
     const readable = new ReadableStream({
       async start(controller) {
         try {
           for await (const chunk of stream) {
             const content = chunk.choices[0]?.delta?.content;
             if (content) {
-              fullText += content;
               controller.enqueue(encoder.encode(content));
             }
           }
-          await convex.mutation(api.messages.send, {
-            text: fullText,
-            role: "assistant",
-          });
+          // Client saves the assistant response via authenticated mutation
           controller.close();
         } catch (err) {
           controller.error(err);

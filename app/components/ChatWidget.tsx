@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
+import { useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import {
   Coffee,
@@ -13,7 +14,9 @@ import {
   RotateCcw,
   CreditCard,
   ExternalLink,
+  LogIn,
 } from "lucide-react";
+import Link from "next/link";
 
 /* ─── detect Stripe payment links in text ────────────────────────── */
 function renderWithPaymentLinks(text: string) {
@@ -26,7 +29,6 @@ function renderWithPaymentLinks(text: string) {
 
   // Match Stripe checkout URLs
   const urlPattern = /https:\/\/checkout\.stripe\.com\/[^\s)]+/;
-  const urlPatternGlobal = /https:\/\/checkout\.stripe\.com\/[^\s)]+/g;
   const parts = cleaned.split(new RegExp(`(${urlPattern.source})`, "g"));
 
   if (parts.length === 1) {
@@ -85,13 +87,17 @@ function Bubble({ role, text }: { role: "user" | "assistant"; text: string }) {
 
 /* ─── main widget ─────────────────────────────────────────────────── */
 export default function ChatWidget() {
+  const { isAuthenticated } = useConvexAuth();
   const [open, setOpen] = useState(false);
   const [inputText, setInputText] = useState("");
   const [streamingText, setStreamingText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const messages = useQuery(api.messages.list);
+  const messages = useQuery(
+    api.messages.list,
+    !isAuthenticated ? "skip" : undefined,
+  );
   const clearMessages = useMutation(api.messages.clear);
   const sendMessage = useMutation(api.messages.send);
 
@@ -122,10 +128,16 @@ export default function ChatWidget() {
     try {
       await sendMessage({ text, role: "user" });
 
+      // Send current history so the API route doesn't need Convex auth
+      const history = (messages || []).map((m) => ({
+        role: m.role,
+        text: m.text,
+      }));
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ message: text, history }),
       });
 
       if (!response.ok) {
@@ -145,6 +157,11 @@ export default function ChatWidget() {
         accumulated += decoder.decode(value, { stream: true });
         setStreamingText(accumulated);
         setIsLoading(false);
+      }
+
+      // Save assistant response via authenticated mutation
+      if (accumulated.trim()) {
+        await sendMessage({ text: accumulated, role: "assistant" });
       }
     } catch {
       setErrorMsg("An unexpected error occurred. Please try again.");
@@ -220,7 +237,29 @@ export default function ChatWidget() {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0">
-          {isEmpty ? (
+          {!isAuthenticated ? (
+            <div className="flex flex-col items-center justify-center h-full text-center gap-3 py-6">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500/20 to-orange-600/10 border border-amber-500/20">
+                <LogIn size={24} className="text-amber-400" />
+              </div>
+              <div>
+                <p className="font-medium text-zinc-200 text-sm">
+                  Sign in to Chat
+                </p>
+                <p className="text-xs text-zinc-500 mt-1 max-w-55 leading-relaxed">
+                  Log in to chat with our AI barista, browse the menu, and place
+                  orders for pickup.
+                </p>
+              </div>
+              <Link
+                href="/signin"
+                className="mt-2 flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-white px-4 py-2.5 text-xs font-semibold transition-colors"
+              >
+                <LogIn size={14} />
+                Sign In
+              </Link>
+            </div>
+          ) : isEmpty ? (
             <div className="flex flex-col items-center justify-center h-full text-center gap-3 py-6">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500/20 to-orange-600/10 border border-amber-500/20">
                 <Coffee size={24} className="text-amber-400" />
@@ -305,14 +344,14 @@ export default function ChatWidget() {
               value={inputText}
               onChange={handleInput}
               onKeyDown={handleKeyDown}
-              placeholder="Ask me anything…"
-              disabled={isLoading}
+              placeholder={isAuthenticated ? "Ask me anything…" : "Sign in to chat"}
+              disabled={isLoading || !isAuthenticated}
               rows={1}
               className="flex-1 resize-none bg-transparent text-sm text-white placeholder-zinc-500 focus:outline-none disabled:opacity-50 max-h-30"
             />
             <button
               onClick={handleSend}
-              disabled={!inputText.trim() || isLoading}
+              disabled={!inputText.trim() || isLoading || !isAuthenticated}
               className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-amber-500 text-white disabled:opacity-30 hover:bg-amber-400 transition-colors"
             >
               {isLoading ? (
