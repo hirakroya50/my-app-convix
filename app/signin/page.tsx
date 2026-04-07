@@ -21,6 +21,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api } from "@/convex/_generated/api";
 
+const COFFEE_HERO_IMAGE =
+  "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1800&q=80";
+const COFFEE_BANNER_IMAGE =
+  "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1600&q=80";
+
 export default function SignInPage() {
   const { signIn } = useAuthActions();
   const { isAuthenticated, isLoading: authLoading } = useConvexAuth();
@@ -72,6 +77,15 @@ export default function SignInPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0a0908] text-white">
+      <div className="absolute inset-0 opacity-9">
+        <Image
+          src={COFFEE_HERO_IMAGE}
+          alt="Coffee shop background"
+          fill
+          priority
+          className="object-cover"
+        />
+      </div>
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-[-12%] top-[-18%] h-112 w-md rounded-full bg-amber-500/25 blur-3xl animate-pulse-glow" />
         <div className="absolute bottom-[-20%] right-[-12%] h-136 w-136 rounded-full bg-orange-500/20 blur-3xl animate-pulse-glow delay-300" />
@@ -102,7 +116,9 @@ export default function SignInPage() {
               style={{ fontFamily: "var(--font-playfair)" }}
             >
               Taste-first ordering,
-              <span className="gradient-text-amber block">designed like luxury tech.</span>
+              <span className="gradient-text-amber block">
+                designed like luxury tech.
+              </span>
             </h1>
             <p className="mt-5 text-base leading-relaxed text-stone-300">
               Manage favorites, reorder in seconds, and track every cup with a
@@ -124,31 +140,14 @@ export default function SignInPage() {
               <p className="mt-3 text-xs text-stone-300">Daily specials</p>
             </div>
           </div>
-
-          <div className="relative mt-8 max-w-xl overflow-hidden rounded-3xl border border-white/10 shadow-2xl shadow-black/35">
-            <Image
-              src="/images/coffee-shop-scene.svg"
-              alt="Warm coffee shop interior"
-              width={1200}
-              height={800}
-              priority
-              className="h-56 w-full object-cover"
-            />
-            <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-[#0a0908]/85 via-[#0a0908]/30 to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-white/15 bg-black/35 px-4 py-3 backdrop-blur-md">
-              <p className="text-xs font-medium tracking-wide text-amber-300">
-                Authentic cafe atmosphere
-              </p>
-              <p className="mt-1 text-sm text-stone-200">
-                Fresh brews, warm lighting, and handcrafted drinks.
-              </p>
-            </div>
-          </div>
         </section>
 
         <section className="animate-fade-in-up w-full">
           <div className="mx-auto w-full max-w-md rounded-3xl border border-white/10 bg-black/35 p-8 backdrop-blur-2xl shadow-2xl shadow-black/40">
-            <Link href="/" className="mb-8 flex items-center justify-center gap-3 lg:hidden">
+            <Link
+              href="/"
+              className="mb-8 flex items-center justify-center gap-3 lg:hidden"
+            >
               <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-amber-400 to-orange-600 shadow-lg shadow-amber-500/35">
                 <Coffee size={20} className="text-white" />
               </span>
@@ -163,8 +162,8 @@ export default function SignInPage() {
             <div className="mb-7">
               <div className="relative mb-5 overflow-hidden rounded-2xl border border-white/10 lg:hidden">
                 <Image
-                  src="/images/coffee-shop-scene.svg"
-                  alt="Brew Haven coffee shop"
+                  src={COFFEE_BANNER_IMAGE}
+                  alt="Brew Haven coffee bar"
                   width={1200}
                   height={800}
                   className="h-32 w-full object-cover"
