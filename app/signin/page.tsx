@@ -3,7 +3,16 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useEffect, useState } from "react";
 import { useConvexAuth, useQuery } from "convex/react";
-import { Coffee, Loader2, Mail, Lock, User, ArrowRight } from "lucide-react";
+import {
+  Coffee,
+  Loader2,
+  Mail,
+  Lock,
+  User,
+  ArrowRight,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api } from "@/convex/_generated/api";
@@ -22,6 +31,7 @@ export default function SignInPage() {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (!authLoading && currentUser?.role === "owner") {
@@ -122,14 +132,22 @@ export default function SignInPage() {
                 className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500"
               />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={8}
-                className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all"
+                className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-10 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-500 hover:text-amber-400 transition-colors"
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
 
             {error && (
