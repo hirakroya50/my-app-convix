@@ -92,10 +92,7 @@ type ChatWidgetProps = {
   onOpenChange: (open: boolean) => void;
 };
 
-export default function ChatWidget({
-  open,
-  onOpenChange,
-}: ChatWidgetProps) {
+export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
   const { isAuthenticated } = useConvexAuth();
   const authToken = useAuthToken();
   const [inputText, setInputText] = useState("");
@@ -262,7 +259,7 @@ export default function ChatWidget({
         {/* Messages */}
         <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0">
           {!isAuthenticated ? (
-            <div className="flex flex-col items-center justify-center h-full text-center gap-3 py-6">
+            <div className="flex flex-col items-center justify-center h-full text-center gap-3 m-0">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500/20 to-orange-600/10 border border-amber-500/20">
                 <LogIn size={24} className="text-amber-400" />
               </div>
@@ -284,7 +281,7 @@ export default function ChatWidget({
               </Link>
             </div>
           ) : isEmpty ? (
-            <div className="flex flex-col items-center justify-center h-full text-center gap-3 py-6">
+            <div className="flex flex-col items-center justify-center h-full text-center gap-3 m-0">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500/20 to-orange-600/10 border border-amber-500/20">
                 <Coffee size={24} className="text-amber-400" />
               </div>
