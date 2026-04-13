@@ -113,6 +113,7 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   /* auto-scroll */
   useEffect(() => {
@@ -125,6 +126,26 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
       setTimeout(() => textareaRef.current?.focus(), 120);
     }
   }, [open, isLoading]);
+
+  /* close panel when clicking outside of it */
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (panelRef.current?.contains(target)) return;
+      onOpenChange(false);
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+    };
+  }, [open, onOpenChange]);
 
   const handleSend = async () => {
     const text = inputText.trim();
@@ -211,6 +232,7 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
     <>
       {/* ── CHAT PANEL ──────────────────────────────────────────── */}
       <div
+        ref={panelRef}
         className={`fixed bottom-24 right-5 z-50 flex flex-col w-92.5 max-w-[calc(100vw-2.5rem)] rounded-2xl border border-zinc-700/60 bg-zinc-900 shadow-2xl shadow-black/50 transition-all duration-300 ease-out origin-bottom-right ${
           open
             ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"

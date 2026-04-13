@@ -929,7 +929,7 @@ export default function Home() {
       </section> */}
 
       {/* ── FOOTER ───────────────────────────────────────────── */}
-      <footer className="border-t border-white/5 px-6 pt-14 pb-8">
+      <footer className="border-t border-white/5 px-6 pt-14 pb-8 border-10">
         <div className="mx-auto max-w-7xl">
           <div className="grid sm:grid-cols-3 gap-10 mb-12">
             {/* Brand */}
@@ -945,27 +945,27 @@ export default function Home() {
                   Brew<span className="text-amber-400"> Haven</span>
                 </span>
               </Link>
-              <p className="text-xs text-stone-500 leading-relaxed max-w-xs">
+              <p className="text-xs text-stone-300 leading-relaxed max-w-xs">
                 Artisan coffee, ethically sourced. A space to work, connect, and
                 savour the moment.
               </p>
-              <div className="flex gap-3 mt-5">
+              {/* <div className="flex gap-3 mt-5">
                 {[Globe, Share2, Heart].map((Icon, i) => (
                   <a
                     key={i}
                     href="#"
-                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white transition-all"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 hover:bg-white/10 text-stone-200 hover:text-white transition-all"
                     aria-label="Social link"
                   >
                     <Icon size={14} />
                   </a>
                 ))}
-              </div>
+              </div> */}
             </div>
 
             {/* Links */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
+              <p className="text-xs font-semibold uppercase tracking-widest text-stone-300 mb-4">
                 Explore
               </p>
               <div className="flex flex-col gap-2.5">
@@ -973,7 +973,7 @@ export default function Home() {
                   <a
                     key={l}
                     href={`#${l.toLowerCase()}`}
-                    className="text-sm text-stone-500 hover:text-white transition-colors"
+                    className="text-sm text-stone-300 hover:text-white transition-colors"
                   >
                     {l}
                   </a>
@@ -983,10 +983,10 @@ export default function Home() {
 
             {/* Contact */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
+              <p className="text-xs font-semibold uppercase tracking-widest text-stone-300 mb-4">
                 Visit Us
               </p>
-              <div className="flex flex-col gap-2.5 text-sm text-stone-500">
+              <div className="flex flex-col gap-1 text-sm text-stone-300">
                 <span>42 Roaster Lane, Coffeeville CA</span>
                 <span>Mon–Fri 6AM–11PM</span>
                 <span>Sat–Sun 7AM–12AM</span>
@@ -1000,21 +1000,21 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-stone-600">
+          <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <p className="text-xs text-stone-400">
               © {new Date().getFullYear()} Brew Haven. Crafted with ☕ and AI.
             </p>
-            <div className="flex gap-5 text-xs text-stone-600">
-              <a href="#" className="hover:text-stone-400 transition-colors">
+            {/* <div className="flex gap-5 text-xs text-stone-400">
+              <a href="#" className="hover:text-stone-200 transition-colors">
                 Privacy
               </a>
-              <a href="#" className="hover:text-stone-400 transition-colors">
+              <a href="#" className="hover:text-stone-200 transition-colors">
                 Terms
               </a>
-              <a href="#" className="hover:text-stone-400 transition-colors">
+              <a href="#" className="hover:text-stone-200 transition-colors">
                 Cookies
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </footer>
