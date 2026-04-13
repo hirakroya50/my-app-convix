@@ -603,7 +603,7 @@ export default function Home() {
                     <TrendingUp size={16} className="text-amber-400" />
                   </div>
                   <div>
-                    <p className="text-xs text-stone-500">Founded</p>
+                    <p className="text-xs text-stone-100 font-bold">Founded</p>
                     <p className="font-bold text-white text-sm">Since 2018</p>
                   </div>
                 </div>
