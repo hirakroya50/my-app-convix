@@ -241,6 +241,7 @@ export default function Home() {
   const { isAuthenticated, isLoading: authLoading } = useConvexAuth();
   const { signOut } = useAuthActions();
   const currentUser = useQuery(api.users.currentUser);
+  const [chatOpen, setChatOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [statsStarted, setStatsStarted] = useState(false);
@@ -340,14 +341,15 @@ export default function Home() {
                 Owner Dashboard
               </Link>
             ) : (
-              <a
-                href="#menu"
+              <button
+                type="button"
+                onClick={() => setChatOpen(true)}
                 className="group relative flex items-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:brightness-110 transition-all duration-300 overflow-hidden"
               >
                 <span className="absolute inset-0 bg-linear-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
                 <Coffee size={14} />
                 Order Now
-              </a>
+              </button>
             )}
           </div>
 
@@ -392,14 +394,28 @@ export default function Home() {
                 </button>
               </div>
             )}
-            <a
-              href={currentUser?.role === "owner" ? "/admin/menu" : "#menu"}
-              className="flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-3 text-sm font-semibold text-white mt-1"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Coffee size={14} />
-              {currentUser?.role === "owner" ? "Owner Dashboard" : "Order Now"}
-            </a>
+            {currentUser?.role === "owner" ? (
+              <Link
+                href="/admin/menu"
+                className="flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-3 text-sm font-semibold text-white mt-1"
+                onClick={() => setMobileOpen(false)}
+              >
+                <Coffee size={14} />
+                Owner Dashboard
+              </Link>
+            ) : (
+              <button
+                type="button"
+                className="flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-3 text-sm font-semibold text-white mt-1"
+                onClick={() => {
+                  setChatOpen(true);
+                  setMobileOpen(false);
+                }}
+              >
+                <Coffee size={14} />
+                Order Now
+              </button>
+            )}
           </div>
         )}
       </header>
@@ -661,16 +677,6 @@ export default function Home() {
                 <span className="gradient-text-amber">perfection</span>
               </h2>
             </div>
-            <a
-              href="#menu"
-              className="group flex items-center gap-2 text-sm text-amber-400 hover:text-amber-300 font-medium transition-colors"
-            >
-              View full menu
-              <ArrowRight
-                size={14}
-                className="group-hover:translate-x-1 transition-transform"
-              />
-            </a>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -1014,7 +1020,7 @@ export default function Home() {
       </footer>
 
       {/* ── FLOATING CHAT WIDGET ─────────────────────────────── */}
-      <ChatWidget />
+      <ChatWidget open={chatOpen} onOpenChange={setChatOpen} />
     </div>
   );
 }

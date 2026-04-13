@@ -87,10 +87,17 @@ function Bubble({ role, text }: { role: "user" | "assistant"; text: string }) {
 }
 
 /* ─── main widget ─────────────────────────────────────────────────── */
-export default function ChatWidget() {
+type ChatWidgetProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+export default function ChatWidget({
+  open,
+  onOpenChange,
+}: ChatWidgetProps) {
   const { isAuthenticated } = useConvexAuth();
   const authToken = useAuthToken();
-  const [open, setOpen] = useState(false);
   const [inputText, setInputText] = useState("");
   const [streamingText, setStreamingText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -244,7 +251,7 @@ export default function ChatWidget() {
               <RotateCcw size={15} />
             </button>
             <button
-              onClick={() => setOpen(false)}
+              onClick={() => onOpenChange(false)}
               className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
             >
               <ChevronDown size={15} />
@@ -388,7 +395,7 @@ export default function ChatWidget() {
 
       {/* ── FLOATING BUTTON ─────────────────────────────────────── */}
       <button
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => onOpenChange(!open)}
         aria-label={open ? "Close chat" : "Open AI chat"}
         className={`fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-2xl shadow-amber-500/30 transition-all duration-300 hover:scale-110 active:scale-95 ${
           open
