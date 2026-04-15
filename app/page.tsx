@@ -207,6 +207,11 @@ function useCountUp(target: string, duration = 1800, start = false) {
   return display;
 }
 
+function truncateLabel(label: string | null, maxLength = 8) {
+  if (!label || label.length <= maxLength) return label;
+  return `${label.slice(0, maxLength)}...`;
+}
+
 /* ─── Stat Card ──────────────────────────────────────────── */
 function StatCard({
   value,
@@ -247,6 +252,7 @@ export default function Home() {
     currentUser?.name ||
     currentUser?.email ||
     (isAuthenticated ? "Signed in" : null);
+  const signedInDisplayLabel = truncateLabel(signedInLabel);
 
   useEffect(() => {
     if (currentUser?.role === "owner") {
@@ -287,12 +293,18 @@ export default function Home() {
             <span className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-400 to-blue-600 shadow-lg shadow-cyan-500/25 group-hover:shadow-cyan-500/40 transition-shadow duration-300">
               <Coffee size={18} className="text-white" />
             </span>
-            <span
-              className="text-lg font-bold tracking-tight"
-              style={{ fontFamily: "var(--font-playfair)" }}
-            >
-              Brew<span className="text-cyan-400"> Haven</span>
-            </span>
+            <div className="flex flex-col">
+              <span
+                className="text-lg font-bold tracking-tight border-b border-white/10"
+                style={{ fontFamily: "var(--font-playfair)" }}
+              >
+                Brew<span className="text-cyan-400"> Haven</span>
+              </span>
+              <span className="font-extralight text-white  px-1 text-xs pt-1 hidden sm:inline-block">
+                {" "}
+                Signed in as {signedInDisplayLabel}
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Nav */}
@@ -312,12 +324,6 @@ export default function Home() {
           <div className="hidden md:flex items-center gap-3">
             {!authLoading && isAuthenticated && signedInLabel && (
               <div className="flex items-center gap-2">
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-stone-300">
-                  Signed in as{" "}
-                  <span className="font-semibold text-white">
-                    {signedInLabel}
-                  </span>
-                </span>
                 <button
                   type="button"
                   onClick={() => void signOut()}
@@ -375,8 +381,11 @@ export default function Home() {
             {!authLoading && isAuthenticated && signedInLabel && (
               <div className="rounded-2xl border border-white/8 bg-white/3 px-4 py-3">
                 <p className="text-[11px] text-stone-500">Signed in as</p>
-                <p className="text-sm font-semibold text-white truncate">
-                  {signedInLabel}
+                <p
+                  className="text-sm font-semibold text-white truncate"
+                  title={signedInLabel}
+                >
+                  {signedInDisplayLabel}
                 </p>
                 <button
                   type="button"
