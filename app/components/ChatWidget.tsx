@@ -49,7 +49,7 @@ function renderWithPaymentLinks(text: string) {
               e.preventDefault();
               window.open(part, "_blank", "noopener,noreferrer");
             }}
-            className="mt-2 mb-1 flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-white px-3.5 py-2.5 text-xs font-semibold transition-colors no-underline w-fit"
+            className="mt-2 mb-1 flex items-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-white px-3.5 py-2.5 text-xs font-semibold transition-colors no-underline w-fit"
           >
             <CreditCard size={14} />
             Complete Payment
@@ -68,7 +68,7 @@ function Bubble({ role, text }: { role: "user" | "assistant"; text: string }) {
   if (role === "user") {
     return (
       <div className="flex justify-end">
-        <div className="max-w-[80%] rounded-2xl rounded-br-sm bg-amber-500 px-3.5 py-2.5 text-sm text-white leading-relaxed shadow-md">
+        <div className="max-w-[80%] rounded-2xl rounded-br-sm bg-cyan-500 px-3.5 py-2.5 text-sm text-white leading-relaxed shadow-md">
           {text}
         </div>
       </div>
@@ -77,7 +77,7 @@ function Bubble({ role, text }: { role: "user" | "assistant"; text: string }) {
   return (
     <div className="flex items-start gap-2.5">
       <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-700 shadow-inner">
-        <Coffee size={13} className="text-amber-400" />
+        <Coffee size={13} className="text-cyan-400" />
       </div>
       <div className="max-w-[80%] rounded-2xl rounded-tl-sm bg-zinc-700/80 px-3.5 py-2.5 text-sm text-zinc-100 leading-relaxed shadow-md">
         {renderWithPaymentLinks(text)}
@@ -243,7 +243,7 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 bg-zinc-950 rounded-t-2xl shrink-0">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-amber-500 to-orange-600 shadow-lg shadow-amber-500/30">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/25">
               <Coffee size={15} className="text-white" />
             </div>
             <div>
@@ -251,7 +251,7 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
                 Brew Haven
               </p>
               <p className="text-[11px] text-zinc-500 mt-0.5 flex items-center gap-1">
-                <Sparkles size={9} className="text-amber-500/70" />
+                <Sparkles size={9} className="text-cyan-500/70" />
                 AI Barista
               </p>
             </div>
@@ -282,8 +282,8 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
         <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0">
           {!isAuthenticated ? (
             <div className="flex flex-col items-center justify-center h-full text-center gap-3 m-0">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500/20 to-orange-600/10 border border-amber-500/20">
-                <LogIn size={24} className="text-amber-400" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-500/20 to-blue-600/10 border border-cyan-500/20">
+                <LogIn size={24} className="text-cyan-400" />
               </div>
               <div>
                 <p className="font-medium text-zinc-200 text-sm">
@@ -296,7 +296,7 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
               </div>
               <Link
                 href="/signin"
-                className="mt-2 flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-white px-4 py-2.5 text-xs font-semibold transition-colors"
+                className="mt-2 flex items-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-white px-4 py-2.5 text-xs font-semibold transition-colors"
               >
                 <LogIn size={14} />
                 Sign In
@@ -304,8 +304,8 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
             </div>
           ) : isEmpty ? (
             <div className="flex flex-col items-center justify-center h-full text-center gap-3 m-0">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500/20 to-orange-600/10 border border-amber-500/20">
-                <Coffee size={24} className="text-amber-400" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-500/20 to-blue-600/10 border border-cyan-500/20">
+                <Coffee size={24} className="text-cyan-400" />
               </div>
               <div>
                 <p className="font-medium text-zinc-200 text-sm">
@@ -350,7 +350,7 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
               {isLoading && !streamingText && (
                 <div className="flex items-start gap-2.5">
                   <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-700">
-                    <Coffee size={13} className="text-amber-400" />
+                    <Coffee size={13} className="text-cyan-400" />
                   </div>
                   <div className="rounded-2xl rounded-tl-sm bg-zinc-700/80 px-3.5 py-3 flex items-center gap-1.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-zinc-400 animate-bounce [animation-delay:-0.3s]" />
@@ -381,7 +381,7 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
 
         {/* Input */}
         <div className="px-3 py-3 border-t border-zinc-800 shrink-0">
-          <div className="flex items-end gap-2 bg-zinc-800 rounded-xl border border-zinc-700 focus-within:border-amber-500/50 focus-within:ring-1 focus-within:ring-amber-500/20 transition-all px-3 py-2">
+          <div className="flex items-end gap-2 bg-zinc-800 rounded-xl border border-zinc-700 focus-within:border-cyan-500/50 focus-within:ring-1 focus-within:ring-cyan-500/20 transition-all px-3 py-2">
             <textarea
               ref={textareaRef}
               value={inputText}
@@ -397,7 +397,7 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
             <button
               onClick={handleSend}
               disabled={!inputText.trim() || isLoading || !isAuthenticated}
-              className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-amber-500 text-white disabled:opacity-30 hover:bg-amber-400 transition-colors"
+              className="mb-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-cyan-500 text-white disabled:opacity-30 hover:bg-cyan-400 transition-colors"
             >
               {isLoading ? (
                 <Loader2 size={13} className="animate-spin" />
@@ -416,10 +416,10 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
       <button
         onClick={() => onOpenChange(!open)}
         aria-label={open ? "Close chat" : "Open AI chat"}
-        className={`fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-2xl shadow-amber-500/30 transition-all duration-300 hover:scale-110 active:scale-95 ${
+        className={`fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-2xl shadow-cyan-500/25 transition-all duration-300 hover:scale-110 active:scale-95 ${
           open
             ? "bg-zinc-800 border border-zinc-700 rotate-0"
-            : "bg-linear-to-br from-amber-500 to-orange-600 border-0"
+            : "bg-linear-to-br from-cyan-500 to-blue-600 border-0"
         }`}
       >
         <span
@@ -433,7 +433,7 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
         </span>
         {/* unread dot — shown when panel is closed and there are messages */}
         {!open && !!messages?.length && (
-          <span className="absolute -top-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-amber-400 border-2 border-zinc-950" />
+          <span className="absolute -top-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-cyan-400 border-2 border-zinc-950" />
         )}
       </button>
     </>

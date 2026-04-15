@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0908;
-  --foreground: #fafaf9;
+  --background: #070a10;
+  --foreground: #f8fafc;
   --font-inter: "Avenir Next", "Segoe UI", sans-serif;
   --font-playfair: "Iowan Old Style", "Palatino Linotype", serif;
 }
@@ -232,7 +232,7 @@ html {
 
 /* Gradient text */
 .gradient-text-amber {
-  background: linear-gradient(135deg, #f59e0b, #f97316, #fb923c);
+  background: linear-gradient(135deg, #22d3ee, #3b82f6, #6366f1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

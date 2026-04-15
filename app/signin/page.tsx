@@ -90,15 +90,15 @@ export default function SignInPage() {
           aria-live="polite"
         >
           <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-black/35 p-6 shadow-2xl shadow-black/70">
-            <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-amber-500/12 via-orange-500/6 to-transparent" />
-            <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-amber-500/12 blur-3xl" />
+            <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-cyan-500/12 via-blue-500/6 to-transparent" />
+            <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-cyan-500/12 blur-3xl" />
 
             <div className="relative flex items-start gap-4">
-              <div className="mt-0.5 flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500 to-orange-600 shadow-lg shadow-amber-500/20">
+              <div className="mt-0.5 flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/20">
                 <CheckCircle2 size={18} className="text-white" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[11px] uppercase tracking-[0.22em] text-amber-200/90">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-cyan-200/90">
                   Brew Haven
                 </p>
                 <p className="mt-1 text-base font-semibold text-white leading-snug">
@@ -111,12 +111,12 @@ export default function SignInPage() {
                 </p>
 
                 <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-white/8 border border-white/8">
-                  <div className="h-full rounded-full bg-linear-to-r from-amber-400 via-orange-400 to-amber-400 opacity-95 animate-fake-progress">
+                  <div className="h-full rounded-full bg-linear-to-r from-cyan-400 via-sky-400 to-indigo-500 opacity-95 animate-fake-progress">
                     <div className="h-full w-full bg-linear-to-r from-white/0 via-white/25 to-white/0 animate-shimmer opacity-70" />
                   </div>
                 </div>
               </div>
-              <Loader2 size={18} className="text-amber-300 animate-spin" />
+              <Loader2 size={18} className="text-cyan-300 animate-spin" />
             </div>
           </div>
         </div>
@@ -131,27 +131,27 @@ export default function SignInPage() {
         />
       </div>
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[-12%] top-[-18%] h-112 w-md rounded-full bg-amber-500/25 blur-3xl animate-pulse-glow" />
-        <div className="absolute bottom-[-20%] right-[-12%] h-136 w-136 rounded-full bg-orange-500/20 blur-3xl animate-pulse-glow delay-300" />
+        <div className="absolute left-[-12%] top-[-18%] h-112 w-md rounded-full bg-cyan-500/22 blur-3xl animate-pulse-glow" />
+        <div className="absolute bottom-[-20%] right-[-12%] h-136 w-136 rounded-full bg-blue-500/18 blur-3xl animate-pulse-glow delay-300" />
         <div className="absolute left-[38%] top-[12%] h-36 w-36 rounded-full border border-white/10 bg-white/5 blur-2xl animate-float" />
       </div>
 
       <div className="noise-overlay relative mx-auto grid min-h-screen w-full max-w-6xl items-center gap-10 px-6 py-8 lg:grid-cols-[1.1fr_0.9fr]">
         <section className="animate-fade-in-up hidden lg:block">
           <Link href="/" className="inline-flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-amber-400 to-orange-600 shadow-lg shadow-amber-500/40">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-400 to-blue-600 shadow-lg shadow-cyan-500/30">
               <Coffee size={22} className="text-white" />
             </span>
             <span
               className="text-3xl font-bold tracking-tight"
               style={{ fontFamily: "var(--font-playfair)" }}
             >
-              Brew<span className="text-amber-400"> Haven</span>
+              Brew<span className="text-cyan-400"> Haven</span>
             </span>
           </Link>
 
           <div className="mt-10 max-w-xl">
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs tracking-wide text-amber-300">
+            <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs tracking-wide text-cyan-300">
               <Sparkles size={14} />
               Crafted for modern coffee lovers
             </p>
@@ -176,11 +176,11 @@ export default function SignInPage() {
               <p className="mt-3 text-xs text-stone-300">Secure checkout</p>
             </div>
             <div className="glass-card hover-lift rounded-2xl p-4">
-              <Clock3 size={18} className="text-amber-300" />
+              <Clock3 size={18} className="text-cyan-300" />
               <p className="mt-3 text-xs text-stone-300">Fast reordering</p>
             </div>
             <div className="glass-card hover-lift rounded-2xl p-4">
-              <Coffee size={18} className="text-orange-300" />
+              <Coffee size={18} className="text-sky-300" />
               <p className="mt-3 text-xs text-stone-300">Daily specials</p>
             </div>
           </div>
@@ -192,14 +192,14 @@ export default function SignInPage() {
               href="/"
               className="mb-8 flex items-center justify-center gap-3 lg:hidden"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-amber-400 to-orange-600 shadow-lg shadow-amber-500/35">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-400 to-blue-600 shadow-lg shadow-cyan-500/28">
                 <Coffee size={20} className="text-white" />
               </span>
               <span
                 className="text-2xl font-bold tracking-tight"
                 style={{ fontFamily: "var(--font-playfair)" }}
               >
-                Brew<span className="text-amber-400"> Haven</span>
+                Brew<span className="text-cyan-400"> Haven</span>
               </span>
             </Link>
 
@@ -213,7 +213,7 @@ export default function SignInPage() {
                   className="h-32 w-full object-cover"
                 />
                 <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-[#0a0908]/75 via-transparent to-transparent" />
-                <p className="absolute bottom-2 left-3 text-[11px] tracking-wide text-amber-200">
+                <p className="absolute bottom-2 left-3 text-[11px] tracking-wide text-cyan-200">
                   Brew Haven Coffee House
                 </p>
               </div>
@@ -249,7 +249,7 @@ export default function SignInPage() {
                     aria-invalid={!!error}
                     aria-describedby={error ? errorId : undefined}
                     disabled={isBusy}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all"
                   />
                 </div>
               )}
@@ -276,7 +276,7 @@ export default function SignInPage() {
                   aria-invalid={!!error}
                   aria-describedby={error ? errorId : undefined}
                   disabled={isBusy}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all"
                 />
               </div>
 
@@ -302,14 +302,14 @@ export default function SignInPage() {
                   aria-invalid={!!error}
                   aria-describedby={error ? errorId : undefined}
                   disabled={isBusy}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-10 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-10 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   disabled={isBusy}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-500 hover:text-amber-400 transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-500 hover:text-cyan-300 transition-colors"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -328,7 +328,7 @@ export default function SignInPage() {
               <button
                 type="submit"
                 disabled={isBusy}
-                className="group w-full flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-amber-500 via-orange-500 to-red-500 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-900/30 transition-all hover:brightness-110 disabled:opacity-50"
+                className="group w-full flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-cyan-500 via-sky-500 to-indigo-600 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-900/20 transition-all hover:brightness-110 disabled:opacity-50"
               >
                 {isBusy ? (
                   <Loader2 size={16} className="animate-spin" />
@@ -342,7 +342,7 @@ export default function SignInPage() {
                   </>
                 )}
                 {isRedirecting && (
-                  <span className="text-xs text-white/80">Redirecting…</span>
+                  <span className="text-xs text-white/85">Redirecting…</span>
                 )}
               </button>
             </form>
@@ -354,7 +354,7 @@ export default function SignInPage() {
                   setError("");
                 }}
                 disabled={isBusy}
-                className="text-xs text-stone-400 transition-colors hover:text-amber-300"
+                className="text-xs text-stone-400 transition-colors hover:text-cyan-300"
               >
                 {flow === "signIn"
                   ? "New here? Create your Brew Haven account"

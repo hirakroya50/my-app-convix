@@ -100,7 +100,7 @@ export default function AdminMenuPage() {
   if (authLoading || currentUser === undefined) {
     return (
       <div className="min-h-screen bg-[#0a0908] flex items-center justify-center">
-        <Loader2 size={32} className="text-amber-400 animate-spin" />
+        <Loader2 size={32} className="text-cyan-400 animate-spin" />
       </div>
     );
   }
@@ -187,13 +187,13 @@ export default function AdminMenuPage() {
   const allOrders = orders;
 
   return (
-    <div className="min-h-screen bg-[#0a0908] text-stone-100">
+    <div className="min-h-screen bg-[#070a10] text-stone-100">
       {/* Header */}
-      <header className="border-b border-white/5 bg-[#0a0908]/90 backdrop-blur-xl sticky top-0 z-30">
+      <header className="border-b border-white/5 bg-[#070a10]/90 backdrop-blur-xl sticky top-0 z-30">
         <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-amber-400 to-orange-600">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-cyan-400 to-blue-600">
                 <Coffee size={16} className="text-white" />
               </div>
               <div>
@@ -242,8 +242,8 @@ export default function AdminMenuPage() {
               className="rounded-2xl border border-white/6 bg-white/3 p-5"
             >
               <div className="flex items-center gap-3 mb-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 border border-amber-500/20">
-                  <Icon size={14} className="text-amber-400" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/10 border border-cyan-500/20">
+                  <Icon size={14} className="text-cyan-400" />
                 </div>
                 <span className="text-md text-stone-500">{label}</span>
               </div>
@@ -267,7 +267,7 @@ export default function AdminMenuPage() {
               aria-selected={activeTab === tab}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 activeTab === tab
-                  ? "bg-amber-500 text-white"
+                  ? "bg-cyan-500 text-white"
                   : "text-stone-400 hover:text-white"
               }`}
             >
@@ -305,7 +305,7 @@ export default function AdminMenuPage() {
                   setEditingId(null);
                   setForm(emptyForm);
                 }}
-                className="flex items-center font-bold gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-amber-500 text-white hover:bg-amber-400 transition-colors"
+                className="flex items-center font-bold gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-cyan-500 text-white hover:bg-cyan-400 transition-colors"
               >
                 <Plus size={16} />
                 Add Item
@@ -313,9 +313,9 @@ export default function AdminMenuPage() {
             </div>
 
             {(showAddForm || editingId) && (
-              <div className="mb-6 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-5">
+              <div className="mb-6 rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-5">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-semibold text-sm text-amber-400">
+                  <h2 className="font-semibold text-sm text-cyan-300">
                     {editingId ? "Edit Item" : "Add New Item"}
                   </h2>
                   <button
@@ -331,7 +331,7 @@ export default function AdminMenuPage() {
                     placeholder="Item name"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50"
+                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-cyan-500/50"
                   />
                   <input
                     type="number"
@@ -342,7 +342,7 @@ export default function AdminMenuPage() {
                     onChange={(e) =>
                       setForm({ ...form, price: e.target.value })
                     }
-                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50"
+                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-cyan-500/50"
                   />
                   <input
                     type="text"
@@ -351,14 +351,14 @@ export default function AdminMenuPage() {
                     onChange={(e) =>
                       setForm({ ...form, description: e.target.value })
                     }
-                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50"
+                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-cyan-500/50"
                   />
                   <select
                     value={form.category}
                     onChange={(e) =>
                       setForm({ ...form, category: e.target.value })
                     }
-                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500/50"
+                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500/50"
                   >
                     {CATEGORIES.map((c) => (
                       <option key={c} value={c} className="bg-zinc-900">
@@ -374,7 +374,7 @@ export default function AdminMenuPage() {
                     onChange={(e) =>
                       setForm({ ...form, quantity: e.target.value })
                     }
-                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50"
+                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-cyan-500/50"
                   />
                   <input
                     type="text"
@@ -383,7 +383,7 @@ export default function AdminMenuPage() {
                     onChange={(e) =>
                       setForm({ ...form, imageEmoji: e.target.value })
                     }
-                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50"
+                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-cyan-500/50"
                   />
                 </div>
                 <div className="flex items-center justify-between mt-4">
@@ -394,13 +394,13 @@ export default function AdminMenuPage() {
                       onChange={(e) =>
                         setForm({ ...form, available: e.target.checked })
                       }
-                      className="h-4 w-4 rounded border-stone-600 accent-amber-500"
+                      className="h-4 w-4 rounded border-stone-600 accent-cyan-500"
                     />
                     Available for sale
                   </label>
                   <button
                     onClick={handleSave}
-                    className="flex items-center gap-1.5 text-sm px-4 py-2 rounded-xl bg-amber-500 text-white hover:bg-amber-400 transition-colors"
+                    className="flex items-center gap-1.5 text-sm px-4 py-2 rounded-xl bg-cyan-500 text-white hover:bg-cyan-400 transition-colors"
                   >
                     <Save size={14} />
                     {editingId ? "Update" : "Add"}
@@ -464,7 +464,7 @@ export default function AdminMenuPage() {
                       </div>
                       <div className="flex items-center gap-5 shrink-0 ml-4">
                         <div className="text-right">
-                          <p className="text-sm font-semibold text-amber-400">
+                          <p className="text-sm font-semibold text-cyan-400">
                             ${item.price.toFixed(2)}
                           </p>
                           <p className="text-sm font-medium text-stone-500">
@@ -474,7 +474,7 @@ export default function AdminMenuPage() {
                         <div className="flex gap-1">
                           <button
                             onClick={() => handleEdit(item)}
-                            className="p-1.5 rounded-lg text-stone-500 hover:text-amber-400 hover:bg-amber-500/10 transition-all"
+                            className="p-1.5 rounded-lg text-stone-500 hover:text-cyan-300 hover:bg-cyan-500/10 transition-all"
                             title="Edit"
                           >
                             <Pencil size={17} />
@@ -580,7 +580,7 @@ const AllOrders = ({
                     {new Date(order.timestamp).toLocaleString()}
                   </span>
                 </div>
-                <span className="font-semibold text-sm text-amber-400">
+                <span className="font-semibold text-sm text-cyan-400">
                   ${order.totalPrice.toFixed(2)}
                 </span>
               </div>
@@ -620,7 +620,7 @@ const ActiveOrders = ({
   return (
     <div className="mb-6">
       <div className="flex items-end justify-between gap-4 mb-3">
-        <h2 className="font-semibold text-sm text-amber-400">
+        <h2 className="font-semibold text-sm text-cyan-400">
           Active Orders ({activeOrders.length})
         </h2>
         {activeOrders.length > pageSize && (
@@ -667,7 +667,7 @@ const ActiveOrders = ({
                   {new Date(order.timestamp).toLocaleTimeString()}
                 </span>
               </div>
-              <span className="font-semibold text-sm text-amber-400">
+              <span className="font-semibold text-sm text-cyan-400">
                 ${order.totalPrice.toFixed(2)}
               </span>
             </div>
@@ -686,7 +686,7 @@ const ActiveOrders = ({
                         status: nextStatus,
                       })
                     }
-                    className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-all"
+                    className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 hover:bg-cyan-500/20 transition-all"
                   >
                     <ChevronRight size={12} />
                     {nextStatus === "picked_up"

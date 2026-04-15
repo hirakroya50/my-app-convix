@@ -39,10 +39,10 @@ const FEATURES = [
     icon: MessageCircle,
     title: "AI-Powered Ordering",
     desc: "Chat naturally to explore the menu, get curated recommendations, and place orders — no app download needed.",
-    glow: "from-amber-500/15 to-orange-500/5",
-    iconBg: "bg-amber-500/10 border-amber-500/20",
-    iconColor: "text-amber-400",
-    accent: "group-hover:border-amber-500/50",
+    glow: "from-cyan-500/15 to-blue-500/5",
+    iconBg: "bg-cyan-500/10 border-cyan-500/20",
+    iconColor: "text-cyan-400",
+    accent: "group-hover:border-cyan-500/50",
   },
   {
     icon: Leaf,
@@ -80,7 +80,7 @@ const MENU_HIGHLIGHTS = [
     tag: "Best Seller",
     desc: "18-hour steep, nitrogen-kissed, served over hand-cut ice",
     emoji: "🥤",
-    tagColor: "bg-amber-500/15 text-amber-400",
+    tagColor: "bg-cyan-500/15 text-cyan-300",
   },
   {
     name: "Honey Oat Latte",
@@ -224,7 +224,7 @@ function StatCard({
     <div className="flex flex-col items-center gap-1.5">
       <span className="text-3xl sm:text-4xl font-bold text-white tabular-nums">
         {animated}
-        <span className="text-amber-400">{suffix}</span>
+        <span className="text-cyan-400">{suffix}</span>
       </span>
       <span className="text-xs text-stone-500 tracking-wide">{label}</span>
     </div>
@@ -272,26 +272,26 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a0908] text-stone-100 overflow-x-hidden">
+    <div className="min-h-screen bg-[#070a10] text-stone-100 overflow-x-hidden">
       {/* ── NAVBAR ───────────────────────────────────────────── */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? "bg-[#0a0908]/90 backdrop-blur-2xl border-b border-white/5 shadow-2xl shadow-black/40"
+            ? "bg-[#070a10]/90 backdrop-blur-2xl border-b border-white/5 shadow-2xl shadow-black/40"
             : "bg-transparent"
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:py-5">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <span className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-amber-400 to-orange-600 shadow-lg shadow-amber-500/30 group-hover:shadow-amber-500/50 transition-shadow duration-300">
+            <span className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-400 to-blue-600 shadow-lg shadow-cyan-500/25 group-hover:shadow-cyan-500/40 transition-shadow duration-300">
               <Coffee size={18} className="text-white" />
             </span>
             <span
               className="text-lg font-bold tracking-tight"
               style={{ fontFamily: "var(--font-playfair)" }}
             >
-              Brew<span className="text-amber-400"> Haven</span>
+              Brew<span className="text-cyan-400"> Haven</span>
             </span>
           </Link>
 
@@ -330,7 +330,7 @@ export default function Home() {
             {currentUser?.role === "owner" ? (
               <Link
                 href="/admin/menu"
-                className="group relative flex items-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:brightness-110 transition-all duration-300 overflow-hidden"
+                className="group relative flex items-center gap-2 rounded-full bg-linear-to-r from-cyan-500 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/35 hover:brightness-110 transition-all duration-300 overflow-hidden"
               >
                 <span className="absolute inset-0 bg-linear-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
                 <Coffee size={14} />
@@ -340,7 +340,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setChatOpen(true)}
-                className="group relative flex items-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:brightness-110 transition-all duration-300 overflow-hidden"
+                className="group relative flex items-center gap-2 rounded-full bg-linear-to-r from-cyan-500 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/35 hover:brightness-110 transition-all duration-300 overflow-hidden"
               >
                 <span className="absolute inset-0 bg-linear-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
                 <Coffee size={14} />
@@ -361,7 +361,7 @@ export default function Home() {
 
         {/* Mobile dropdown */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-white/5 bg-[#0a0908]/95 backdrop-blur-xl px-6 py-5 flex flex-col gap-4">
+          <div className="md:hidden border-t border-white/5 bg-[#070a10]/95 backdrop-blur-xl px-6 py-5 flex flex-col gap-4">
             {NAV_LINKS.map((l) => (
               <a
                 key={l}
@@ -393,7 +393,7 @@ export default function Home() {
             {currentUser?.role === "owner" ? (
               <Link
                 href="/admin/menu"
-                className="flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-3 text-sm font-semibold text-white mt-1"
+                className="flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-cyan-500 to-blue-600 px-5 py-3 text-sm font-semibold text-white mt-1"
                 onClick={() => setMobileOpen(false)}
               >
                 <Coffee size={14} />
@@ -402,7 +402,7 @@ export default function Home() {
             ) : (
               <button
                 type="button"
-                className="flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-5 py-3 text-sm font-semibold text-white mt-1"
+                className="flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-cyan-500 to-blue-600 px-5 py-3 text-sm font-semibold text-white mt-1"
                 onClick={() => {
                   setChatOpen(true);
                   setMobileOpen(false);
@@ -429,16 +429,16 @@ export default function Home() {
             sizes="100vw"
           />
           {/* Multi-layer gradient overlay for drama */}
-          <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/40 to-[#0a0908]" />
+          <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/40 to-[#070a10]" />
           <div className="absolute inset-0 bg-linear-to-r from-black/40 via-transparent to-transparent" />
-          {/* Warm amber glow at center */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-125 rounded-full bg-amber-600/10 blur-[120px] pointer-events-none" />
+          {/* Accent glow at center */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 h-125 rounded-full bg-cyan-600/10 blur-[120px] pointer-events-none" />
         </div>
 
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center text-center px-6 pt-32 pb-24 max-w-5xl mx-auto">
           {/* Badge */}
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/8 px-4 py-1.5 text-xs font-medium text-amber-300 backdrop-blur-sm animate-fade-in">
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/8 px-4 py-1.5 text-xs font-medium text-cyan-200 backdrop-blur-sm animate-fade-in">
             <Sparkles size={11} />
             Now with AI-powered coffee discovery
           </div>
@@ -505,12 +505,12 @@ export default function Home() {
       {/* ── FEATURES ─────────────────────────────────────────── */}
       <section id="about" className="relative px-6 py-28 overflow-hidden">
         {/* Background decoration */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-600/5 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-orange-600/5 rounded-full blur-[80px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-600/6 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-600/6 rounded-full blur-[80px] pointer-events-none" />
 
         <div className="mx-auto max-w-7xl relative">
           <div className="mb-16 max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400 mb-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-4">
               Why Brew Haven
             </p>
             <h2
@@ -593,10 +593,10 @@ export default function Home() {
                 <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
               </div>
               {/* Floating stat card */}
-              <div className="absolute bottom-[42%] right-[48%] translate-x-1/2 translate-y-1/2 glass-card rounded-2xl px-5 py-4 shadow-xl border border-white/8 z-10 backdrop-blur-xl bg-[#0a0908]/80">
+              <div className="absolute bottom-[42%] right-[48%] translate-x-1/2 translate-y-1/2 glass-card rounded-2xl px-5 py-4 shadow-xl border border-white/8 z-10 backdrop-blur-xl bg-[#070a10]/80">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/15 border border-amber-500/20">
-                    <TrendingUp size={16} className="text-amber-400" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/15 border border-cyan-500/20">
+                    <TrendingUp size={16} className="text-cyan-400" />
                   </div>
                   <div>
                     <p className="text-xs text-stone-100 font-bold">Founded</p>
@@ -608,7 +608,7 @@ export default function Home() {
 
             {/* Text */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400 mb-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-4">
                 Our Story
               </p>
               <h2
@@ -638,7 +638,7 @@ export default function Home() {
                 ].map(({ n, label }) => (
                   <div
                     key={label}
-                    className="border-l-2 border-amber-500/40 pl-4"
+                    className="border-l-2 border-cyan-500/40 pl-4"
                   >
                     <div
                       className="text-2xl font-bold text-white"
@@ -657,11 +657,11 @@ export default function Home() {
 
       {/* ── MENU HIGHLIGHTS ──────────────────────────────────── */}
       <section id="menu" className="relative px-6 py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-b from-transparent via-amber-950/5 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-linear-to-b from-transparent via-sky-950/6 to-transparent pointer-events-none" />
         <div className="mx-auto max-w-7xl relative">
           <div className="mb-16 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400 mb-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-4">
                 Our Menu
               </p>
               <h2
@@ -682,7 +682,7 @@ export default function Home() {
                   key={name}
                   className="group relative overflow-hidden rounded-2xl border border-white/6 bg-white/3 p-5 hover:border-white/10 hover:bg-white/5 transition-all duration-300 hover:-translate-y-1"
                 >
-                  <div className="absolute inset-0 bg-linear-to-br from-amber-500/0 to-transparent group-hover:from-amber-500/3 transition-all duration-300 pointer-events-none" />
+                  <div className="absolute inset-0 bg-linear-to-br from-cyan-500/0 to-transparent group-hover:from-cyan-500/3 transition-all duration-300 pointer-events-none" />
                   <div className="relative flex items-start justify-between gap-4">
                     <div className="flex items-start gap-4 flex-1 min-w-0">
                       <span className="text-3xl shrink-0 leading-none pt-0.5">
@@ -706,7 +706,7 @@ export default function Home() {
                         </p>
                       </div>
                     </div>
-                    <span className="text-base font-bold text-amber-400 shrink-0 group-hover:text-amber-300 transition-colors">
+                    <span className="text-base font-bold text-cyan-400 shrink-0 group-hover:text-cyan-300 transition-colors">
                       {price}
                     </span>
                   </div>
@@ -721,7 +721,7 @@ export default function Home() {
       <section id="gallery" className="px-6 py-10 pb-28">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400 mb-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-4">
               The Experience
             </p>
             <h2
@@ -758,7 +758,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-linear-to-b from-transparent via-white/1.5 to-transparent pointer-events-none" />
         <div className="mx-auto max-w-7xl relative">
           <div className="mb-16 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400 mb-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-4">
               Testimonials
             </p>
             <h2
@@ -794,7 +794,7 @@ export default function Home() {
                     alt={name}
                     width={40}
                     height={40}
-                    className="rounded-full object-cover ring-2 ring-amber-500/20"
+                    className="rounded-full object-cover ring-2 ring-cyan-500/20"
                   />
                   <div>
                     <p className="font-semibold text-white text-sm">{name}</p>
@@ -812,7 +812,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400 mb-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-4">
                 Find Us
               </p>
               <h2
@@ -851,8 +851,8 @@ export default function Home() {
                   },
                 ].map(({ icon: Icon, title, lines, id }) => (
                   <div key={title} id={id} className="flex items-start gap-4">
-                    <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-500/20">
-                      <Icon size={16} className="text-amber-400" />
+                    <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+                      <Icon size={16} className="text-cyan-400" />
                     </div>
                     <div>
                       <p className="font-semibold text-white text-sm mb-1">
@@ -881,7 +881,7 @@ export default function Home() {
               <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <div className="inline-flex items-center gap-2 rounded-full bg-black/60 backdrop-blur-md border border-white/10 px-4 py-2">
-                  <MapPin size={13} className="text-amber-400" />
+                  <MapPin size={13} className="text-cyan-400" />
                   <span className="text-xs text-white font-medium">
                     42 Roaster Lane, Coffeeville
                   </span>
@@ -931,14 +931,14 @@ export default function Home() {
             {/* Brand */}
             <div>
               <Link href="/" className="flex items-center gap-2.5 mb-4">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-amber-400 to-orange-600">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-cyan-400 to-blue-600">
                   <Coffee size={16} className="text-white" />
                 </span>
                 <span
                   className="font-bold"
                   style={{ fontFamily: "var(--font-playfair)" }}
                 >
-                  Brew<span className="text-amber-400"> Haven</span>
+                  Brew<span className="text-cyan-400"> Haven</span>
                 </span>
               </Link>
               <p className="text-xs text-stone-300 leading-relaxed max-w-xs">
@@ -988,7 +988,7 @@ export default function Home() {
                 <span>Sat–Sun 7AM–12AM</span>
                 <a
                   href="tel:+14155550182"
-                  className="hover:text-amber-400 transition-colors"
+                  className="hover:text-cyan-300 transition-colors"
                 >
                   +1 (415) 555-0182
                 </a>
