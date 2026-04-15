@@ -523,7 +523,7 @@ const AllOrders = ({
           <h2 className="font-semibold text-sm">All Orders</h2>
           {orders && orders.length > 0 && (
             <div className="flex items-center gap-2">
-              <span className="text-[11px] text-stone-500">
+              <span className="text-[11px] text-stone-200 bg-white/4 border border-white/8 rounded-full px-2.5 py-1">
                 Showing {clampedPage * pageSize + 1}–
                 {Math.min((clampedPage + 1) * pageSize, orders.length)} of{" "}
                 {orders.length}
@@ -532,7 +532,7 @@ const AllOrders = ({
                 type="button"
                 onClick={() => setPage((p) => Math.max(0, p - 1))}
                 disabled={clampedPage === 0}
-                className="text-xs px-2.5 py-1.5 rounded-lg border border-white/10 text-stone-400 hover:text-white hover:border-white/20 disabled:opacity-40 disabled:hover:border-white/10 disabled:hover:text-stone-400 transition-all"
+                className="text-xs px-3 py-1.5 rounded-lg border border-white/12 bg-white/3 text-stone-200 hover:text-white hover:border-white/20 hover:bg-white/6 disabled:opacity-40 disabled:hover:border-white/12 disabled:hover:bg-white/3 disabled:hover:text-stone-200 transition-all"
               >
                 Prev
               </button>
@@ -542,7 +542,7 @@ const AllOrders = ({
                   setPage((p) => Math.min(pageCount - 1, p + 1))
                 }
                 disabled={clampedPage >= pageCount - 1}
-                className="text-xs px-2.5 py-1.5 rounded-lg border border-white/10 text-stone-400 hover:text-white hover:border-white/20 disabled:opacity-40 disabled:hover:border-white/10 disabled:hover:text-stone-400 transition-all"
+                className="text-xs px-3 py-1.5 rounded-lg border border-white/12 bg-white/3 text-stone-200 hover:text-white hover:border-white/20 hover:bg-white/6 disabled:opacity-40 disabled:hover:border-white/12 disabled:hover:bg-white/3 disabled:hover:text-stone-200 transition-all"
               >
                 Next
               </button>
@@ -625,14 +625,14 @@ const ActiveOrders = ({
         </h2>
         {activeOrders.length > pageSize && (
           <div className="flex items-center gap-2">
-            <span className="text-[11px] text-stone-500">
+            <span className="text-[11px] text-stone-200 bg-white/4 border border-white/8 rounded-full px-2.5 py-1">
               Page {clampedPage + 1} of {pageCount}
             </span>
             <button
               type="button"
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={clampedPage === 0}
-              className="text-xs px-2.5 py-1.5 rounded-lg border border-white/10 text-stone-400 hover:text-white hover:border-white/20 disabled:opacity-40 disabled:hover:border-white/10 disabled:hover:text-stone-400 transition-all"
+              className="text-xs px-3 py-1.5 rounded-lg border border-white/12 bg-white/3 text-stone-200 hover:text-white hover:border-white/20 hover:bg-white/6 disabled:opacity-40 disabled:hover:border-white/12 disabled:hover:bg-white/3 disabled:hover:text-stone-200 transition-all"
             >
               Prev
             </button>
@@ -640,7 +640,7 @@ const ActiveOrders = ({
               type="button"
               onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
               disabled={clampedPage >= pageCount - 1}
-              className="text-xs px-2.5 py-1.5 rounded-lg border border-white/10 text-stone-400 hover:text-white hover:border-white/20 disabled:opacity-40 disabled:hover:border-white/10 disabled:hover:text-stone-400 transition-all"
+              className="text-xs px-3 py-1.5 rounded-lg border border-white/12 bg-white/3 text-stone-200 hover:text-white hover:border-white/20 hover:bg-white/6 disabled:opacity-40 disabled:hover:border-white/12 disabled:hover:bg-white/3 disabled:hover:text-stone-200 transition-all"
             >
               Next
             </button>
