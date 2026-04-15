@@ -3,7 +3,7 @@
 import { useQuery, useMutation } from "convex/react";
 import { useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import type { Id } from "@/convex/_generated/dataModel";
+import type { Doc, Id } from "@/convex/_generated/dataModel";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -46,20 +46,26 @@ const emptyForm: MenuForm = {
 
 const CATEGORIES = ["Hot Drinks", "Cold Drinks", "Specialty", "Food", "Other"];
 
-const STATUS_FLOW: Record<string, string[]> = {
+type OrderStatus = Doc<"orders">["status"];
+type UpdateableOrderStatus = Extract<
+  OrderStatus,
+  "preparing" | "ready" | "picked_up" | "cancelled"
+>;
+
+const STATUS_FLOW: Partial<Record<OrderStatus, UpdateableOrderStatus[]>> = {
   paid: ["preparing"],
   preparing: ["ready"],
   ready: ["picked_up"],
 };
 
-const STATUS_COLORS: Record<string, string> = {
+const STATUS_COLORS = {
   pending: "bg-amber-500/15 text-amber-400 border-amber-500/30",
   paid: "bg-blue-500/15 text-blue-400 border-blue-500/30",
   preparing: "bg-violet-500/15 text-violet-400 border-violet-500/30",
   ready: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
   picked_up: "bg-sky-500/15 text-sky-400 border-sky-500/30",
   cancelled: "bg-rose-500/15 text-rose-400 border-rose-500/30",
-};
+} satisfies Record<OrderStatus, string>;
 
 export default function AdminMenuPage() {
   const { isAuthenticated, isLoading: authLoading } = useConvexAuth();
@@ -275,141 +281,12 @@ export default function AdminMenuPage() {
         {/* ── ORDERS TAB ─── */}
         {activeTab === "orders" && (
           <>
-            {activeOrders.length > 0 && (
-              <div className="mb-6">
-                <h2 className="font-semibold text-sm mb-3 text-amber-400">
-                  Active Orders ({activeOrders.length})
-                </h2>
-                <div className="space-y-2">
-                  {activeOrders.map((order) => (
-                    <div
-                      key={order._id}
-                      className="rounded-2xl border border-white/6 bg-white/3 p-5 hover:border-white/10 transition-colors"
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                          <span
-                            className={`text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wide border ${STATUS_COLORS[order.status] || ""}`}
-                          >
-                            {order.status === "picked_up"
-                              ? "Picked Up"
-                              : order.status}
-                          </span>
-                          <span className="text-xs text-stone-500">
-                            {order.pickupName || "Customer"}
-                          </span>
-                          <span className="text-xs text-stone-600">
-                            {new Date(order.timestamp).toLocaleTimeString()}
-                          </span>
-                        </div>
-                        <span className="font-semibold text-sm text-amber-400">
-                          ${order.totalPrice.toFixed(2)}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm text-stone-400">
-                          {order.items
-                            .map((i) => `${i.quantity}× ${i.name}`)
-                            .join(", ")}
-                        </p>
-                        <div className="flex gap-1.5">
-                          {(STATUS_FLOW[order.status] || []).map(
-                            (nextStatus) => (
-                              <button
-                                key={nextStatus}
-                                onClick={() =>
-                                  updateOrderStatus({
-                                    id: order._id,
-                                    status: nextStatus as
-                                      | "preparing"
-                                      | "ready"
-                                      | "picked_up"
-                                      | "cancelled",
-                                  })
-                                }
-                                className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-all"
-                              >
-                                <ChevronRight size={12} />
-                                {nextStatus === "picked_up"
-                                  ? "Mark Picked Up"
-                                  : `Mark ${nextStatus.charAt(0).toUpperCase() + nextStatus.slice(1)}`}
-                              </button>
-                            ),
-                          )}
-                          {order.status !== "cancelled" && (
-                            <button
-                              onClick={() =>
-                                updateOrderStatus({
-                                  id: order._id,
-                                  status: "cancelled",
-                                })
-                              }
-                              className="text-xs px-2 py-1.5 rounded-lg text-rose-400 hover:bg-rose-500/10 transition-all"
-                            >
-                              Cancel
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <ActiveOrders
+              activeOrders={activeOrders}
+              onUpdateStatus={updateOrderStatus}
+            />
 
-            <div className="rounded-2xl border border-white/6 overflow-hidden">
-              <div className="bg-white/3 px-5 py-3 border-b border-white/6">
-                <h2 className="font-semibold text-sm">All Orders</h2>
-              </div>
-              {!orders ? (
-                <div className="px-5 py-12 text-center text-stone-500 text-sm">
-                  Loading…
-                </div>
-              ) : orders.length === 0 ? (
-                <div className="px-5 py-12 text-center">
-                  <ShoppingBag
-                    size={32}
-                    className="text-stone-700 mx-auto mb-3"
-                  />
-                  <p className="text-stone-500 text-sm">No orders yet</p>
-                </div>
-              ) : (
-                <div className="divide-y divide-white/5">
-                  {recentOrders.map((order) => (
-                    <div
-                      key={order._id}
-                      className="px-5 py-4 hover:bg-white/2 transition-colors"
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wide border ${STATUS_COLORS[order.status] || ""}`}
-                          >
-                            {order.status === "picked_up"
-                              ? "Picked Up"
-                              : order.status}
-                          </span>
-                          <span className="text-xs text-stone-500">
-                            {order.pickupName || "Customer"}
-                          </span>
-                          <span className="text-xs text-stone-600">
-                            {new Date(order.timestamp).toLocaleString()}
-                          </span>
-                        </div>
-                        <span className="font-semibold text-sm text-amber-400">
-                          ${order.totalPrice.toFixed(2)}
-                        </span>
-                      </div>
-                      <p className="text-xs text-stone-400">
-                        {order.items
-                          .map((i) => `${i.quantity}× ${i.name}`)
-                          .join(", ")}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <AllOrders recentOrders={recentOrders} orders={orders} />
           </>
         )}
 
@@ -623,3 +500,147 @@ export default function AdminMenuPage() {
     </div>
   );
 }
+
+const AllOrders = ({
+  orders,
+  recentOrders,
+}: {
+  orders: Doc<"orders">[] | undefined;
+  recentOrders: Doc<"orders">[];
+}) => {
+  return (
+    <div className="rounded-2xl border border-white/6 overflow-hidden">
+      <div className="bg-white/3 px-5 py-3 border-b border-white/6">
+        <h2 className="font-semibold text-sm">All Orders</h2>
+      </div>
+      {orders === undefined ? (
+        <div className="px-5 py-12 text-center text-stone-500 text-sm">
+          Loading…
+        </div>
+      ) : orders.length === 0 ? (
+        <div className="px-5 py-12 text-center">
+          <ShoppingBag size={32} className="text-stone-700 mx-auto mb-3" />
+          <p className="text-stone-500 text-sm">No orders yet</p>
+        </div>
+      ) : (
+        <div className="divide-y divide-white/5">
+          {recentOrders.map((order) => (
+            <div
+              key={order._id}
+              className="px-5 py-4 hover:bg-white/2 transition-colors"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wide border ${STATUS_COLORS[order.status] || ""}`}
+                  >
+                    {order.status === "picked_up" ? "Picked Up" : order.status}
+                  </span>
+                  <span className="text-xs text-stone-500">
+                    {order.pickupName || "Customer"}
+                  </span>
+                  <span className="text-xs text-stone-600">
+                    {new Date(order.timestamp).toLocaleString()}
+                  </span>
+                </div>
+                <span className="font-semibold text-sm text-amber-400">
+                  ${order.totalPrice.toFixed(2)}
+                </span>
+              </div>
+              <p className="text-xs text-stone-400">
+                {order.items.map((i) => `${i.quantity}× ${i.name}`).join(", ")}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ActiveOrders = ({
+  activeOrders,
+  onUpdateStatus,
+}: {
+  activeOrders: Doc<"orders">[];
+  onUpdateStatus: (args: {
+    id: Id<"orders">;
+    status: UpdateableOrderStatus;
+  }) => Promise<unknown>;
+}) => {
+  if (activeOrders.length === 0) return null;
+
+  return (
+    <div className="mb-6">
+      <h2 className="font-semibold text-sm mb-3 text-amber-400">
+        Active Orders ({activeOrders.length})
+      </h2>
+      <div className="space-y-2">
+        {activeOrders.map((order) => (
+          <div
+            key={order._id}
+            className="rounded-2xl border border-white/6 bg-white/3 p-5 hover:border-white/10 transition-colors"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-3">
+                <span
+                  className={`text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wide border ${STATUS_COLORS[order.status] || ""}`}
+                >
+                  {order.status === "picked_up" ? "Picked Up" : order.status}
+                </span>
+                <span className="text-xs text-stone-500">
+                  {order.pickupName || "Customer"}
+                </span>
+                <span className="text-xs text-stone-600">
+                  {new Date(order.timestamp).toLocaleTimeString()}
+                </span>
+              </div>
+              <span className="font-semibold text-sm text-amber-400">
+                ${order.totalPrice.toFixed(2)}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-stone-400">
+                {order.items.map((i) => `${i.quantity}× ${i.name}`).join(", ")}
+              </p>
+              <div className="flex gap-1.5">
+                {(STATUS_FLOW[order.status] || []).map((nextStatus) => (
+                  <button
+                    key={nextStatus}
+                    type="button"
+                    onClick={() =>
+                      onUpdateStatus({
+                        id: order._id,
+                        status: nextStatus,
+                      })
+                    }
+                    className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-all"
+                  >
+                    <ChevronRight size={12} />
+                    {nextStatus === "picked_up"
+                      ? "Mark Picked Up"
+                      : `Mark ${nextStatus.charAt(0).toUpperCase() + nextStatus.slice(1)}`}
+                  </button>
+                ))}
+                {order.status !== "cancelled" && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      onUpdateStatus({
+                        id: order._id,
+                        status: "cancelled",
+                      })
+                    }
+                    className="text-xs px-2 py-1.5 rounded-lg text-rose-400 hover:bg-rose-500/10 transition-all"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
