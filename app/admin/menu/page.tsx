@@ -95,12 +95,12 @@ function AdminDashboardSkeleton({
         </div>
       </header>
 
-      <div className="mx-auto max-w-6xl px-6 py-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
           {Array.from({ length: 4 }).map((_, index) => (
             <div
               key={index}
-              className="rounded-2xl border border-white/6 bg-white/3 p-5"
+              className="rounded-xl sm:rounded-2xl border border-white/6 bg-white/3 p-3 sm:p-4 md:p-5"
             >
               <div className="flex items-center gap-3 mb-4">
                 <SkeletonBlock className="h-8 w-8 rounded-lg" />
@@ -111,14 +111,14 @@ function AdminDashboardSkeleton({
           ))}
         </div>
 
-        <div className="flex gap-1 mb-6 bg-white/3 rounded-xl p-1 border border-white/6 w-fit">
+        <div className="flex gap-1 mb-4 sm:mb-6 bg-white/3 rounded-lg sm:rounded-xl p-0.5 sm:p-1 border border-white/6 w-fit">
           <SkeletonBlock
-            className={`h-10 w-24 rounded-lg ${
+            className={`h-8 sm:h-10 w-20 sm:w-24 rounded-lg ${
               activeTab === "orders" ? "bg-cyan-500/40 ring-cyan-500/20" : ""
             }`}
           />
           <SkeletonBlock
-            className={`h-10 w-24 rounded-lg ${
+            className={`h-8 sm:h-10 w-20 sm:w-24 rounded-lg ${
               activeTab === "menu" ? "bg-cyan-500/40 ring-cyan-500/20" : ""
             }`}
           />
@@ -138,37 +138,32 @@ function OrdersTabSkeleton() {
   return (
     <>
       <div className="mb-6">
-        <div className="flex items-end justify-between gap-4 mb-3">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 sm:gap-4 mb-3">
           <SkeletonBlock className="h-4 w-36 rounded-md" />
-          <div className="flex items-center gap-2">
-            <SkeletonBlock className="h-7 w-24 rounded-full" />
-            <SkeletonBlock className="h-8 w-14 rounded-lg" />
-            <SkeletonBlock className="h-8 w-14 rounded-lg" />
+          <div className="flex items-center gap-2 flex-wrap">
+            <SkeletonBlock className="h-6 sm:h-7 w-20 sm:w-24 rounded-full" />
+            <SkeletonBlock className="h-7 sm:h-8 w-12 sm:w-14 rounded-lg" />
+            <SkeletonBlock className="h-7 sm:h-8 w-12 sm:w-14 rounded-lg" />
           </div>
         </div>
-        <div className="space-y-2">
-          {Array.from({ length: 3 }).map((_, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
+          {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
-              className="rounded-2xl border border-white/6 bg-white/3 p-5"
+              className="rounded-xl sm:rounded-2xl border border-white/6 bg-white/3 p-3 sm:p-4"
             >
-              <div className="flex items-center justify-between mb-4 gap-4">
-                <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center justify-between mb-3 gap-3">
+                <div className="flex items-center gap-2 flex-wrap">
                   <SkeletonBlock className="h-5 w-20 rounded-full" />
-                  <SkeletonBlock className="h-3 w-24 rounded-md" />
-                  <SkeletonBlock className="h-3 w-18 rounded-md" />
+                  <SkeletonBlock className="h-3 w-16 rounded-md" />
                 </div>
                 <SkeletonBlock className="h-4 w-16 rounded-md" />
               </div>
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex-1 space-y-2">
-                  <SkeletonBlock className="h-3.5 w-full rounded-md" />
-                  <SkeletonBlock className="h-3.5 w-2/3 rounded-md" />
-                </div>
-                <div className="flex gap-1.5 shrink-0">
-                  <SkeletonBlock className="h-8 w-28 rounded-lg" />
-                  <SkeletonBlock className="h-8 w-16 rounded-lg" />
-                </div>
+              <SkeletonBlock className="h-3 w-3/4 rounded-md mb-1.5" />
+              <SkeletonBlock className="h-3 w-full rounded-md mb-3" />
+              <div className="flex gap-1.5 flex-wrap">
+                <SkeletonBlock className="h-7 w-24 rounded-lg" />
+                <SkeletonBlock className="h-7 w-16 rounded-lg" />
               </div>
             </div>
           ))}
@@ -176,28 +171,28 @@ function OrdersTabSkeleton() {
       </div>
 
       <div className="rounded-2xl border border-white/6 overflow-hidden">
-        <div className="bg-white/3 px-5 py-3 border-b border-white/6">
-          <div className="flex items-center justify-between gap-4">
+        <div className="bg-white/3 px-4 sm:px-5 py-3 border-b border-white/6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
             <SkeletonBlock className="h-4 w-24 rounded-md" />
-            <div className="flex items-center gap-2">
-              <SkeletonBlock className="h-7 w-40 rounded-full" />
-              <SkeletonBlock className="h-8 w-14 rounded-lg" />
-              <SkeletonBlock className="h-8 w-14 rounded-lg" />
+            <div className="flex items-center gap-2 flex-wrap">
+              <SkeletonBlock className="h-6 sm:h-7 w-28 sm:w-40 rounded-full" />
+              <SkeletonBlock className="h-7 sm:h-8 w-12 sm:w-14 rounded-lg" />
+              <SkeletonBlock className="h-7 sm:h-8 w-12 sm:w-14 rounded-lg" />
             </div>
           </div>
         </div>
-        <div className="divide-y divide-white/5">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div key={index} className="px-5 py-4">
-              <div className="flex items-center justify-between mb-3 gap-4">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <SkeletonBlock className="h-5 w-18 rounded-full" />
-                  <SkeletonBlock className="h-3 w-24 rounded-md" />
-                  <SkeletonBlock className="h-3 w-32 rounded-md" />
-                </div>
-                <SkeletonBlock className="h-4 w-16 rounded-md" />
+        <div className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <div
+              key={index}
+              className="rounded-xl border border-white/6 bg-white/2 p-3 sm:p-4"
+            >
+              <div className="flex items-center justify-between mb-2.5 gap-3">
+                <SkeletonBlock className="h-5 w-18 rounded-full" />
+                <SkeletonBlock className="h-4 w-14 rounded-md" />
               </div>
-              <SkeletonBlock className="h-3.5 w-4/5 rounded-md" />
+              <SkeletonBlock className="h-3 w-1/2 rounded-md mb-2" />
+              <SkeletonBlock className="h-3 w-full rounded-md" />
             </div>
           ))}
         </div>
@@ -277,7 +272,6 @@ export default function AdminMenuPage() {
   const addItem = useMutation(api.menu.add);
   const updateItem = useMutation(api.menu.update);
   const removeItem = useMutation(api.menu.remove);
-  const seedMenu = useMutation(api.menu.seed);
   const updateOrderStatus = useMutation(api.orders.updateStatus);
 
   const [editingId, setEditingId] = useState<Id<"menu"> | null>(null);
@@ -680,9 +674,9 @@ export default function AdminMenuPage() {
                       >
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2.5">
-                            <span className="text-lg">
+                            {/* <span className="text-lg">
                               {item.imageEmoji || "☕"}
-                            </span>
+                            </span> */}
                             <p className="font-medium text-sm text-white truncate">
                               {item.name}
                             </p>
@@ -709,7 +703,7 @@ export default function AdminMenuPage() {
                             <p className="text-sm font-semibold text-cyan-400">
                               ${item.price.toFixed(2)}
                             </p>
-                            <p className="text-sm font-medium text-stone-500">
+                            <p className="text-sm font-medium text-red-400">
                               Qty: {item.quantity}
                             </p>
                           </div>
@@ -744,7 +738,7 @@ export default function AdminMenuPage() {
 }
 
 const AllOrders = ({ orders }: { orders: Doc<"orders">[] | undefined }) => {
-  const pageSize = 12;
+  const pageSize = 16;
   const [page, setPage] = useState(0);
 
   const pageCount = orders
@@ -762,12 +756,12 @@ const AllOrders = ({ orders }: { orders: Doc<"orders">[] | undefined }) => {
       className="rounded-2xl border border-white/6 overflow-hidden"
       id="allorderss"
     >
-      <div className="bg-white/3 px-5 py-3 border-b border-white/6">
-        <div className="flex items-center justify-between gap-4">
-          <h2 className="font-semibold text-sm">All Orders</h2>
+      <div className="bg-white/3 px-4 sm:px-5 py-3 border-b border-white/6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+          <h2 className="font-semibold text-xs sm:text-sm">All Orders</h2>
           {orders && orders.length > 0 && (
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-stone-200 bg-white/4 border border-white/8 rounded-full px-2.5 py-1">
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+              <span className="text-[10px] sm:text-[11px] text-stone-200 bg-white/4 border border-white/8 rounded-full px-2 sm:px-2.5 py-1 whitespace-nowrap">
                 Showing {clampedPage * pageSize + 1}–
                 {Math.min((clampedPage + 1) * pageSize, orders.length)} of{" "}
                 {orders.length}
@@ -776,7 +770,7 @@ const AllOrders = ({ orders }: { orders: Doc<"orders">[] | undefined }) => {
                 type="button"
                 onClick={() => setPage((p) => Math.max(0, p - 1))}
                 disabled={clampedPage === 0}
-                className="text-xs px-3 py-1.5 rounded-lg border border-white/12 bg-white/3 text-stone-200 hover:text-white hover:border-white/20 hover:bg-white/6 disabled:opacity-40 disabled:hover:border-white/12 disabled:hover:bg-white/3 disabled:hover:text-stone-200 transition-all"
+                className="text-[10px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border border-white/12 bg-white/3 text-stone-200 hover:text-white hover:border-white/20 hover:bg-white/6 disabled:opacity-40 disabled:hover:border-white/12 disabled:hover:bg-white/3 disabled:hover:text-stone-200 transition-all"
               >
                 Prev
               </button>
@@ -784,7 +778,7 @@ const AllOrders = ({ orders }: { orders: Doc<"orders">[] | undefined }) => {
                 type="button"
                 onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
                 disabled={clampedPage >= pageCount - 1}
-                className="text-xs px-3 py-1.5 rounded-lg border border-white/12 bg-white/3 text-stone-200 hover:text-white hover:border-white/20 hover:bg-white/6 disabled:opacity-40 disabled:hover:border-white/12 disabled:hover:bg-white/3 disabled:hover:text-stone-200 transition-all"
+                className="text-[10px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border border-white/12 bg-white/3 text-stone-200 hover:text-white hover:border-white/20 hover:bg-white/6 disabled:opacity-40 disabled:hover:border-white/12 disabled:hover:bg-white/3 disabled:hover:text-stone-200 transition-all"
               >
                 Next
               </button>
@@ -792,42 +786,43 @@ const AllOrders = ({ orders }: { orders: Doc<"orders">[] | undefined }) => {
           )}
         </div>
       </div>
+
       {orders === undefined ? (
-        <div className="px-5 py-12 text-center text-stone-500 text-sm">
-          Loading…
+        <div className="px-5 py-12 text-center text-stone-500 text-xs sm:text-sm">
+          Loading...
         </div>
       ) : orders.length === 0 ? (
         <div className="px-5 py-12 text-center">
           <ShoppingBag size={32} className="text-stone-700 mx-auto mb-3" />
-          <p className="text-stone-500 text-sm">No orders yet</p>
+          <p className="text-stone-500 text-xs sm:text-sm">No orders yet</p>
         </div>
       ) : (
-        <div className="divide-y divide-white/5">
+        <div className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4">
           {pageOrders.map((order) => (
             <div
               key={order._id}
-              className="px-5 py-4 hover:bg-white/2 transition-colors"
+              className="rounded-xl border border-white/8 bg-white/2 p-3 sm:p-4 hover:border-white/14 hover:bg-white/3 transition-colors"
             >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
+              <div className="flex items-start justify-between gap-3 mb-2.5">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 min-w-0">
                   <span
-                    className={`text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wide border ${STATUS_COLORS[order.status] || ""}`}
+                    className={`text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wide border whitespace-nowrap ${STATUS_COLORS[order.status] || ""}`}
                   >
                     {order.status === "picked_up" ? "Picked Up" : order.status}
                   </span>
-                  <span className="text-xs text-stone-500">
+                  <span className="text-[10px] sm:text-xs text-stone-500 truncate max-w-36">
                     {order.pickupName || "Customer"}
                   </span>
-                  <span className="text-xs text-stone-600">
-                    {new Date(order.timestamp).toLocaleString()}
-                  </span>
                 </div>
-                <span className="font-semibold text-sm text-cyan-400">
+                <span className="font-semibold text-xs sm:text-sm text-cyan-400 whitespace-nowrap">
                   ${order.totalPrice.toFixed(2)}
                 </span>
               </div>
-              <p className="text-xs text-stone-400">
-                {order.items.map((i) => `${i.quantity}× ${i.name}`).join(", ")}
+              <p className="text-[10px] sm:text-xs text-stone-600 mb-2">
+                {new Date(order.timestamp).toLocaleString()}
+              </p>
+              <p className="text-xs text-stone-400 leading-relaxed wrap-break-word">
+                {order.items.map((i) => `${i.quantity}x ${i.name}`).join(", ")}
               </p>
             </div>
           ))}
@@ -847,7 +842,7 @@ const ActiveOrders = ({
     status: UpdateableOrderStatus;
   }) => Promise<unknown>;
 }) => {
-  const pageSize = 6;
+  const pageSize = 9;
   const [page, setPage] = useState(0);
 
   const pageCount = Math.max(1, Math.ceil(activeOrders.length / pageSize));
@@ -861,20 +856,20 @@ const ActiveOrders = ({
 
   return (
     <div className="mb-6">
-      <div className="flex items-end justify-between gap-4 mb-3">
-        <h2 className="font-semibold text-sm text-cyan-400">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 sm:gap-4 mb-3">
+        <h2 className="font-semibold text-xs sm:text-sm text-cyan-400">
           Active Orders ({activeOrders.length})
         </h2>
         {activeOrders.length > pageSize && (
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] text-stone-200 bg-white/4 border border-white/8 rounded-full px-2.5 py-1">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+            <span className="text-[10px] sm:text-[11px] text-stone-200 bg-white/4 border border-white/8 rounded-full px-2 sm:px-2.5 py-1">
               Page {clampedPage + 1} of {pageCount}
             </span>
             <button
               type="button"
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={clampedPage === 0}
-              className="text-xs px-3 py-1.5 rounded-lg border border-white/12 bg-white/3 text-stone-200 hover:text-white hover:border-white/20 hover:bg-white/6 disabled:opacity-40 disabled:hover:border-white/12 disabled:hover:bg-white/3 disabled:hover:text-stone-200 transition-all"
+              className="text-[10px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border border-white/12 bg-white/3 text-stone-200 hover:text-white hover:border-white/20 hover:bg-white/6 disabled:opacity-40 disabled:hover:border-white/12 disabled:hover:bg-white/3 disabled:hover:text-stone-200 transition-all"
             >
               Prev
             </button>
@@ -882,75 +877,76 @@ const ActiveOrders = ({
               type="button"
               onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
               disabled={clampedPage >= pageCount - 1}
-              className="text-xs px-3 py-1.5 rounded-lg border border-white/12 bg-white/3 text-stone-200 hover:text-white hover:border-white/20 hover:bg-white/6 disabled:opacity-40 disabled:hover:border-white/12 disabled:hover:bg-white/3 disabled:hover:text-stone-200 transition-all"
+              className="text-[10px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border border-white/12 bg-white/3 text-stone-200 hover:text-white hover:border-white/20 hover:bg-white/6 disabled:opacity-40 disabled:hover:border-white/12 disabled:hover:bg-white/3 disabled:hover:text-stone-200 transition-all"
             >
               Next
             </button>
           </div>
         )}
       </div>
-      <div className="space-y-2">
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
         {pageOrders.map((order) => (
           <div
             key={order._id}
-            className="rounded-2xl border border-white/6 bg-white/3 p-5 hover:border-white/10 transition-colors"
+            className="rounded-xl sm:rounded-2xl border border-white/6 bg-white/3 p-3 sm:p-4 hover:border-white/10 transition-colors"
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-3">
+            <div className="flex items-start justify-between gap-3 mb-2.5">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 min-w-0">
                 <span
-                  className={`text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wide border ${STATUS_COLORS[order.status] || ""}`}
+                  className={`text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wide border whitespace-nowrap ${STATUS_COLORS[order.status] || ""}`}
                 >
                   {order.status === "picked_up" ? "Picked Up" : order.status}
                 </span>
-                <span className="text-xs text-stone-500">
+                <span className="text-[10px] sm:text-xs text-stone-500 truncate max-w-36">
                   {order.pickupName || "Customer"}
                 </span>
-                <span className="text-xs text-stone-600">
-                  {new Date(order.timestamp).toLocaleTimeString()}
-                </span>
               </div>
-              <span className="font-semibold text-sm text-cyan-400">
+              <span className="font-semibold text-xs sm:text-sm text-cyan-400 whitespace-nowrap">
                 ${order.totalPrice.toFixed(2)}
               </span>
             </div>
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-stone-400">
-                {order.items.map((i) => `${i.quantity}× ${i.name}`).join(", ")}
-              </p>
-              <div className="flex gap-1.5">
-                {(STATUS_FLOW[order.status] || []).map((nextStatus) => (
-                  <button
-                    key={nextStatus}
-                    type="button"
-                    onClick={() =>
-                      onUpdateStatus({
-                        id: order._id,
-                        status: nextStatus,
-                      })
-                    }
-                    className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 hover:bg-cyan-500/20 transition-all"
-                  >
-                    <ChevronRight size={12} />
-                    {nextStatus === "picked_up"
-                      ? "Mark Picked Up"
-                      : `Mark ${nextStatus.charAt(0).toUpperCase() + nextStatus.slice(1)}`}
-                  </button>
-                ))}
-                {order.status !== "cancelled" && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      onUpdateStatus({
-                        id: order._id,
-                        status: "cancelled",
-                      })
-                    }
-                    className="text-xs px-2 py-1.5 rounded-lg text-rose-400 hover:bg-rose-500/10 transition-all"
-                  >
-                    Cancel
-                  </button>
-                )}
-              </div>
+
+            <p className="text-[10px] sm:text-xs text-stone-600 mb-2.5">
+              {new Date(order.timestamp).toLocaleTimeString()}
+            </p>
+            <p className="text-xs text-stone-400 leading-relaxed wrap-break-word mb-3">
+              {order.items.map((i) => `${i.quantity}x ${i.name}`).join(", ")}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-1.5">
+              {(STATUS_FLOW[order.status] || []).map((nextStatus) => (
+                <button
+                  key={nextStatus}
+                  type="button"
+                  onClick={() =>
+                    onUpdateStatus({
+                      id: order._id,
+                      status: nextStatus,
+                    })
+                  }
+                  className="flex items-center gap-1 text-[10px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 hover:bg-cyan-500/20 transition-all"
+                >
+                  <ChevronRight size={12} />
+                  {nextStatus === "picked_up"
+                    ? "Mark Picked Up"
+                    : `Mark ${nextStatus.charAt(0).toUpperCase() + nextStatus.slice(1)}`}
+                </button>
+              ))}
+              {order.status !== "cancelled" && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    onUpdateStatus({
+                      id: order._id,
+                      status: "cancelled",
+                    })
+                  }
+                  className="text-[10px] sm:text-xs px-2 py-1.5 rounded-lg text-rose-400 hover:bg-rose-500/10 transition-all"
+                >
+                  Cancel
+                </button>
+              )}
             </div>
           </div>
         ))}
