@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react";
 import { useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Doc, Id } from "@/convex/_generated/dataModel";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Coffee,
@@ -15,7 +15,6 @@ import {
   X,
   Package,
   ShoppingBag,
-  Loader2,
   LogOut,
   ChevronRight,
   Clock,
@@ -65,6 +64,195 @@ const STATUS_COLORS = {
   cancelled: "bg-rose-500/15 text-rose-400 border-rose-500/30",
 } satisfies Record<OrderStatus, string>;
 
+function SkeletonBlock({ className }: { className: string }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`animate-pulse rounded-xl bg-white/6 ring-1 ring-inset ring-white/4 ${className}`}
+    />
+  );
+}
+
+function AdminDashboardSkeleton({
+  activeTab = "orders",
+}: {
+  activeTab?: "menu" | "orders";
+}) {
+  return (
+    <div className="min-h-screen bg-[#070a10] text-stone-100">
+      <header className="border-b border-white/5 bg-[#070a10]/90 backdrop-blur-xl sticky top-0 z-30">
+        <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2.5">
+              <SkeletonBlock className="h-9 w-9 rounded-xl" />
+              <div className="space-y-2">
+                <SkeletonBlock className="h-3 w-28 rounded-md" />
+                <SkeletonBlock className="h-2.5 w-40 rounded-md" />
+              </div>
+            </div>
+          </div>
+          <SkeletonBlock className="h-8 w-24 rounded-lg" />
+        </div>
+      </header>
+
+      <div className="mx-auto max-w-6xl px-6 py-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div
+              key={index}
+              className="rounded-2xl border border-white/6 bg-white/3 p-5"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <SkeletonBlock className="h-8 w-8 rounded-lg" />
+                <SkeletonBlock className="h-3 w-20 rounded-md" />
+              </div>
+              <SkeletonBlock className="h-7 w-16 rounded-md" />
+            </div>
+          ))}
+        </div>
+
+        <div className="flex gap-1 mb-6 bg-white/3 rounded-xl p-1 border border-white/6 w-fit">
+          <SkeletonBlock
+            className={`h-10 w-24 rounded-lg ${
+              activeTab === "orders" ? "bg-cyan-500/40 ring-cyan-500/20" : ""
+            }`}
+          />
+          <SkeletonBlock
+            className={`h-10 w-24 rounded-lg ${
+              activeTab === "menu" ? "bg-cyan-500/40 ring-cyan-500/20" : ""
+            }`}
+          />
+        </div>
+
+        {activeTab === "orders" ? (
+          <OrdersTabSkeleton />
+        ) : (
+          <MenuTabSkeleton showToolbar />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function OrdersTabSkeleton() {
+  return (
+    <>
+      <div className="mb-6">
+        <div className="flex items-end justify-between gap-4 mb-3">
+          <SkeletonBlock className="h-4 w-36 rounded-md" />
+          <div className="flex items-center gap-2">
+            <SkeletonBlock className="h-7 w-24 rounded-full" />
+            <SkeletonBlock className="h-8 w-14 rounded-lg" />
+            <SkeletonBlock className="h-8 w-14 rounded-lg" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div
+              key={index}
+              className="rounded-2xl border border-white/6 bg-white/3 p-5"
+            >
+              <div className="flex items-center justify-between mb-4 gap-4">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <SkeletonBlock className="h-5 w-20 rounded-full" />
+                  <SkeletonBlock className="h-3 w-24 rounded-md" />
+                  <SkeletonBlock className="h-3 w-18 rounded-md" />
+                </div>
+                <SkeletonBlock className="h-4 w-16 rounded-md" />
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1 space-y-2">
+                  <SkeletonBlock className="h-3.5 w-full rounded-md" />
+                  <SkeletonBlock className="h-3.5 w-2/3 rounded-md" />
+                </div>
+                <div className="flex gap-1.5 shrink-0">
+                  <SkeletonBlock className="h-8 w-28 rounded-lg" />
+                  <SkeletonBlock className="h-8 w-16 rounded-lg" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-white/6 overflow-hidden">
+        <div className="bg-white/3 px-5 py-3 border-b border-white/6">
+          <div className="flex items-center justify-between gap-4">
+            <SkeletonBlock className="h-4 w-24 rounded-md" />
+            <div className="flex items-center gap-2">
+              <SkeletonBlock className="h-7 w-40 rounded-full" />
+              <SkeletonBlock className="h-8 w-14 rounded-lg" />
+              <SkeletonBlock className="h-8 w-14 rounded-lg" />
+            </div>
+          </div>
+        </div>
+        <div className="divide-y divide-white/5">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="px-5 py-4">
+              <div className="flex items-center justify-between mb-3 gap-4">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <SkeletonBlock className="h-5 w-18 rounded-full" />
+                  <SkeletonBlock className="h-3 w-24 rounded-md" />
+                  <SkeletonBlock className="h-3 w-32 rounded-md" />
+                </div>
+                <SkeletonBlock className="h-4 w-16 rounded-md" />
+              </div>
+              <SkeletonBlock className="h-3.5 w-4/5 rounded-md" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function MenuTabSkeleton({ showToolbar = false }: { showToolbar?: boolean }) {
+  return (
+    <>
+      {showToolbar && (
+        <div className="flex gap-2 mb-6">
+          <SkeletonBlock className="h-8 w-32 rounded-lg" />
+          <SkeletonBlock className="h-8 w-24 rounded-lg bg-cyan-500/30 ring-cyan-500/20" />
+        </div>
+      )}
+
+      <div className="rounded-2xl border border-white/6 overflow-hidden">
+        <div className="bg-white/3 px-5 py-3 border-b border-white/6">
+          <SkeletonBlock className="h-4 w-24 rounded-md" />
+        </div>
+
+        <div className="divide-y divide-white/5">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between px-5 py-4 gap-4"
+            >
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <SkeletonBlock className="h-6 w-6 rounded-md" />
+                  <SkeletonBlock className="h-4 w-36 rounded-md" />
+                  <SkeletonBlock className="h-4 w-20 rounded-md" />
+                </div>
+                <SkeletonBlock className="h-3.5 w-3/4 rounded-md ml-8" />
+              </div>
+              <div className="flex items-center gap-5 shrink-0">
+                <div className="space-y-2">
+                  <SkeletonBlock className="h-4 w-16 rounded-md" />
+                  <SkeletonBlock className="h-3.5 w-14 rounded-md" />
+                </div>
+                <div className="flex gap-1">
+                  <SkeletonBlock className="h-8 w-8 rounded-lg" />
+                  <SkeletonBlock className="h-8 w-8 rounded-lg" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function AdminMenuPage() {
   const { isAuthenticated, isLoading: authLoading } = useConvexAuth();
   const { signOut } = useAuthActions();
@@ -96,18 +284,9 @@ export default function AdminMenuPage() {
   const [form, setForm] = useState<MenuForm>(emptyForm);
   const [showAddForm, setShowAddForm] = useState(false);
   const [activeTab, setActiveTab] = useState<"menu" | "orders">("orders");
-
-  if (authLoading || currentUser === undefined) {
-    return (
-      <div className="min-h-screen bg-[#0a0908] flex items-center justify-center">
-        <Loader2 size={32} className="text-cyan-400 animate-spin" />
-      </div>
-    );
-  }
-
-  if (!currentUser || currentUser.role !== "owner") {
-    return null;
-  }
+  const allOrdersRef = useRef<HTMLDivElement>(null);
+  const [scrollToAllOrdersRequested, setScrollToAllOrdersRequested] =
+    useState(false);
 
   const handleEdit = (item: {
     _id: Id<"menu">;
@@ -177,6 +356,41 @@ export default function AdminMenuPage() {
     setShowAddForm(false);
     setForm(emptyForm);
   };
+
+  const scrollToAllOrders = () => {
+    allOrdersRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  const handleJumpToAllOrders = () => {
+    if (activeTab !== "orders") {
+      setActiveTab("orders");
+      setScrollToAllOrdersRequested(true);
+      return;
+    }
+    scrollToAllOrders();
+  };
+
+  useEffect(() => {
+    if (!scrollToAllOrdersRequested || activeTab !== "orders") return;
+
+    const frameId = requestAnimationFrame(() => {
+      scrollToAllOrders();
+      setScrollToAllOrdersRequested(false);
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [activeTab, scrollToAllOrdersRequested]);
+
+  if (authLoading || currentUser === undefined) {
+    return <AdminDashboardSkeleton activeTab={activeTab} />;
+  }
+
+  if (!currentUser || currentUser.role !== "owner") {
+    return null;
+  }
 
   // Group orders by status for the dashboard
   const activeOrders =
@@ -253,39 +467,59 @@ export default function AdminMenuPage() {
         </div>
 
         {/* Tabs */}
-        <div
-          role="tablist"
-          aria-label="Dashboard views"
-          className="flex gap-1 mb-6 bg-white/3 rounded-xl p-1 border border-white/6 w-fit"
-        >
-          {(["orders", "menu"] as const).map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => setActiveTab(tab)}
-              role="tab"
-              aria-selected={activeTab === tab}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                activeTab === tab
-                  ? "bg-cyan-500 text-white"
-                  : "text-stone-400 hover:text-white"
-              }`}
-            >
-              {tab === "orders" ? "Orders" : "Menu"}
-            </button>
-          ))}
+        <div className="flex items-center justify-between gap-4 mb-6">
+          <div
+            role="tablist"
+            aria-label="Dashboard views"
+            className="flex gap-1 bg-white/3 rounded-xl p-1 border border-white/6 w-fit"
+          >
+            {(["orders", "menu"] as const).map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setActiveTab(tab)}
+                role="tab"
+                aria-selected={activeTab === tab}
+                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                  activeTab === tab
+                    ? "bg-cyan-500 text-slate-950"
+                    : "text-stone-300 hover:text-cyan-200"
+                }`}
+              >
+                {tab === "orders" ? "Orders" : "Menu"}
+              </button>
+            ))}
+          </div>
+          <a
+            href="#allorderss"
+            onClick={handleJumpToAllOrders}
+            className="rounded-full  text-sm font-medium text-stone-200 transition-all underline hover:border-white/20 hover:bg-white/8 hover:text-white"
+          >
+            All Orders
+          </a>
         </div>
 
         {/* ── ORDERS TAB ─── */}
         {activeTab === "orders" && (
           <>
-            <ActiveOrders
-              key={activeOrders.length}
-              activeOrders={activeOrders}
-              onUpdateStatus={updateOrderStatus}
-            />
+            {orders === undefined ? (
+              <OrdersTabSkeleton />
+            ) : (
+              <>
+                <ActiveOrders
+                  key={activeOrders.length}
+                  activeOrders={activeOrders}
+                  onUpdateStatus={updateOrderStatus}
+                />
 
-            <AllOrders key={allOrders?.length ?? "loading"} orders={allOrders} />
+                <div ref={allOrdersRef}>
+                  <AllOrders
+                    key={allOrders?.length ?? "loading"}
+                    orders={allOrders}
+                  />
+                </div>
+              </>
+            )}
           </>
         )}
 
@@ -294,18 +528,12 @@ export default function AdminMenuPage() {
           <>
             <div className="flex gap-2 mb-6">
               <button
-                onClick={() => seedMenu()}
-                className="text-xs px-3 py-1.5 rounded-lg border border-white/10 text-stone-400 hover:text-white hover:border-white/20 transition-all"
-              >
-                Seed Default Items
-              </button>
-              <button
                 onClick={() => {
                   setShowAddForm(true);
                   setEditingId(null);
                   setForm(emptyForm);
                 }}
-                className="flex items-center font-bold gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-cyan-500 text-white hover:bg-cyan-400 transition-colors"
+                className="flex items-center font-bold gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-cyan-500 text-white/80 hover:bg-cyan-400 transition-colors"
               >
                 <Plus size={16} />
                 Add Item
@@ -409,90 +637,93 @@ export default function AdminMenuPage() {
               </div>
             )}
 
-            <div className="rounded-2xl border border-white/6 overflow-hidden">
-              <div className="bg-white/3 px-5 py-3 border-b border-white/6">
-                <h2 className="font-semibold text-sm">Menu Items</h2>
-              </div>
+            {menuItems === undefined ? (
+              <MenuTabSkeleton />
+            ) : (
+              <div className="rounded-2xl border border-white/6 overflow-hidden">
+                <div className="bg-white/3 px-5 py-3 border-b border-white/6">
+                  <h2 className="font-semibold text-sm">Menu Items</h2>
+                </div>
 
-              {!menuItems ? (
-                <div className="px-5 py-12 text-center text-stone-500 text-sm">
-                  Loading…
-                </div>
-              ) : menuItems.length === 0 ? (
-                <div className="px-5 py-12 text-center">
-                  <Package size={32} className="text-stone-700 mx-auto mb-3" />
-                  <p className="text-stone-500 text-sm mb-1">
-                    No menu items yet
-                  </p>
-                  <p className="text-stone-600 text-xs">
-                    Click &ldquo;Seed Default Items&rdquo; or &ldquo;Add
-                    Item&rdquo; to get started.
-                  </p>
-                </div>
-              ) : (
-                <div className="divide-y divide-white/5">
-                  {menuItems.map((item) => (
-                    <div
-                      key={item._id}
-                      className="flex items-center justify-between px-5 py-4 hover:bg-white/2 transition-colors"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2.5">
-                          <span className="text-lg">
-                            {item.imageEmoji || "☕"}
-                          </span>
-                          <p className="font-medium text-sm text-white truncate">
-                            {item.name}
-                          </p>
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-stone-500">
-                            {item.category}
-                          </span>
-                          {!item.available && (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/15 text-red-400 font-medium">
-                              Unavailable
+                {menuItems.length === 0 ? (
+                  <div className="px-5 py-12 text-center">
+                    <Package
+                      size={32}
+                      className="text-stone-700 mx-auto mb-3"
+                    />
+                    <p className="text-stone-500 text-sm mb-1">
+                      No menu items yet
+                    </p>
+                    <p className="text-stone-600 text-xs">
+                      Click &ldquo;Seed Default Items&rdquo; or &ldquo;Add
+                      Item&rdquo; to get started.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="divide-y divide-white/5">
+                    {menuItems.map((item) => (
+                      <div
+                        key={item._id}
+                        className="flex items-center justify-between px-5 py-4 hover:bg-white/2 transition-colors"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-lg">
+                              {item.imageEmoji || "☕"}
                             </span>
-                          )}
-                          {item.available && item.quantity === 0 && (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-orange-500/15 text-orange-400 font-medium">
-                              Out of stock
+                            <p className="font-medium text-sm text-white truncate">
+                              {item.name}
+                            </p>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-stone-500">
+                              {item.category}
                             </span>
-                          )}
-                        </div>
-                        <p className="text-xs text-stone-500 mt-0.5 truncate ml-8">
-                          {item.description}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-5 shrink-0 ml-4">
-                        <div className="text-right">
-                          <p className="text-sm font-semibold text-cyan-400">
-                            ${item.price.toFixed(2)}
+                            {!item.available && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/15 text-red-400 font-medium">
+                                Unavailable
+                              </span>
+                            )}
+                            {item.available && item.quantity === 0 && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-orange-500/15 text-orange-400 font-medium">
+                                Out of stock
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-stone-500 mt-0.5 truncate ml-8">
+                            {item.description}
                           </p>
-                          <p className="text-sm font-medium text-stone-500">
-                            Qty: {item.quantity}
-                          </p>
                         </div>
-                        <div className="flex gap-1">
-                          <button
-                            onClick={() => handleEdit(item)}
-                            className="p-1.5 rounded-lg text-stone-500 hover:text-cyan-300 hover:bg-cyan-500/10 transition-all"
-                            title="Edit"
-                          >
-                            <Pencil size={17} />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(item._id)}
-                            className="p-1.5 rounded-lg text-stone-500 hover:text-red-400 hover:bg-red-500/10 transition-all"
-                            title="Delete"
-                          >
-                            <Trash2 size={17} />
-                          </button>
+                        <div className="flex items-center gap-5 shrink-0 ml-4">
+                          <div className="text-right">
+                            <p className="text-sm font-semibold text-cyan-400">
+                              ${item.price.toFixed(2)}
+                            </p>
+                            <p className="text-sm font-medium text-stone-500">
+                              Qty: {item.quantity}
+                            </p>
+                          </div>
+                          <div className="flex gap-1">
+                            <button
+                              onClick={() => handleEdit(item)}
+                              className="p-1.5 rounded-lg text-stone-500 hover:text-cyan-300 hover:bg-cyan-500/10 transition-all"
+                              title="Edit"
+                            >
+                              <Pencil size={17} />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(item._id)}
+                              className="p-1.5 rounded-lg text-stone-500 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                              title="Delete"
+                            >
+                              <Trash2 size={17} />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>
@@ -500,15 +731,13 @@ export default function AdminMenuPage() {
   );
 }
 
-const AllOrders = ({
-  orders,
-}: {
-  orders: Doc<"orders">[] | undefined;
-}) => {
+const AllOrders = ({ orders }: { orders: Doc<"orders">[] | undefined }) => {
   const pageSize = 12;
   const [page, setPage] = useState(0);
 
-  const pageCount = orders ? Math.max(1, Math.ceil(orders.length / pageSize)) : 1;
+  const pageCount = orders
+    ? Math.max(1, Math.ceil(orders.length / pageSize))
+    : 1;
   const clampedPage = Math.min(page, pageCount - 1);
   const pageOrders = useMemo(() => {
     if (!orders) return [];
@@ -517,7 +746,10 @@ const AllOrders = ({
   }, [orders, clampedPage]);
 
   return (
-    <div className="rounded-2xl border border-white/6 overflow-hidden">
+    <div
+      className="rounded-2xl border border-white/6 overflow-hidden"
+      id="allorderss"
+    >
       <div className="bg-white/3 px-5 py-3 border-b border-white/6">
         <div className="flex items-center justify-between gap-4">
           <h2 className="font-semibold text-sm">All Orders</h2>
@@ -538,9 +770,7 @@ const AllOrders = ({
               </button>
               <button
                 type="button"
-                onClick={() =>
-                  setPage((p) => Math.min(pageCount - 1, p + 1))
-                }
+                onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
                 disabled={clampedPage >= pageCount - 1}
                 className="text-xs px-3 py-1.5 rounded-lg border border-white/12 bg-white/3 text-stone-200 hover:text-white hover:border-white/20 hover:bg-white/6 disabled:opacity-40 disabled:hover:border-white/12 disabled:hover:bg-white/3 disabled:hover:text-stone-200 transition-all"
               >
