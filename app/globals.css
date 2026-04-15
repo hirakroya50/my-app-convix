@@ -132,6 +132,16 @@ html {
   }
 }
 
+/* Fake progress (used for redirect UX) */
+@keyframes fakeProgress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
 /* Pulse glow */
 @keyframes pulseGlow {
   0%,
@@ -173,6 +183,11 @@ html {
 .animate-shimmer {
   background-size: 200% auto;
   animation: shimmer 3s linear infinite;
+}
+
+.animate-fake-progress {
+  width: 0%;
+  animation: fakeProgress 700ms ease-out forwards;
 }
 
 .animate-pulse-glow {

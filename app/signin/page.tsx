@@ -111,7 +111,9 @@ export default function SignInPage() {
                 </p>
 
                 <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-white/8 border border-white/8">
-                  <div className="h-full w-full bg-linear-to-r from-amber-400 via-orange-400 to-amber-400 animate-shimmer opacity-90" />
+                  <div className="h-full rounded-full bg-linear-to-r from-amber-400 via-orange-400 to-amber-400 opacity-95 animate-fake-progress">
+                    <div className="h-full w-full bg-linear-to-r from-white/0 via-white/25 to-white/0 animate-shimmer opacity-70" />
+                  </div>
                 </div>
               </div>
               <Loader2 size={18} className="text-amber-300 animate-spin" />
