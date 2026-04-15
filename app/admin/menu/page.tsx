@@ -408,10 +408,15 @@ export default function AdminMenuPage() {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 sm:gap-2.5">
               <div className="flex h-8 sm:h-9 w-8 sm:w-9 items-center justify-center rounded-lg sm:rounded-xl bg-linear-to-br from-cyan-400 to-blue-600 shrink-0">
-                <Coffee size={14} className="text-white sm:w-[16px] sm:h-[16px]" />
+                <Coffee
+                  size={14}
+                  className="text-white sm:w-[16px] sm:h-[16px]"
+                />
               </div>
               <div>
-                <h1 className="font-semibold text-xs sm:text-sm">Owner Dashboard</h1>
+                <h1 className="font-semibold text-xs sm:text-sm">
+                  Owner Dashboard
+                </h1>
                 <p className="text-[10px] xs:text-[11px] text-stone-500 truncate">
                   {currentUser.email}
                 </p>
@@ -457,11 +462,18 @@ export default function AdminMenuPage() {
             >
               <div className="flex items-center gap-3 mb-2">
                 <div className="flex h-7 sm:h-8 w-7 sm:w-8 items-center justify-center rounded-lg bg-cyan-500/10 border border-cyan-500/20 shrink-0">
-                  <Icon size={12} className="text-cyan-400 sm:w-[14px] sm:h-[14px]" />
+                  <Icon
+                    size={12}
+                    className="text-cyan-400 sm:w-[14px] sm:h-[14px]"
+                  />
                 </div>
-                <span className="text-xs sm:text-sm text-stone-500">{label}</span>
+                <span className="text-xs sm:text-sm text-stone-500">
+                  {label}
+                </span>
               </div>
-              <p className="text-lg xs:text-xl sm:text-2xl font-bold text-white">{value}</p>
+              <p className="text-lg xs:text-xl sm:text-2xl font-bold text-white">
+                {value}
+              </p>
             </div>
           ))}
         </div>

@@ -449,7 +449,9 @@ export default function Home() {
           {/* Badge */}
           <div className="mb-6 sm:mb-8 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/8 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-medium text-cyan-200 backdrop-blur-sm animate-fade-in">
             <Sparkles size={10} className="sm:w-[11px] sm:h-[11px]" />
-            <span className="hidden xs:inline">AI-powered coffee discovery</span>
+            <span className="hidden xs:inline">
+              AI-powered coffee discovery
+            </span>
             <span className="xs:hidden">AI Ordering</span>
           </div>
 
@@ -467,7 +469,8 @@ export default function Home() {
 
           <p className="mt-4 sm:mt-6 md:mt-7 max-w-xl text-xs xs:text-sm sm:text-base md:text-lg text-stone-300 leading-relaxed animate-fade-in-up delay-200">
             Brew Haven blends artisan coffee craft with cutting-edge AI. Explore
-            our menu, get recommendations, and order through natural conversation.
+            our menu, get recommendations, and order through natural
+            conversation.
           </p>
 
           {/* CTA buttons */}
@@ -488,7 +491,10 @@ export default function Home() {
           <span className="text-[10px] xs:text-xs text-stone-500 tracking-widest uppercase">
             Scroll
           </span>
-          <ChevronDown size={14} className="text-stone-500 sm:w-[16px] sm:h-[16px]" />
+          <ChevronDown
+            size={14}
+            className="text-stone-500 sm:w-[16px] sm:h-[16px]"
+          />
         </div>
       </section>
 
@@ -513,7 +519,10 @@ export default function Home() {
       </div>
 
       {/* ── FEATURES ─────────────────────────────────────────── */}
-      <section id="about" className="relative px-4 sm:px-6 py-16 sm:py-20 md:py-28 overflow-hidden">
+      <section
+        id="about"
+        className="relative px-4 sm:px-6 py-16 sm:py-20 md:py-28 overflow-hidden"
+      >
         {/* Background decoration */}
         <div className="absolute top-0 right-0 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 bg-cyan-600/6 rounded-full blur-[80px] sm:blur-[100px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-blue-600/6 rounded-full blur-[60px] sm:blur-[80px] pointer-events-none" />
@@ -560,7 +569,10 @@ export default function Home() {
                     <div
                       className={`mb-3 sm:mb-5 flex h-10 sm:h-12 w-10 sm:w-12 items-center justify-center rounded-2xl border ${iconBg}`}
                     >
-                      <Icon size={18} className={`sm:w-[20px] sm:h-[20px] ${iconColor}`} />
+                      <Icon
+                        size={18}
+                        className={`sm:w-[20px] sm:h-[20px] ${iconColor}`}
+                      />
                     </div>
                     <h3 className="mb-1.5 sm:mb-2.5 font-semibold text-white text-xs sm:text-base">
                       {title}
@@ -606,11 +618,18 @@ export default function Home() {
               <div className="absolute bottom-[42%] right-[48%] translate-x-1/2 translate-y-1/2 glass-card rounded-xl sm:rounded-2xl px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 shadow-xl border border-white/8 z-10 backdrop-blur-xl bg-[#070a10]/80">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="flex h-8 sm:h-10 w-8 sm:w-10 items-center justify-center rounded-lg sm:rounded-xl bg-cyan-500/15 border border-cyan-500/20 shrink-0">
-                    <TrendingUp size={14} className="text-cyan-400 sm:w-[16px] sm:h-[16px]" />
+                    <TrendingUp
+                      size={14}
+                      className="text-cyan-400 sm:w-[16px] sm:h-[16px]"
+                    />
                   </div>
                   <div>
-                    <p className="text-[10px] xs:text-xs text-stone-100 font-bold">Founded</p>
-                    <p className="font-bold text-white text-xs sm:text-sm">Since 2018</p>
+                    <p className="text-[10px] xs:text-xs text-stone-100 font-bold">
+                      Founded
+                    </p>
+                    <p className="font-bold text-white text-xs sm:text-sm">
+                      Since 2018
+                    </p>
                   </div>
                 </div>
               </div>
@@ -656,7 +675,9 @@ export default function Home() {
                     >
                       {n}
                     </div>
-                    <div className="text-[10px] xs:text-xs text-stone-500 mt-0.5">{label}</div>
+                    <div className="text-[10px] xs:text-xs text-stone-500 mt-0.5">
+                      {label}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -666,7 +687,10 @@ export default function Home() {
       </section>
 
       {/* ── MENU HIGHLIGHTS ──────────────────────────────────── */}
-      <section id="menu" className="relative px-4 sm:px-6 py-16 sm:py-20 md:py-28 overflow-hidden">
+      <section
+        id="menu"
+        className="relative px-4 sm:px-6 py-16 sm:py-20 md:py-28 overflow-hidden"
+      >
         <div className="absolute inset-0 bg-linear-to-b from-transparent via-sky-950/6 to-transparent pointer-events-none" />
         <div className="mx-auto max-w-7xl relative">
           <div className="mb-10 sm:mb-16 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-6">
@@ -807,8 +831,12 @@ export default function Home() {
                     className="h-9 sm:h-10 w-9 sm:w-10 rounded-full object-cover ring-2 ring-cyan-500/20 shrink-0"
                   />
                   <div>
-                    <p className="font-semibold text-white text-xs sm:text-sm">{name}</p>
-                    <p className="text-[10px] xs:text-xs text-stone-500 mt-0.5">{role}</p>
+                    <p className="font-semibold text-white text-xs sm:text-sm">
+                      {name}
+                    </p>
+                    <p className="text-[10px] xs:text-xs text-stone-500 mt-0.5">
+                      {role}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -860,16 +888,26 @@ export default function Home() {
                     lines: ["+1 (415) 555-0182"],
                   },
                 ].map(({ icon: Icon, title, lines, id }) => (
-                  <div key={title} id={id} className="flex items-start gap-3 sm:gap-4">
+                  <div
+                    key={title}
+                    id={id}
+                    className="flex items-start gap-3 sm:gap-4"
+                  >
                     <div className="mt-0.5 flex h-9 sm:h-10 w-9 sm:w-10 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-cyan-500/10 border border-cyan-500/20">
-                      <Icon size={14} className="text-cyan-400 sm:w-[16px] sm:h-[16px]" />
+                      <Icon
+                        size={14}
+                        className="text-cyan-400 sm:w-[16px] sm:h-[16px]"
+                      />
                     </div>
                     <div>
                       <p className="font-semibold text-white text-xs sm:text-sm mb-0.5 sm:mb-1">
                         {title}
                       </p>
                       {lines.map((l) => (
-                        <p key={l} className="text-xs sm:text-sm text-stone-400">
+                        <p
+                          key={l}
+                          className="text-xs sm:text-sm text-stone-400"
+                        >
                           {l}
                         </p>
                       ))}
@@ -891,7 +929,10 @@ export default function Home() {
               <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 lg:p-6">
                 <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-black/60 backdrop-blur-md border border-white/10 px-2.5 sm:px-4 py-1.5 sm:py-2">
-                  <MapPin size={12} className="text-cyan-400 shrink-0 sm:w-[13px] sm:h-[13px]" />
+                  <MapPin
+                    size={12}
+                    className="text-cyan-400 shrink-0 sm:w-[13px] sm:h-[13px]"
+                  />
                   <span className="text-[10px] xs:text-xs sm:text-xs text-white font-medium truncate">
                     42 Roaster Lane, Coffeeville
                   </span>
@@ -940,9 +981,15 @@ export default function Home() {
           <div className="grid sm:grid-cols-3 gap-6 sm:gap-8 md:gap-10 mb-8 sm:mb-12">
             {/* Brand */}
             <div>
-              <Link href="/" className="flex items-center gap-2 sm:gap-2.5 mb-3 sm:mb-4">
+              <Link
+                href="/"
+                className="flex items-center gap-2 sm:gap-2.5 mb-3 sm:mb-4"
+              >
                 <span className="flex h-8 sm:h-9 w-8 sm:w-9 items-center justify-center rounded-lg sm:rounded-xl bg-linear-to-br from-cyan-400 to-blue-600 shrink-0">
-                  <Coffee size={14} className="text-white sm:w-[16px] sm:h-[16px]" />
+                  <Coffee
+                    size={14}
+                    className="text-white sm:w-[16px] sm:h-[16px]"
+                  />
                 </span>
                 <span
                   className="text-sm sm:text-base font-bold"

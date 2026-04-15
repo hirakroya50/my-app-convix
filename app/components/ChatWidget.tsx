@@ -367,7 +367,9 @@ export default function ChatWidget({ open, onOpenChange }: ChatWidgetProps) {
           {errorMsg && (
             <div className="flex items-start gap-2 rounded-xl border border-red-800 bg-red-950/60 px-2 sm:px-3 py-2 sm:py-2.5 text-[11px] sm:text-xs text-red-300">
               <span className="shrink-0 mt-0.5 text-sm">⚠️</span>
-              <span className="flex-1 text-[10px] sm:text-[11px]">{errorMsg}</span>
+              <span className="flex-1 text-[10px] sm:text-[11px]">
+                {errorMsg}
+              </span>
               <button
                 onClick={() => setErrorMsg(null)}
                 className="shrink-0 text-red-500 hover:text-red-300 p-1"
