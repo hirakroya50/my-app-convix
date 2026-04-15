@@ -40,14 +40,8 @@ body {
 
 /* Smooth scrolling */
 html {
-  /* scroll-behavior: smooth; */
-  /* scrollbar-gutter: stable both-edges; */
-  /* overflow-y: scroll; */
-}
-
-body {
-  /* overflow-y: scroll; */
-  /* overflow-x: hidden; */
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
 }
 
 /* Noise texture overlay for depth */
