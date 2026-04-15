@@ -327,7 +327,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => void signOut()}
-                  className="rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-stone-200 hover:bg-white/8 hover:text-white transition-colors"
+                  className="rounded-full border border-white/10 bg-white/5 px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-semibold text-stone-200 hover:bg-white/8 hover:text-white transition-colors whitespace-nowrap"
                 >
                   Sign Out
                 </button>
@@ -445,16 +445,17 @@ export default function Home() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col items-center text-center px-6 pt-32 pb-24 max-w-5xl mx-auto">
+        <div className="relative z-10 flex flex-col items-center text-center px-4 sm:px-6 pt-24 sm:pt-32 pb-16 sm:pb-24 max-w-5xl mx-auto">
           {/* Badge */}
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/8 px-4 py-1.5 text-xs font-medium text-cyan-200 backdrop-blur-sm animate-fade-in">
-            <Sparkles size={11} />
-            Now with AI-powered coffee discovery
+          <div className="mb-6 sm:mb-8 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/8 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-medium text-cyan-200 backdrop-blur-sm animate-fade-in">
+            <Sparkles size={10} className="sm:w-[11px] sm:h-[11px]" />
+            <span className="hidden xs:inline">AI-powered coffee discovery</span>
+            <span className="xs:hidden">AI Ordering</span>
           </div>
 
           {/* Headline */}
           <h1
-            className="text-5xl sm:text-6xl lg:text-8xl font-bold leading-none tracking-tight text-white animate-fade-in-up"
+            className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight xs:leading-none tracking-tight text-white animate-fade-in-up"
             style={{ fontFamily: "var(--font-playfair)" }}
           >
             Where every cup
@@ -464,30 +465,30 @@ export default function Home() {
             </span>
           </h1>
 
-          <p className="mt-7 max-w-xl text-base sm:text-lg text-stone-300 leading-relaxed animate-fade-in-up delay-200">
+          <p className="mt-4 sm:mt-6 md:mt-7 max-w-xl text-xs xs:text-sm sm:text-base md:text-lg text-stone-300 leading-relaxed animate-fade-in-up delay-200">
             Brew Haven blends artisan coffee craft with cutting-edge AI. Explore
-            our curated menu, get personalised recommendations, and order — all
-            through a natural conversation with our AI barista.
+            our menu, get recommendations, and order through natural conversation.
           </p>
 
           {/* CTA buttons */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 animate-fade-in-up delay-300">
+          <div className="mt-6 sm:mt-8 md:mt-10 flex flex-wrap items-center justify-center gap-2 sm:gap-4 animate-fade-in-up delay-300">
             <a
               href="#menu"
-              className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm px-8 py-4 text-base font-semibold text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300"
+              className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm px-5 sm:px-8 py-2.5 sm:py-4 text-xs sm:text-base font-semibold text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300"
             >
-              <Coffee size={18} />
-              Explore Menu
+              <Coffee size={14} className="sm:w-[18px] sm:h-[18px]" />
+              <span className="hidden xs:inline">Explore Menu</span>
+              <span className="xs:hidden">Menu</span>
             </a>
           </div>
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-scroll-bounce z-10">
-          <span className="text-xs text-stone-500 tracking-widest uppercase">
+        <div className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 sm:gap-2 animate-scroll-bounce z-10">
+          <span className="text-[10px] xs:text-xs text-stone-500 tracking-widest uppercase">
             Scroll
           </span>
-          <ChevronDown size={16} className="text-stone-500" />
+          <ChevronDown size={14} className="text-stone-500 sm:w-[16px] sm:h-[16px]" />
         </div>
       </section>
 
@@ -496,8 +497,8 @@ export default function Home() {
         ref={statsRef}
         className="relative border-y border-white/5 bg-white/2"
       >
-        <div className="mx-auto max-w-5xl px-6 py-10">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 divide-x-0 sm:divide-x divide-white/8">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-6 sm:py-10">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 md:gap-8 divide-x divide-white/8">
             {STATS.map(({ value, suffix, label }) => (
               <StatCard
                 key={label}
@@ -512,32 +513,32 @@ export default function Home() {
       </div>
 
       {/* ── FEATURES ─────────────────────────────────────────── */}
-      <section id="about" className="relative px-6 py-28 overflow-hidden">
+      <section id="about" className="relative px-4 sm:px-6 py-16 sm:py-20 md:py-28 overflow-hidden">
         {/* Background decoration */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-600/6 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-600/6 rounded-full blur-[80px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 bg-cyan-600/6 rounded-full blur-[80px] sm:blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 bg-blue-600/6 rounded-full blur-[60px] sm:blur-[80px] pointer-events-none" />
 
         <div className="mx-auto max-w-7xl relative">
-          <div className="mb-16 max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-4">
+          <div className="mb-10 sm:mb-16 max-w-2xl">
+            <p className="text-[9px] xs:text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-3 sm:mb-4">
               Why Brew Haven
             </p>
             <h2
-              className="text-4xl sm:text-5xl font-bold tracking-tight leading-tight text-white"
+              className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight text-white"
               style={{ fontFamily: "var(--font-playfair)" }}
             >
               More than just
               <br />
               <span className="gradient-text-amber">a coffee shop</span>
             </h2>
-            <p className="mt-5 text-stone-400 text-lg leading-relaxed">
+            <p className="mt-3 sm:mt-4 md:mt-5 text-stone-400 text-xs xs:text-sm sm:text-base md:text-lg leading-relaxed">
               We&apos;ve obsessed over every detail — from sourcing the
               world&apos;s finest beans to building the seamless digital
               experience you deserve.
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {FEATURES.map(
               ({
                 icon: Icon,
@@ -550,21 +551,21 @@ export default function Home() {
               }) => (
                 <div
                   key={title}
-                  className={`group relative overflow-hidden rounded-3xl border border-white/6 bg-white/3 p-7 transition-all duration-300 hover:-translate-y-2 hover:border-white/10 hover:shadow-2xl hover:shadow-black/50 ${accent}`}
+                  className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/6 bg-white/3 p-4 sm:p-5 md:p-6 lg:p-7 transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 hover:border-white/10 hover:shadow-2xl hover:shadow-black/50 ${accent}`}
                 >
                   <div
                     className={`absolute inset-0 bg-linear-to-br ${glow} opacity-60 pointer-events-none transition-opacity duration-300 group-hover:opacity-100`}
                   />
                   <div className="relative">
                     <div
-                      className={`mb-5 flex h-12 w-12 items-center justify-center rounded-2xl border ${iconBg}`}
+                      className={`mb-3 sm:mb-5 flex h-10 sm:h-12 w-10 sm:w-12 items-center justify-center rounded-2xl border ${iconBg}`}
                     >
-                      <Icon size={20} className={iconColor} />
+                      <Icon size={18} className={`sm:w-[20px] sm:h-[20px] ${iconColor}`} />
                     </div>
-                    <h3 className="mb-2.5 font-semibold text-white text-base">
+                    <h3 className="mb-1.5 sm:mb-2.5 font-semibold text-white text-xs sm:text-base">
                       {title}
                     </h3>
-                    <p className="text-sm text-stone-400 leading-relaxed">
+                    <p className="text-[11px] xs:text-xs sm:text-sm text-stone-400 leading-relaxed">
                       {desc}
                     </p>
                   </div>
@@ -576,12 +577,12 @@ export default function Home() {
       </section>
 
       {/* ── SPLIT SECTION — Story ────────────────────────────── */}
-      <section className="relative px-6 py-24 overflow-hidden">
+      <section className="relative px-4 sm:px-6 py-16 sm:py-20 md:py-24 overflow-hidden">
         <div className="mx-auto max-w-7xl">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12 lg:gap-16 xl:gap-20 items-center">
             {/* Image collage */}
-            <div className="relative h-130 lg:h-155">
-              <div className="absolute top-0 left-0 w-[65%] h-[72%] rounded-3xl overflow-hidden shadow-2xl shadow-black/60">
+            <div className="relative h-280px xs:h-320px sm:h-96 md:h-120 lg:h-130 xl:h-155">
+              <div className="absolute top-0 left-0 w-[65%] h-[72%] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl shadow-black/60">
                 <Image
                   src="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=700&q=80"
                   alt="Barista crafting latte art"
@@ -591,7 +592,7 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
               </div>
-              <div className="absolute bottom-0 right-0 w-[55%] h-[60%] rounded-3xl overflow-hidden shadow-2xl shadow-black/60 border border-white/5">
+              <div className="absolute bottom-0 right-0 w-[55%] h-[60%] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl shadow-black/60 border border-white/5">
                 <Image
                   src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80"
                   alt="Coffee beans close up"
@@ -602,14 +603,14 @@ export default function Home() {
                 <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
               </div>
               {/* Floating stat card */}
-              <div className="absolute bottom-[42%] right-[48%] translate-x-1/2 translate-y-1/2 glass-card rounded-2xl px-5 py-4 shadow-xl border border-white/8 z-10 backdrop-blur-xl bg-[#070a10]/80">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/15 border border-cyan-500/20">
-                    <TrendingUp size={16} className="text-cyan-400" />
+              <div className="absolute bottom-[42%] right-[48%] translate-x-1/2 translate-y-1/2 glass-card rounded-xl sm:rounded-2xl px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 shadow-xl border border-white/8 z-10 backdrop-blur-xl bg-[#070a10]/80">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="flex h-8 sm:h-10 w-8 sm:w-10 items-center justify-center rounded-lg sm:rounded-xl bg-cyan-500/15 border border-cyan-500/20 shrink-0">
+                    <TrendingUp size={14} className="text-cyan-400 sm:w-[16px] sm:h-[16px]" />
                   </div>
                   <div>
-                    <p className="text-xs text-stone-100 font-bold">Founded</p>
-                    <p className="font-bold text-white text-sm">Since 2018</p>
+                    <p className="text-[10px] xs:text-xs text-stone-100 font-bold">Founded</p>
+                    <p className="font-bold text-white text-xs sm:text-sm">Since 2018</p>
                   </div>
                 </div>
               </div>
@@ -617,29 +618,29 @@ export default function Home() {
 
             {/* Text */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-4">
+              <p className="text-[9px] xs:text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-2 sm:mb-4">
                 Our Story
               </p>
               <h2
-                className="text-4xl sm:text-5xl font-bold tracking-tight leading-tight text-white mb-6"
+                className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight text-white mb-4 sm:mb-6"
                 style={{ fontFamily: "var(--font-playfair)" }}
               >
                 Crafted with passion,
                 <br />
                 <span className="gradient-text-amber">served with love</span>
               </h2>
-              <p className="text-stone-400 leading-relaxed mb-5 text-base">
+              <p className="text-stone-400 leading-relaxed mb-3 sm:mb-4 md:mb-5 text-xs xs:text-sm sm:text-base">
                 What started as a small neighbourhood roastery in 2018 has grown
                 into Coffeeville&apos;s most beloved specialty café. We believe
                 great coffee is a conversation — so we built an AI barista to
                 make that conversation happen anywhere, anytime.
               </p>
-              <p className="text-stone-400 leading-relaxed mb-8 text-base">
+              <p className="text-stone-400 leading-relaxed mb-6 sm:mb-8 text-xs xs:text-sm sm:text-base">
                 Our beans travel from the highlands of Ethiopia, the hills of
                 Colombia, and the islands of Indonesia — each lot traceable back
                 to the specific farm, farmer, and harvest season.
               </p>
-              <div className="flex flex-col sm:flex-row gap-6">
+              <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 md:gap-6">
                 {[
                   { n: "3", label: "Origin countries" },
                   { n: "8", label: "Roast profiles" },
@@ -647,15 +648,15 @@ export default function Home() {
                 ].map(({ n, label }) => (
                   <div
                     key={label}
-                    className="border-l-2 border-cyan-500/40 pl-4"
+                    className="border-l-2 border-cyan-500/40 pl-3 sm:pl-4"
                   >
                     <div
-                      className="text-2xl font-bold text-white"
+                      className="text-lg xs:text-xl sm:text-2xl font-bold text-white"
                       style={{ fontFamily: "var(--font-playfair)" }}
                     >
                       {n}
                     </div>
-                    <div className="text-xs text-stone-500 mt-0.5">{label}</div>
+                    <div className="text-[10px] xs:text-xs text-stone-500 mt-0.5">{label}</div>
                   </div>
                 ))}
               </div>
@@ -665,16 +666,16 @@ export default function Home() {
       </section>
 
       {/* ── MENU HIGHLIGHTS ──────────────────────────────────── */}
-      <section id="menu" className="relative px-6 py-28 overflow-hidden">
+      <section id="menu" className="relative px-4 sm:px-6 py-16 sm:py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-b from-transparent via-sky-950/6 to-transparent pointer-events-none" />
         <div className="mx-auto max-w-7xl relative">
-          <div className="mb-16 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+          <div className="mb-10 sm:mb-16 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-6">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-4">
+              <p className="text-[9px] xs:text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-2 sm:mb-4">
                 Our Menu
               </p>
               <h2
-                className="text-4xl sm:text-5xl font-bold tracking-tight text-white"
+                className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white"
                 style={{ fontFamily: "var(--font-playfair)" }}
               >
                 Brewed to
@@ -684,38 +685,38 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-2 sm:gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {MENU_HIGHLIGHTS.map(
               ({ name, price, tag, desc, emoji, tagColor }) => (
                 <div
                   key={name}
-                  className="group relative overflow-hidden rounded-2xl border border-white/6 bg-white/3 p-5 hover:border-white/10 hover:bg-white/5 transition-all duration-300 hover:-translate-y-1"
+                  className="group relative overflow-hidden rounded-xl sm:rounded-2xl border border-white/6 bg-white/3 p-3 sm:p-4 md:p-5 hover:border-white/10 hover:bg-white/5 transition-all duration-300 hover:-translate-y-1"
                 >
                   <div className="absolute inset-0 bg-linear-to-br from-cyan-500/0 to-transparent group-hover:from-cyan-500/3 transition-all duration-300 pointer-events-none" />
                   <div className="relative flex items-start justify-between gap-4">
-                    <div className="flex items-start gap-4 flex-1 min-w-0">
-                      <span className="text-3xl shrink-0 leading-none pt-0.5">
+                    <div className="flex items-start gap-2 sm:gap-4 flex-1 min-w-0">
+                      <span className="text-2xl sm:text-3xl shrink-0 leading-none pt-0.5">
                         {emoji}
                       </span>
                       <div className="min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap mb-1.5">
-                          <p className="font-semibold text-white text-sm">
+                        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap mb-1">
+                          <p className="font-semibold text-white text-xs sm:text-sm">
                             {name}
                           </p>
                           {tag && (
                             <span
-                              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${tagColor}`}
+                              className={`rounded-full px-1.5 sm:px-2 py-0.5 text-[8px] xs:text-[9px] sm:text-[10px] font-semibold ${tagColor}`}
                             >
                               {tag}
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-stone-500 leading-relaxed">
+                        <p className="text-[10px] xs:text-xs text-stone-500 leading-relaxed">
                           {desc}
                         </p>
                       </div>
                     </div>
-                    <span className="text-base font-bold text-cyan-400 shrink-0 group-hover:text-cyan-300 transition-colors">
+                    <span className="text-xs sm:text-base font-bold text-cyan-400 shrink-0 group-hover:text-cyan-300 transition-colors whitespace-nowrap">
                       {price}
                     </span>
                   </div>
@@ -727,14 +728,14 @@ export default function Home() {
       </section>
 
       {/* ── GALLERY ──────────────────────────────────────────── */}
-      <section id="gallery" className="px-6 py-10 pb-28">
+      <section id="gallery" className="px-4 sm:px-6 py-8 sm:py-10 md:pb-28">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-12 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-4">
+          <div className="mb-8 sm:mb-12 text-center">
+            <p className="text-[9px] xs:text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-2 sm:mb-4">
               The Experience
             </p>
             <h2
-              className="text-4xl sm:text-5xl font-bold tracking-tight text-white"
+              className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white"
               style={{ fontFamily: "var(--font-playfair)" }}
             >
               A space you&apos;ll
@@ -763,51 +764,51 @@ export default function Home() {
       </section>
 
       {/* ── TESTIMONIALS ─────────────────────────────────────── */}
-      <section className="px-6 py-28 relative overflow-hidden">
+      <section className="px-4 sm:px-6 py-16 sm:py-20 md:py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-b from-transparent via-white/1.5 to-transparent pointer-events-none" />
         <div className="mx-auto max-w-7xl relative">
-          <div className="mb-16 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-4">
+          <div className="mb-10 sm:mb-16 text-center">
+            <p className="text-[9px] xs:text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-2 sm:mb-4">
               Testimonials
             </p>
             <h2
-              className="text-4xl sm:text-5xl font-bold tracking-tight text-white"
+              className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white"
               style={{ fontFamily: "var(--font-playfair)" }}
             >
               Loved by <span className="gradient-text-amber">regulars</span>
             </h2>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-3">
+          <div className="grid gap-3 sm:gap-4 md:gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {TESTIMONIALS.map(({ name, role, avatar, text, stars }, idx) => (
               <div
                 key={name}
-                className="relative flex flex-col gap-5 rounded-3xl border border-white/6 bg-white/3 p-7 hover:border-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/40"
+                className="relative flex flex-col gap-3 sm:gap-4 md:gap-5 rounded-2xl sm:rounded-3xl border border-white/6 bg-white/3 p-4 sm:p-5 md:p-6 lg:p-7 hover:border-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/40"
                 style={{ animationDelay: `${idx * 100}ms` }}
               >
-                <div className="flex gap-1">
+                <div className="flex gap-0.5 sm:gap-1">
                   {Array.from({ length: stars }).map((_, i) => (
                     <Star
                       key={i}
-                      size={13}
-                      className="fill-amber-400 text-amber-400"
+                      size={11}
+                      className="fill-amber-400 text-amber-400 sm:w-[13px] sm:h-[13px]"
                     />
                   ))}
                 </div>
-                <p className="text-sm text-stone-300 leading-relaxed flex-1">
+                <p className="text-xs sm:text-sm text-stone-300 leading-relaxed flex-1">
                   &ldquo;{text}&rdquo;
                 </p>
-                <div className="flex items-center gap-3 border-t border-white/6 pt-5">
+                <div className="flex items-center gap-2 sm:gap-3 border-t border-white/6 pt-3 sm:pt-4 md:pt-5">
                   <Image
                     src={avatar}
                     alt={name}
                     width={40}
                     height={40}
-                    className="rounded-full object-cover ring-2 ring-cyan-500/20"
+                    className="h-9 sm:h-10 w-9 sm:w-10 rounded-full object-cover ring-2 ring-cyan-500/20 shrink-0"
                   />
                   <div>
-                    <p className="font-semibold text-white text-sm">{name}</p>
-                    <p className="text-xs text-stone-500 mt-0.5">{role}</p>
+                    <p className="font-semibold text-white text-xs sm:text-sm">{name}</p>
+                    <p className="text-[10px] xs:text-xs text-stone-500 mt-0.5">{role}</p>
                   </div>
                 </div>
               </div>
@@ -817,22 +818,22 @@ export default function Home() {
       </section>
 
       {/* ── LOCATION & HOURS ─────────────────────────────────── */}
-      <section id="location" className="px-6 py-28">
+      <section id="location" className="px-4 sm:px-6 py-16 sm:py-20 md:py-28">
         <div className="mx-auto max-w-7xl">
-          <div className="grid gap-12 lg:grid-cols-2 items-center">
+          <div className="grid gap-8 sm:gap-10 md:gap-12 lg:grid-cols-2 items-center">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-4">
+              <p className="text-[9px] xs:text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400 mb-2 sm:mb-4">
                 Find Us
               </p>
               <h2
-                className="text-4xl sm:text-5xl font-bold tracking-tight text-white mb-10 leading-tight"
+                className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white mb-6 sm:mb-8 md:mb-10 leading-tight"
                 style={{ fontFamily: "var(--font-playfair)" }}
               >
                 Come visit
                 <br />
                 <span className="gradient-text-amber">us anytime</span>
               </h2>
-              <div className="space-y-5">
+              <div className="space-y-3 sm:space-y-4 md:space-y-5">
                 {[
                   {
                     icon: MapPin,
@@ -859,16 +860,16 @@ export default function Home() {
                     lines: ["+1 (415) 555-0182"],
                   },
                 ].map(({ icon: Icon, title, lines, id }) => (
-                  <div key={title} id={id} className="flex items-start gap-4">
-                    <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 border border-cyan-500/20">
-                      <Icon size={16} className="text-cyan-400" />
+                  <div key={title} id={id} className="flex items-start gap-3 sm:gap-4">
+                    <div className="mt-0.5 flex h-9 sm:h-10 w-9 sm:w-10 shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+                      <Icon size={14} className="text-cyan-400 sm:w-[16px] sm:h-[16px]" />
                     </div>
                     <div>
-                      <p className="font-semibold text-white text-sm mb-1">
+                      <p className="font-semibold text-white text-xs sm:text-sm mb-0.5 sm:mb-1">
                         {title}
                       </p>
                       {lines.map((l) => (
-                        <p key={l} className="text-sm text-stone-400">
+                        <p key={l} className="text-xs sm:text-sm text-stone-400">
                           {l}
                         </p>
                       ))}
@@ -879,7 +880,7 @@ export default function Home() {
             </div>
 
             {/* Map / Image placeholder */}
-            <div className="relative h-80 lg:h-125 w-full overflow-hidden rounded-3xl border border-white/6">
+            <div className="relative h-64 xs:h-72 sm:h-80 md:h-96 lg:h-125 w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-white/6">
               <Image
                 src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=900&q=80"
                 alt="Coffee shop storefront"
@@ -888,10 +889,10 @@ export default function Home() {
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div className="inline-flex items-center gap-2 rounded-full bg-black/60 backdrop-blur-md border border-white/10 px-4 py-2">
-                  <MapPin size={13} className="text-cyan-400" />
-                  <span className="text-xs text-white font-medium">
+              <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 lg:p-6">
+                <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-black/60 backdrop-blur-md border border-white/10 px-2.5 sm:px-4 py-1.5 sm:py-2">
+                  <MapPin size={12} className="text-cyan-400 shrink-0 sm:w-[13px] sm:h-[13px]" />
+                  <span className="text-[10px] xs:text-xs sm:text-xs text-white font-medium truncate">
                     42 Roaster Lane, Coffeeville
                   </span>
                 </div>
@@ -934,23 +935,23 @@ export default function Home() {
       </section> */}
 
       {/* ── FOOTER ───────────────────────────────────────────── */}
-      <footer className="border-t border-white/5 px-6 pt-14 pb-8 border-10">
+      <footer className="border-t border-white/5 px-4 sm:px-6 pt-8 sm:pt-10 md:pt-14 pb-6 sm:pb-8">
         <div className="mx-auto max-w-7xl">
-          <div className="grid sm:grid-cols-3 gap-10 mb-12">
+          <div className="grid sm:grid-cols-3 gap-6 sm:gap-8 md:gap-10 mb-8 sm:mb-12">
             {/* Brand */}
             <div>
-              <Link href="/" className="flex items-center gap-2.5 mb-4">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-cyan-400 to-blue-600">
-                  <Coffee size={16} className="text-white" />
+              <Link href="/" className="flex items-center gap-2 sm:gap-2.5 mb-3 sm:mb-4">
+                <span className="flex h-8 sm:h-9 w-8 sm:w-9 items-center justify-center rounded-lg sm:rounded-xl bg-linear-to-br from-cyan-400 to-blue-600 shrink-0">
+                  <Coffee size={14} className="text-white sm:w-[16px] sm:h-[16px]" />
                 </span>
                 <span
-                  className="font-bold"
+                  className="text-sm sm:text-base font-bold"
                   style={{ fontFamily: "var(--font-playfair)" }}
                 >
                   Brew<span className="text-cyan-400"> Haven</span>
                 </span>
               </Link>
-              <p className="text-xs text-stone-300 leading-relaxed max-w-xs">
+              <p className="text-[10px] xs:text-xs text-stone-300 leading-relaxed max-w-xs">
                 Artisan coffee, ethically sourced. A space to work, connect, and
                 savour the moment.
               </p>
@@ -970,15 +971,15 @@ export default function Home() {
 
             {/* Links */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-stone-300 mb-4">
+              <p className="text-[10px] xs:text-xs sm:text-xs font-semibold uppercase tracking-widest text-stone-300 mb-2 sm:mb-4">
                 Explore
               </p>
-              <div className="flex flex-col gap-2.5">
+              <div className="flex flex-col gap-1.5 sm:gap-2.5">
                 {["Menu", "About", "Gallery", "Location"].map((l) => (
                   <a
                     key={l}
                     href={`#${l.toLowerCase()}`}
-                    className="text-sm text-stone-300 hover:text-white transition-colors"
+                    className="text-xs sm:text-sm text-stone-300 hover:text-white transition-colors"
                   >
                     {l}
                   </a>
@@ -988,10 +989,10 @@ export default function Home() {
 
             {/* Contact */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-stone-300 mb-4">
+              <p className="text-[10px] xs:text-xs sm:text-xs font-semibold uppercase tracking-widest text-stone-300 mb-2 sm:mb-4">
                 Visit Us
               </p>
-              <div className="flex flex-col gap-1 text-sm text-stone-300">
+              <div className="flex flex-col gap-0.5 sm:gap-1 text-xs sm:text-sm text-stone-300">
                 <span>42 Roaster Lane, Coffeeville CA</span>
                 <span>Mon–Fri 6AM–11PM</span>
                 <span>Sat–Sun 7AM–12AM</span>
@@ -1005,8 +1006,8 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <p className="text-xs text-stone-400">
+          <div className="border-t border-white/5 pt-6 sm:pt-8 flex flex-col xs:flex-row xs:items-center xs:justify-center gap-2 xs:gap-4">
+            <p className="text-[10px] xs:text-xs text-stone-400 text-center xs:text-left">
               © {new Date().getFullYear()} Brew Haven. Crafted with ☕ and AI.
             </p>
             {/* <div className="flex gap-5 text-xs text-stone-400">

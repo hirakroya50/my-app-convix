@@ -81,7 +81,7 @@ function AdminDashboardSkeleton({
   return (
     <div className="min-h-screen bg-[#070a10] text-stone-100">
       <header className="border-b border-white/5 bg-[#070a10]/90 backdrop-blur-xl sticky top-0 z-30">
-        <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
+        <div className="mx-auto max-w-6xl flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2.5">
               <SkeletonBlock className="h-9 w-9 rounded-xl" />
@@ -406,13 +406,13 @@ export default function AdminMenuPage() {
       <header className="border-b border-white/5 bg-[#070a10]/90 backdrop-blur-xl sticky top-0 z-30">
         <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-cyan-400 to-blue-600">
-                <Coffee size={16} className="text-white" />
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              <div className="flex h-8 sm:h-9 w-8 sm:w-9 items-center justify-center rounded-lg sm:rounded-xl bg-linear-to-br from-cyan-400 to-blue-600 shrink-0">
+                <Coffee size={14} className="text-white sm:w-[16px] sm:h-[16px]" />
               </div>
               <div>
-                <h1 className="font-semibold text-sm">Owner Dashboard</h1>
-                <p className="text-[11px] text-stone-500">
+                <h1 className="font-semibold text-xs sm:text-sm">Owner Dashboard</h1>
+                <p className="text-[10px] xs:text-[11px] text-stone-500 truncate">
                   {currentUser.email}
                 </p>
               </div>
@@ -420,17 +420,17 @@ export default function AdminMenuPage() {
           </div>
           <button
             onClick={() => signOut()}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-white/10 text-stone-400 hover:text-white hover:border-white/20 transition-all"
+            className="flex items-center gap-1 sm:gap-1.5 text-[10px] xs:text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-white/10 text-stone-400 hover:text-white hover:border-white/20 transition-all whitespace-nowrap"
           >
-            <LogOut size={12} />
+            <LogOut size={11} className="sm:w-[12px] sm:h-[12px]" />
             Sign Out
           </button>
         </div>
       </header>
 
-      <div className="mx-auto max-w-6xl px-6 py-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-8">
         {/* Stats row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
           {[
             {
               label: "Menu Items",
@@ -453,25 +453,25 @@ export default function AdminMenuPage() {
           ].map(({ label, value, icon: Icon }) => (
             <div
               key={label}
-              className="rounded-2xl border border-white/6 bg-white/3 p-5"
+              className="rounded-xl sm:rounded-2xl border border-white/6 bg-white/3 p-3 sm:p-4 md:p-5"
             >
               <div className="flex items-center gap-3 mb-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/10 border border-cyan-500/20">
-                  <Icon size={14} className="text-cyan-400" />
+                <div className="flex h-7 sm:h-8 w-7 sm:w-8 items-center justify-center rounded-lg bg-cyan-500/10 border border-cyan-500/20 shrink-0">
+                  <Icon size={12} className="text-cyan-400 sm:w-[14px] sm:h-[14px]" />
                 </div>
-                <span className="text-md text-stone-500">{label}</span>
+                <span className="text-xs sm:text-sm text-stone-500">{label}</span>
               </div>
-              <p className="text-2xl font-bold text-white">{value}</p>
+              <p className="text-lg xs:text-xl sm:text-2xl font-bold text-white">{value}</p>
             </div>
           ))}
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center justify-between gap-4 mb-6">
+        <div className="flex items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-6">
           <div
             role="tablist"
             aria-label="Dashboard views"
-            className="flex gap-1 bg-white/3 rounded-xl p-1 border border-white/6 w-fit"
+            className="flex gap-1 bg-white/3 rounded-lg sm:rounded-xl p-0.5 sm:p-1 border border-white/6 w-fit text-nowrap"
           >
             {(["orders", "menu"] as const).map((tab) => (
               <button
@@ -480,7 +480,7 @@ export default function AdminMenuPage() {
                 onClick={() => setActiveTab(tab)}
                 role="tab"
                 aria-selected={activeTab === tab}
-                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-bold transition-all ${
                   activeTab === tab
                     ? "bg-cyan-500 text-slate-950"
                     : "text-stone-300 hover:text-cyan-200"
@@ -493,7 +493,7 @@ export default function AdminMenuPage() {
           <a
             href="#allorderss"
             onClick={handleJumpToAllOrders}
-            className="rounded-full  text-sm font-medium text-stone-200 transition-all underline hover:border-white/20 hover:bg-white/8 hover:text-white"
+            className="rounded-full text-xs sm:text-sm font-medium text-stone-200 transition-all underline hover:border-white/20 hover:bg-white/8 hover:text-white whitespace-nowrap"
           >
             All Orders
           </a>
@@ -526,40 +526,40 @@ export default function AdminMenuPage() {
         {/* ── MENU TAB ─── */}
         {activeTab === "menu" && (
           <>
-            <div className="flex gap-2 mb-6">
+            <div className="flex gap-1.5 sm:gap-2 mb-4 sm:mb-6">
               <button
                 onClick={() => {
                   setShowAddForm(true);
                   setEditingId(null);
                   setForm(emptyForm);
                 }}
-                className="flex items-center font-bold gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-cyan-500 text-white/80 hover:bg-cyan-400 transition-colors"
+                className="flex items-center font-bold gap-1 sm:gap-1.5 text-[10px] xs:text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-cyan-500 text-white/80 hover:bg-cyan-400 transition-colors whitespace-nowrap"
               >
-                <Plus size={16} />
+                <Plus size={14} className="sm:w-[16px] sm:h-[16px]" />
                 Add Item
               </button>
             </div>
 
             {(showAddForm || editingId) && (
-              <div className="mb-6 rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-semibold text-sm text-cyan-300">
+              <div className="mb-4 sm:mb-6 rounded-xl sm:rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-3 sm:p-4 md:p-5">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <h2 className="font-semibold text-xs sm:text-sm text-cyan-300">
                     {editingId ? "Edit Item" : "Add New Item"}
                   </h2>
                   <button
                     onClick={handleCancel}
-                    className="text-stone-500 hover:text-white"
+                    className="text-stone-500 hover:text-white shrink-0"
                   >
-                    <X size={16} />
+                    <X size={14} className="sm:w-[16px] sm:h-[16px]" />
                   </button>
                 </div>
-                <div className="grid sm:grid-cols-2 gap-3">
+                <div className="grid sm:grid-cols-2 gap-2 sm:gap-3">
                   <input
                     type="text"
                     placeholder="Item name"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-cyan-500/50"
+                    className="rounded-lg sm:rounded-xl border border-white/10 bg-white/5 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-cyan-500/50"
                   />
                   <input
                     type="number"
