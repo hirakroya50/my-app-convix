@@ -15,6 +15,7 @@ import {
   Sparkles,
   ShieldCheck,
   Clock3,
+  CheckCircle2,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,9 +40,13 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [phase, setPhase] = useState<"idle" | "submitting" | "redirecting">(
+    "idle",
+  );
   const [showPassword, setShowPassword] = useState(false);
   const errorId = useId();
+  const isBusy = phase !== "idle";
+  const isRedirecting = phase === "redirecting";
 
   useEffect(() => {
     if (!authLoading && currentUser?.role === "owner") {
@@ -55,7 +60,7 @@ export default function SignInPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    setPhase("submitting");
 
     try {
       await signIn("password", {
@@ -64,6 +69,7 @@ export default function SignInPage() {
         flow,
         ...(flow === "signUp" ? { name: name.trim() } : {}),
       });
+      setPhase("redirecting");
     } catch (err) {
       setError(
         flow === "signUp"
@@ -71,13 +77,48 @@ export default function SignInPage() {
           : "Invalid email or password.",
       );
       console.error(err);
-    } finally {
-      setLoading(false);
+      setPhase("idle");
     }
   };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0a0908] text-white">
+      {isRedirecting && (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center px-6 bg-[#0a0908]/75 backdrop-blur-md"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-black/35 p-6 shadow-2xl shadow-black/70">
+            <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-amber-500/12 via-orange-500/6 to-transparent" />
+            <div className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full bg-amber-500/12 blur-3xl" />
+
+            <div className="relative flex items-start gap-4">
+              <div className="mt-0.5 flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-amber-500 to-orange-600 shadow-lg shadow-amber-500/20">
+                <CheckCircle2 size={18} className="text-white" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-amber-200/90">
+                  Brew Haven
+                </p>
+                <p className="mt-1 text-base font-semibold text-white leading-snug">
+                  {flow === "signUp"
+                    ? "Account created successfully"
+                    : "Signed in successfully"}
+                </p>
+                <p className="mt-1 text-sm text-stone-300">
+                  Redirecting you now…
+                </p>
+
+                <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-white/8 border border-white/8">
+                  <div className="h-full w-full bg-linear-to-r from-amber-400 via-orange-400 to-amber-400 animate-shimmer opacity-90" />
+                </div>
+              </div>
+              <Loader2 size={18} className="text-amber-300 animate-spin" />
+            </div>
+          </div>
+        </div>
+      )}
       <div className="absolute inset-0 opacity-9">
         <Image
           src={COFFEE_HERO_IMAGE}
@@ -205,6 +246,7 @@ export default function SignInPage() {
                     autoComplete="name"
                     aria-invalid={!!error}
                     aria-describedby={error ? errorId : undefined}
+                    disabled={isBusy}
                     className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all"
                   />
                 </div>
@@ -231,6 +273,7 @@ export default function SignInPage() {
                   spellCheck={false}
                   aria-invalid={!!error}
                   aria-describedby={error ? errorId : undefined}
+                  disabled={isBusy}
                   className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all"
                 />
               </div>
@@ -256,12 +299,14 @@ export default function SignInPage() {
                   }
                   aria-invalid={!!error}
                   aria-describedby={error ? errorId : undefined}
+                  disabled={isBusy}
                   className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-10 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
+                  disabled={isBusy}
                   className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-500 hover:text-amber-400 transition-colors"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -280,10 +325,10 @@ export default function SignInPage() {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={isBusy}
                 className="group w-full flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-amber-500 via-orange-500 to-red-500 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-900/30 transition-all hover:brightness-110 disabled:opacity-50"
               >
-                {loading ? (
+                {isBusy ? (
                   <Loader2 size={16} className="animate-spin" />
                 ) : (
                   <>
@@ -294,6 +339,9 @@ export default function SignInPage() {
                     />
                   </>
                 )}
+                {isRedirecting && (
+                  <span className="text-xs text-white/80">Redirecting…</span>
+                )}
               </button>
             </form>
 
@@ -303,6 +351,7 @@ export default function SignInPage() {
                   setFlow(flow === "signIn" ? "signUp" : "signIn");
                   setError("");
                 }}
+                disabled={isBusy}
                 className="text-xs text-stone-400 transition-colors hover:text-amber-300"
               >
                 {flow === "signIn"
