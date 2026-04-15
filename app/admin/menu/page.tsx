@@ -212,7 +212,7 @@ export default function AdminMenuPage() {
 
       <div className="mx-auto max-w-6xl px-6 py-8">
         {/* Stats row */}
-        <div className="grid grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
             {
               label: "Menu Items",
@@ -241,7 +241,7 @@ export default function AdminMenuPage() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 border border-amber-500/20">
                   <Icon size={14} className="text-amber-400" />
                 </div>
-                <span className="text-xs text-stone-500">{label}</span>
+                <span className="text-md text-stone-500">{label}</span>
               </div>
               <p className="text-2xl font-bold text-white">{value}</p>
             </div>
@@ -249,11 +249,18 @@ export default function AdminMenuPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-6 bg-white/3 rounded-xl p-1 border border-white/6 w-fit">
+        <div
+          role="tablist"
+          aria-label="Dashboard views"
+          className="flex gap-1 mb-6 bg-white/3 rounded-xl p-1 border border-white/6 w-fit"
+        >
           {(["orders", "menu"] as const).map((tab) => (
             <button
               key={tab}
+              type="button"
               onClick={() => setActiveTab(tab)}
+              role="tab"
+              aria-selected={activeTab === tab}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 activeTab === tab
                   ? "bg-amber-500 text-white"

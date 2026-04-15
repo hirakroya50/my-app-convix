@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuthActions } from "@convex-dev/auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useConvexAuth, useQuery } from "convex/react";
 import {
   Coffee,
@@ -41,6 +41,7 @@ export default function SignInPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const errorId = useId();
 
   useEffect(() => {
     if (!authLoading && currentUser?.role === "owner") {
@@ -187,48 +188,74 @@ export default function SignInPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {flow === "signUp" && (
                 <div className="relative">
+                  <label htmlFor="name" className="sr-only">
+                    Name
+                  </label>
                   <User
                     size={16}
                     className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500"
                   />
                   <input
+                    id="name"
                     type="text"
                     placeholder="Your name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
+                    autoComplete="name"
+                    aria-invalid={!!error}
+                    aria-describedby={error ? errorId : undefined}
                     className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all"
                   />
                 </div>
               )}
 
               <div className="relative">
+                <label htmlFor="email" className="sr-only">
+                  Email
+                </label>
                 <Mail
                   size={16}
                   className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500"
                 />
                 <input
+                  id="email"
                   type="email"
                   placeholder="Email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  autoComplete="email"
+                  inputMode="email"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  aria-invalid={!!error}
+                  aria-describedby={error ? errorId : undefined}
                   className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all"
                 />
               </div>
 
               <div className="relative">
+                <label htmlFor="password" className="sr-only">
+                  Password
+                </label>
                 <Lock
                   size={16}
                   className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500"
                 />
                 <input
+                  id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={8}
+                  autoComplete={
+                    flow === "signIn" ? "current-password" : "new-password"
+                  }
+                  aria-invalid={!!error}
+                  aria-describedby={error ? errorId : undefined}
                   className="w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-10 py-3 text-sm text-white placeholder:text-stone-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all"
                 />
                 <button
@@ -242,7 +269,11 @@ export default function SignInPage() {
               </div>
 
               {error && (
-                <p className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-400">
+                <p
+                  id={errorId}
+                  role="alert"
+                  className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-300"
+                >
                   {error}
                 </p>
               )}
