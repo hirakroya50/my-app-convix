@@ -112,7 +112,7 @@ export default function SignInPage() {
 
                 <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-white/8 border border-white/8">
                   <div className="h-full rounded-full bg-linear-to-r from-cyan-400 via-sky-400 to-indigo-500 opacity-95 animate-fake-progress">
-                    <div className="h-full w-full bg-linear-to-r from-white/0 via-white/25 to-white/0 animate-shimmer opacity-70" />
+                    <div className="h-full  w-full bg-linear-to-r from-white/0 via-white/25 to-white/0 animate-shimmer opacity-70" />
                   </div>
                 </div>
               </div>
